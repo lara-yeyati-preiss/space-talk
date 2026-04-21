@@ -414,7 +414,7 @@
         if (DATA.themes[k]) DATA.themes[k].label = label;
       }
     }
-  
+
     migrateLegacyDrilldownLayout();
   
     // ── UI WIRING ──────────────────────────────────────────────────────────

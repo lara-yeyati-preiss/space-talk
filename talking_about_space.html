@@ -75,7 +75,7 @@
           <div class="scrolly-panel" data-panel="intro">
             <div class="scrolly-intro-block">
               <p class="scrolly-display-title" aria-hidden="true">Talking <span class="accent">about</span> space</p>
-              <p class="scrolly-lede">Space is as symbolic as it is physical. From the Cold War space race to the rise of commercial spaceflight, another history runs alongside it—one shaped by the ways it has been framed, contested, and imagined.</p>
+              <p class="scrolly-lede">From the Cold War space race to the rise of commercial spaceflight, outer space has taken shape in headlines, speeches, and stories: an account of how it has defined and reshaped over time</p>
             </div>
           </div>
           <div class="scrolly-panel" data-panel="frontier">
@@ -150,31 +150,29 @@
   </section>
   <!-- Planets/Bubble chart section: scrolls naturally from bottom up -->
   <section class="bubble-section" aria-labelledby="bubble-section-title">
-              <header class="bubble-header">
-                <div class="bubble-header-grid">
-                  <div class="bubble-header-main">
-                    <h2 class="bubble-title" id="bubble-section-title">The recurring themes</h2>
-                    <p class="page-subtitle page-subtitle--planets" id="page-subtitle-planets">Click any circle to explore how attention given to a theme changed across 1950–2024</p>
-                    <div class="filters filters--inline" id="bubble-filters" aria-label="Source for bubble chart">
-                      <div class="filter-view-group filter-source-group" role="group">
-                        <button type="button" class="filter-view filter-view--src filter-source--rank active" data-trends-src="nyt">NEWS</button>
-                        <button type="button" class="filter-view filter-view--src filter-source--rank" data-trends-src="politics">POLITICS</button>
-                        <button type="button" class="filter-view filter-view--src filter-source--rank" data-trends-src="books">BOOKS</button>
-                      </div>
-                      <div class="filter-source-note" id="planets-source-note">New York Times</div>
-                    </div>
-                    <div id="bubble-drill-row" class="bubble-drill-row" hidden>
-                      <button type="button" class="back-link bubble-back" id="back-link">← all themes</button>
-                    </div>
-                  </div>
-                  <div id="bubble-drill-slot" class="bubble-drill-slot" aria-live="polite"></div>
-                </div>
-              </header>
-
-              <div id="chart-wrap">
-                <svg id="bubble-svg" style="display:block;width:100%;overflow:visible;"></svg>
-              </div>
-            </section>
+    <header class="bubble-header">
+      <div class="bubble-header-grid">
+        <div class="bubble-header-main">
+          <h2 class="bubble-title" id="bubble-section-title">The recurring themes</h2>
+          <p class="page-subtitle page-subtitle--planets" id="page-subtitle-planets">Click any circle to explore how attention given to a theme changed across 1950–2024</p>
+          <div class="filters filters--inline" id="bubble-filters" aria-label="Source for bubble chart">
+            <div class="filter-view-group filter-source-group" role="group">
+              <button type="button" class="filter-view filter-view--src filter-source--rank active" data-trends-src="nyt">NEWS</button>
+              <button type="button" class="filter-view filter-view--src filter-source--rank" data-trends-src="politics">POLITICS</button>
+              <button type="button" class="filter-view filter-view--src filter-source--rank" data-trends-src="books">BOOKS</button>
+            </div>
+            <div class="filter-source-note" id="planets-source-note">New York Times</div>
+          </div>
+          <div id="bubble-drill-row" class="bubble-drill-row" hidden>
+            <button type="button" class="back-link bubble-back" id="back-link">← all themes</button>
+          </div>
+        </div>
+        <div id="bubble-drill-slot" class="bubble-drill-slot" aria-live="polite"></div>
+      </div>
+    </header>
+    <div id="chart-wrap">
+      <svg id="bubble-svg" style="display:block;width:100%;overflow:visible;"></svg>
+    </div>
   </section>
 
   <div id="detail-panel" style="display:none;min-height:0;"></div>
@@ -182,14 +180,6 @@
 
 <div id="tooltip"></div>
 
-<script>
-  const decadesDropdown = document.getElementById('decades-dropdown');
-  if (decadesDropdown) {
-    decadesDropdown.addEventListener('change', (e) => {
-      if (e.target.value) window.location.href = e.target.value;
-    });
-  }
-</script>
 <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
 <!-- Scrollama: IntersectionObserver-based scrollytelling step detection -->
 <script src="https://cdn.jsdelivr.net/npm/scrollama@3.2.0/build/scrollama.min.js"></script>

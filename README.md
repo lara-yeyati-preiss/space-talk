@@ -16,6 +16,8 @@ Together, these layers frame outer space as a cultural and political object, exp
 
 ![themes bubble chart](images/bubble-chart.png)
 
+![actors rank chart](images/rank-chart.png)
+
 ![themes - markets](images/bubble-chart-decade.png)
 
 ![objects diagram](images/objects-diagram.png)

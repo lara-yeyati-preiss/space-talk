@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Space Talk</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="tts-body">
+
+<nav>
+  <span class="nav-logo"><a href="index.html">Space Talk</a></span>
+  <div class="nav-links">
+    <a href="talking_about_space.html"><span class="nav-words"><span class="nav-word">talking</span><span class="nav-word">about</span><span class="nav-word">space</span></span></a>
+    <a href="talking_to_space.html" class="active"><span class="nav-words"><span class="nav-word">talking</span><span class="nav-word">to</span><span class="nav-word">space</span></span></a>
+    <a href="#">methodology</a>
+  </div>
+</nav>
+
+<div class="tts-page">
+  <header class="page-hero" aria-label="Talking to space introduction">
+    <div class="hero-container">
+      <div class="hero-inner">
+        <h1 id="page-title">Talking <span class="accent">to</span> space</h1>
+        <p id="page-intro" class="page-intro">Since the beginning of the space age, people have sent beyond Earth not only instruments and machines, but also something more personal: an archive of ourselves—of who we are and who we were.</p>
+        <a class="scroll-indicator" href="#scrolly" aria-label="Scroll to begin" title="Scroll to begin">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9" stroke="currentColor"/>
+          </svg>
+        </a>
+        <span class="back-link" id="decade-back-link" style="display:none;">← all decades</span>
+      </div>
+      <div class="hero-image-wrap">
+        <img class="hero-image" src="images/talking_to_space.png" alt="" decoding="async">
+      </div>
+    </div>
+  </header>
+
+  <!-- Zone 1: scrolly intro. Images: tts_intro/*.
+       The "chart" phase shows the interactive visualization as a sticky panel so the
+       transition from the abundance text to the chart happens in-place on scroll. -->
+  <section id="scrolly" class="scrolly" aria-label="Introduction">
+    <div class="scrolly-stack">
+      <div class="scrolly-rail" aria-hidden="true">
+        <div class="scrolly-track" data-scrolly-phase="intro"></div>
+        <div class="scrolly-track" data-scrolly-phase="pioneer"></div>
+        <div class="scrolly-track" data-scrolly-phase="arecibo"></div>
+        <div class="scrolly-track" data-scrolly-phase="voyager"></div>
+        <div class="scrolly-track scrolly-track--abundance" data-scrolly-phase="abundance">
+          <div class="abundance-trigger" data-line="0"></div>
+          <div class="abundance-trigger abundance-trigger--pause"></div>
+          <div class="abundance-trigger" data-line="1"></div>
+          <div class="abundance-trigger abundance-trigger--pause"></div>
+          <div class="abundance-trigger" data-line="2"></div>
+          <div class="abundance-trigger" data-line="3"></div>
+          <div class="abundance-trigger" data-line="4"></div>
+          <div class="abundance-trigger" data-line="5"></div>
+          <div class="abundance-trigger" data-line="6"></div>
+          <div class="abundance-trigger" data-line="7"></div>
+          <div class="abundance-trigger" data-line="8"></div>
+        </div>
+        <!-- Curtain: abundance panel fades to near-invisible -->
+        <div class="scrolly-track scrolly-track--curtain" data-scrolly-phase="curtain"></div>
+        <!-- Done: sticky frame fades completely before viz-screen scrolls into view -->
+        <div class="scrolly-track scrolly-track--done" data-scrolly-phase="done"></div>
+      </div>
+      <aside class="scrolly-sticky">
+        <div class="scrolly-sticky-inner" data-phase="intro">
+          <div class="scrolly-panel" data-panel="intro">
+            <div class="scrolly-intro-block">
+              <p class="scrolly-display-title" aria-hidden="true">Talking <span class="accent">to</span> space</p>
+              <p class="scrolly-lede">Since the beginning of the space age, people have sent beyond Earth not only instruments and machines, but also something more intimate: an archive of humanity—of who we are and who we were.</p>
+            </div>
+            <div class="scrolly-intro-image" aria-hidden="true">
+              <img src="images/talking_to_space.png" alt="" decoding="async">
+            </div>
+          </div>
+          <div class="scrolly-panel" data-panel="pioneer">
+            <div class="scrolly-split scrolly-split--img-left">
+              <div class="scrolly-col scrolly-col--img">
+                <img class="scrolly-photo" src="data_objects/object_images/117.png" width="1200" height="900" alt="" decoding="async">
+              </div>
+              <div class="scrolly-col scrolly-col--text">
+                <p class="scrolly-body">In 1972, NASA attached two gold-anodized aluminum plaques to a pair of spacecraft leaving the Solar System, in case they were intercepted by intelligent extraterrestrial life. Engraved on them are a man and a woman, a pulsar map locating our Sun, and a diagram of the hydrogen atom.</p>
+                <p class="scrolly-object-label">Pioneer Plaques</p>
+              </div>
+            </div>
+          </div>
+          <div class="scrolly-panel" data-panel="arecibo">
+            <div class="scrolly-split scrolly-split--img-left">
+              <div class="scrolly-col scrolly-col--img">
+                <img class="scrolly-photo" src="data_objects/object_images/1_big.png" width="1200" height="900" alt="" decoding="async">
+              </div>
+              <div class="scrolly-col scrolly-col--text">
+                <p class="scrolly-body">Two years later, astronomers transmitted a 1,679-bit binary message toward a star cluster in Hercules, 25,000 light-years away. Encoded within it: the numbers one through ten, the atomic numbers of the elements of life, the double helix, a diagram of our Solar System, a human figure.</p>
+                <p class="scrolly-object-label">Arecibo Message</p>
+              </div>
+            </div>
+          </div>
+          <div class="scrolly-panel" data-panel="voyager">
+            <div class="scrolly-split scrolly-split--img-left">
+              <div class="scrolly-col scrolly-col--img">
+                <img class="scrolly-photo" src="data_objects/object_images/118.png" width="1200" height="1200" alt="" decoding="async">
+              </div>
+              <div class="scrolly-col scrolly-col--text">
+                <p class="scrolly-body">In 1977, two spacecraft left Earth carrying gold-plated copper records into space, containing 116 images, greetings in 55 languages, and sounds, including a mother’s kiss, footsteps, and a heartbeat.</p>
+                <p class="scrolly-object-label">Voyager Golden Record</p>
+              </div>
+            </div>
+          </div>
+          <div class="scrolly-panel" data-panel="abundance">
+            <div class="scrolly-pull scrolly-lines" role="list">
+              <div class="scrolly-line scrolly-line--intro" role="listitem">Many other objects, messages, and transmissions followed.</div>
+              <div class="scrolly-line scrolly-line--intro" role="listitem">Ways of fixing ourselves into matter, into sound, into signals.</div>
+              <div class="scrolly-line scrolly-line--spacer" aria-hidden="true"></div>
+              <div class="scrolly-line scrolly-line--spacer" aria-hidden="true"></div>
+              <div class="scrolly-line" role="listitem">The Universal Declaration of Human Rights</div>
+              <div class="scrolly-line" role="listitem">A copy of Wikipedia articles</div>
+              <div class="scrolly-line" role="listitem">Brain waves converted to sound</div>
+              <div class="scrolly-line" role="listitem">A collection of science fiction literature</div>
+              <div class="scrolly-line" role="listitem">Thousands of text messages</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="viz-screen" aria-label="Talking to space diagram">
+    <p id="viz-hint" class="viz-hint"><span class="viz-hint-a">Cultural artifacts and messages sent to outer space</span></p>
+    <h2 id="decade-heading" class="decade-heading" hidden>Talking to space</h2>
+    <div class="viz-main">
+      <aside class="viz-sidebar" aria-label="How to explore">
+        <div class="sidebar-back-slot" aria-hidden="true"></div>
+        <div id="legend-panel">
+          <div class="leg-title">FILTER BY TYPE</div>
+        </div>
+      </aside>
+      <div class="viz-chart-col">
+        <div id="decade-toolbar" class="decade-toolbar" hidden>
+          <h2 id="decade-toolbar-title" class="decade-toolbar-title"></h2>
+        </div>
+        <div class="viz-stage" aria-label="Radial chart">
+          <div id="chart-inner">
+            <svg id="star-svg"></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="detail-panel"></div>
+</div>
+
+<div id="tooltip"></div>
+
+<!-- Scrollama: IntersectionObserver-based scrollytelling step detection -->
+<script src="https://cdn.jsdelivr.net/npm/scrollama@3.2.0/build/scrollama.min.js"></script>
+<script src="talking_to_space.js"></script>
+</body>
+</html>

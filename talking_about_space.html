@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Space Talk</title>
+  <link rel="stylesheet" href="styles.css?v=2026-04-18a">
+</head>
+<body class="tas-body">
+
+<!-- SVG filter for mobile drilldown bars (same recipe as bubble #noise) -->
+<svg aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden;clip:rect(0,0,0,0)" focusable="false">
+  <defs>
+    <filter id="mob-bar-noise" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="1.5" numOctaves="4" stitchTiles="stitch" result="n"/>
+      <feColorMatrix in="n" type="saturate" values="0" result="gn"/>
+      <feBlend in="SourceGraphic" in2="gn" mode="soft-light" result="b"/>
+      <feComposite in="b" in2="SourceGraphic" operator="in"/>
+    </filter>
+  </defs>
+</svg>
+
+<nav>
+  <span class="nav-logo"><a href="index.html">Space Talk</a></span>
+  <div class="nav-links">
+    <a href="talking_about_space.html" class="active"><span class="nav-words"><span class="nav-word">talking</span><span class="nav-word">about</span><span class="nav-word">space</span></span></a>
+    <a href="talking_to_space.html"><span class="nav-words"><span class="nav-word">talking</span><span class="nav-word">to</span><span class="nav-word">space</span></span></a>
+    <a href="#">methodology</a>
+  </div>
+</nav>
+
+<div class="page tas-page">
+
+  <header class="page-hero" aria-label="Talking about space introduction">
+    <div class="hero-container">
+      <div class="hero-inner">
+        <h1 id="page-title">Talking <span class="accent">about</span> space</h1>
+        <p id="page-intro" class="page-intro">Space is as symbolic as it is physical. From the Cold War space race to the rise of commercial spaceflight, another history runs alongside it—one shaped by the ways it has been framed, contested, and imagined from Earth.</p>
+        <a class="scroll-indicator" href="#scrolly" aria-label="Scroll to begin" title="Scroll to begin">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9" stroke="currentColor"/>
+          </svg>
+        </a>
+      </div>
+      <div class="hero-image-wrap">
+        <img class="hero-image" src="images/talking_about_space.png" alt="" decoding="async">
+      </div>
+    </div>
+  </header>
+
+  <!-- Zone 1: scrolly intro (desktop). -->
+  <section id="scrolly" class="scrolly" aria-label="Introduction">
+    <div class="scrolly-stack">
+      <div class="scrolly-rail" aria-hidden="true">
+        <div class="scrolly-track" data-scrolly-phase="intro"></div>
+        <div class="scrolly-track" data-scrolly-phase="frontier"></div>
+        <div class="scrolly-track" data-scrolly-phase="race"></div>
+        <div class="scrolly-track" data-scrolly-phase="risk"></div>
+        <div class="scrolly-track" data-scrolly-phase="market"></div>
+        <div class="scrolly-track scrolly-track--protagonists" data-scrolly-phase="protagonists">
+          <div class="protagonists-trigger" data-line="0"></div>
+          <div class="protagonists-trigger protagonists-trigger--pause"></div>
+          <div class="protagonists-trigger" data-line="1"></div>
+        </div>
+        <!-- Curtain: protagonists panel fades to near-invisible -->
+        <div class="scrolly-track scrolly-track--curtain" data-scrolly-phase="curtain"></div>
+        <!-- Done: sticky frame fades completely before charts scrolly section begins -->
+        <div class="scrolly-track scrolly-track--done" data-scrolly-phase="done"></div>
+      </div>
+      <aside class="scrolly-sticky">
+        <div class="scrolly-sticky-inner" data-phase="intro">
+          <div class="scrolly-panel" data-panel="intro">
+            <div class="scrolly-intro-block">
+              <p class="scrolly-display-title" aria-hidden="true">Talking <span class="accent">about</span> space</p>
+              <p class="scrolly-lede">Space is as symbolic as it is physical. From the Cold War space race to the rise of commercial spaceflight, another history runs alongside it—one shaped by the ways it has been framed, contested, and imagined.</p>
+            </div>
+          </div>
+          <div class="scrolly-panel" data-panel="frontier">
+            <div class="scrolly-progressive">
+              <p class="scrolly-pull">Across time, space has been a <span class="accent">frontier</span></p>
+            </div>
+            <img class="scrolly-hazard-image" src="images/frontier_headlines.png" alt="" decoding="async">
+          </div>
+          <div class="scrolly-panel" data-panel="race">
+            <div class="scrolly-progressive">
+              <p class="scrolly-pull">Across time, space has been a <span class="accent">race</span></p>
+            </div>
+            <img class="scrolly-hazard-image" src="images/race_headlines.png" alt="" decoding="async">
+          </div>
+          <div class="scrolly-panel" data-panel="risk">
+            <div class="scrolly-progressive">
+              <p class="scrolly-pull">Across time, space has been a <span class="accent">hazard</span></p>
+            </div>
+            <img class="scrolly-hazard-image" src="images/hazard_headlines.png" alt="" decoding="async">
+          </div>
+          <div class="scrolly-panel" data-panel="market">
+            <div class="scrolly-progressive">
+              <p class="scrolly-pull">Across time, space has been a <span class="accent">market</span></p>
+            </div>
+            <img class="scrolly-hazard-image" src="images/market_headlines.png" alt="" decoding="async">
+          </div>
+          <div class="scrolly-panel" data-panel="protagonists">
+            <div class="scrolly-pull scrolly-lines" role="list">
+              <div class="scrolly-line scrolly-line--protagonists" role="listitem">As the way we talk about outer space changes,<br> so do its protagonists and the themes that shape it.</div>
+              <div class="scrolly-line scrolly-line--spacer" aria-hidden="true"></div>
+              <div class="scrolly-line scrolly-line--protagonists" role="listitem">In the process, space points back to us.</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Zone 2: charts scrollytelling (desktop) - rank chart only -->
+  <section id="tas-charts-scrolly" class="scrolly" aria-label="Charts introduction">
+    <div class="scrolly-stack">
+      <div class="scrolly-rail" aria-hidden="true">
+        <div class="scrolly-track" data-scrolly-phase="trends"></div>
+      </div>
+      <aside class="scrolly-sticky">
+        <div class="scrolly-sticky-inner" data-phase="trends">
+          <div class="scrolly-panel" data-panel="trends">
+            <section class="rank-section" aria-labelledby="rank-section-title">
+              <header class="chart-header chart-header--rank">
+                <h1 class="bubble-title" id="rank-section-title">The main characters</h1>
+                <p class="page-subtitle page-subtitle--rank" id="page-subtitle-trends">How attention given to different actor types changed across 1950–2024</p>
+                <div class="filters filters--inline" id="rank-filters" aria-label="Source for rank chart">
+                  <div class="filter-view-group filter-source-group" role="group">
+                    <button type="button" class="filter-view filter-view--src filter-source--rank active" data-trends-src="nyt">NEWS</button>
+                    <button type="button" class="filter-view filter-view--src filter-source--rank" data-trends-src="politics">POLITICS</button>
+                    <button type="button" class="filter-view filter-view--src filter-source--rank" data-trends-src="books">BOOKS</button>
+                  </div>
+                  <div class="filter-source-note" id="rank-source-note">New York Times</div>
+                </div>
+                <p class="rank-annotation" id="rank-annotation" aria-live="polite"></p>
+              </header>
+              <div class="rank-stage" id="rank-stage" aria-label="Actor ranking over time">
+                <div class="rank-block" id="rank-block">
+                  <svg id="rank-svg" class="rank-svg" aria-hidden="false"></svg>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+  <!-- Planets/Bubble chart section: scrolls naturally from bottom up -->
+  <section class="bubble-section" aria-labelledby="bubble-section-title">
+              <header class="bubble-header">
+                <div class="bubble-header-grid">
+                  <div class="bubble-header-main">
+                    <h2 class="bubble-title" id="bubble-section-title">The recurring themes</h2>
+                    <p class="page-subtitle page-subtitle--planets" id="page-subtitle-planets">Click any circle to explore how attention given to a theme changed across 1950–2024</p>
+                    <div class="filters filters--inline" id="bubble-filters" aria-label="Source for bubble chart">
+                      <div class="filter-view-group filter-source-group" role="group">
+                        <button type="button" class="filter-view filter-view--src filter-source--rank active" data-trends-src="nyt">NEWS</button>
+                        <button type="button" class="filter-view filter-view--src filter-source--rank" data-trends-src="politics">POLITICS</button>
+                        <button type="button" class="filter-view filter-view--src filter-source--rank" data-trends-src="books">BOOKS</button>
+                      </div>
+                      <div class="filter-source-note" id="planets-source-note">New York Times</div>
+                    </div>
+                    <div id="bubble-drill-row" class="bubble-drill-row" hidden>
+                      <button type="button" class="back-link bubble-back" id="back-link">← all themes</button>
+                    </div>
+                  </div>
+                  <div id="bubble-drill-slot" class="bubble-drill-slot" aria-live="polite"></div>
+                </div>
+              </header>
+
+              <div id="chart-wrap">
+                <svg id="bubble-svg" style="display:block;width:100%;overflow:visible;"></svg>
+              </div>
+            </section>
+  </section>
+
+  <div id="detail-panel" style="display:none;min-height:0;"></div>
+</div>
+
+<div id="tooltip"></div>
+
+<script>
+  const decadesDropdown = document.getElementById('decades-dropdown');
+  if (decadesDropdown) {
+    decadesDropdown.addEventListener('change', (e) => {
+      if (e.target.value) window.location.href = e.target.value;
+    });
+  }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<!-- Scrollama: IntersectionObserver-based scrollytelling step detection -->
+<script src="https://cdn.jsdelivr.net/npm/scrollama@3.2.0/build/scrollama.min.js"></script>
+<script src="talking_about_space.js?v=2026-04-18a"></script>
+</body>
+</html>

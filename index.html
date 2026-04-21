@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Space Talk</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="tts-body">
+
+<!-- Grain filter for landing page hero texture only -->
+<svg aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden;clip:rect(0,0,0,0)" focusable="false">
+  <defs>
+    <filter id="landing-grain" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.62" numOctaves="4" stitchTiles="stitch" result="n"/>
+      <feColorMatrix in="n" type="saturate" values="0" result="gn"/>
+      <feBlend in="SourceGraphic" in2="gn" mode="soft-light" result="b"/>
+      <feComposite in="b" in2="SourceGraphic" operator="in"/>
+    </filter>
+  </defs>
+</svg>
+
+<nav>
+  <span class="nav-logo"><a href="index.html">Space Talk</a></span>
+  <div class="nav-links">
+    <a href="talking_about_space.html"><span class="nav-words"><span class="nav-word">talking</span><span class="nav-word">about</span><span class="nav-word">space</span></span></a>
+    <a href="talking_to_space.html"><span class="nav-words"><span class="nav-word">talking</span><span class="nav-word">to</span><span class="nav-word">space</span></span></a>
+    <a href="#">methodology</a>
+  </div>
+</nav>
+
+<div class="tts-page landing-page">
+
+  <!-- Hero: full viewport, title + diagram, grain texture contained here -->
+  <header class="landing-hero">
+    <div class="landing-hero-component">
+      <div class="landing-hero-content">
+        <h1>Space Talk</h1>
+        <p class="landing-subtitle">Visualizing how outer space has been framed, addressed, and imagined over seven decades.</p>
+      </div>
+      <div class="landing-hero-diagram" aria-hidden="true"></div>
+      <div class="landing-hero-circle" aria-hidden="true"></div>
+    </div>
+  </header>
+
+  <!-- Intro text -->
+  <section class="landing-intro" aria-label="Project introduction">
+    <div class="landing-intro-inner">
+      <p class="landing-intro-line landing-intro-line--lead">The history of space is a history of talking.</p>
+      <div class="landing-intro-pair">
+        <p class="landing-intro-line">It is described, interpreted, fought over.</p>
+        <p class="landing-intro-line">It is spoken to, projected into.</p>
+      </div>
+      <div class="landing-intro-tail">
+        <p class="landing-intro-line">In talking to—and about—space,</p>
+        <p class="landing-intro-line landing-intro-line--echo">space points back to us.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Entry points -->
+  <section class="landing-entries" aria-label="Explore the project">
+
+    <a href="talking_about_space.html" class="landing-entry landing-entry--about">
+      <div class="landing-entry-inner">
+        <h2 class="landing-entry-title">Talking <em>about</em> space</h2>
+        <p class="landing-entry-desc">Space across media coverage, political speech, and literature</p>
+      </div>
+    </a>
+
+    <a href="talking_to_space.html" class="landing-entry landing-entry--to">
+      <div class="landing-entry-inner">
+        <h2 class="landing-entry-title">Talking <em>to</em> space</h2>
+        <p class="landing-entry-desc">Cultural artifacts and messages sent beyond Earth</p>
+      </div>
+    </a>
+
+  </section>
+
+</div>
+
+</body>
+</html>

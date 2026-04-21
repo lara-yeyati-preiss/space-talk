@@ -2595,22 +2595,6 @@ h1 {
   align-items: flex-start;
   flex: 0 0 auto;
 }
-.landing-hero h1 {
-  font-size: clamp(80px, 12vw, 160px);
-  font-weight: 400;
-  letter-spacing: -2px;
-  line-height: 1;
-  margin: 0 0 0.15em 0;
-  padding-left: clamp(20px, 3vw, 60px);
-}
-.landing-subtitle {
-  font-size: clamp(24px, 3vw, 36px);
-  line-height: 1.2;
-  color: rgba(235, 238, 242, 0.85);
-  font-weight: 300;
-  padding-left: clamp(20px, 3vw, 60px);
-  margin: 0 0 0.2em 0;
-}
 .landing-hero-diagram {
   position: absolute;
   top: 50%;
@@ -3493,7 +3477,7 @@ h1 {
   position: relative;
   z-index: 10;
   text-align: left;
-  max-width: 600px;
+  max-width: 650px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -3506,14 +3490,14 @@ h1 {
   letter-spacing: -2px;
   line-height: 1;
   margin: 0 0 0.15em 0;
-  padding-left: clamp(20px, 3vw, 60px);
+  padding-left: clamp(40px, 6vw, 120px);
 }
 .landing-subtitle {
   font-size: clamp(24px, 3vw, 36px);
   line-height: 1.2;
   color: rgba(235, 238, 242, 0.85);
   font-weight: 300;
-  padding-left: clamp(20px, 3vw, 60px);
+  padding-left: clamp(40px, 6vw, 120px);
   margin: 0 0 0.2em 0;
 }
 .landing-hero-diagram {

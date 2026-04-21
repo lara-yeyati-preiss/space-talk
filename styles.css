@@ -191,7 +191,7 @@ body.tas-body {
 /* Editorial annotation line under trends subtitle */
 .rank-annotation {
   /* More readable measure; keep tight to chart */
-  margin: 12px 0 0;
+  margin: 12px 0 20px;
   max-width: min(92ch, 100%);
   padding-left: 16px;
   border-left: 1px solid rgba(255, 255, 255, 0.60);

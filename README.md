@@ -13,3 +13,9 @@ Drawing on natural language processing and semantic analysis, this project maps 
 Together, these layers frame outer space as a cultural and political object, exploring what its construction reveals about the societies that looked up at it.
 
 ![hero](images/preview.png)
+
+![themes bubble chart](images/bubble-chart.png)
+
+![themes - markets](images/bubble-chart-decade.png)
+
+![objects diagram](images/objects-diagram.png)

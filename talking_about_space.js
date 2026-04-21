@@ -549,7 +549,7 @@
   const TAS_RANK_SUBTITLE =
     'How attention given to different actor types changed across 1950–2024';
   const TAS_TRENDS_ANNOTATIONS = {
-    nyt:      'Early concentration of coverage on rival space powers, with geopolitical competition at the core of space discourse. Growing attention to the private sector, as space becomes increasingly framed through the language of markets, private ambition, and resource extraction.',
+    nyt:      'Early coverage centers on geopolitical rivalry between space powers. Growing attention to the private sector, reframing space through the language of markets, ambition, and resource extraction.',
     politics: 'Editorial note (placeholder): In POLITICS, lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum',
     books:    'Editorial note (placeholder): In BOOKS, lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum',
   };
@@ -575,7 +575,7 @@
     const hRed  = (s) => `<span style="color:#c85a3a;font-weight:600;">${escHtml(s)}</span>`;
     const hBrick = (s) => `<span style="color:#a2a47aff;font-weight:600;">${escHtml(s)}</span>`;
     const safe = escHtml(raw)
-      .replace(/\brival space powers\b/gi, hRed('rival space powers'))
+      .replace(/\bgeopolitical rivalry\b/gi, hRed('geopolitical rivalry'))
       .replace(/\bprivate sector\b/gi, hBrick('private sector'));
     el.innerHTML = safe;
   }

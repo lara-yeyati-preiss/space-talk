@@ -950,7 +950,7 @@ body.tts-body .tts-page.landing-page {
 .scrolly-lede {
   margin: 0;
   width: 100%;
-  max-width: 34rem;
+  max-width: 35rem;
   font-family: var(--font-main);
   font-size: 24px;
   font-weight: 300;
@@ -2588,7 +2588,7 @@ h1 {
   position: relative;
   z-index: 10;
   text-align: left;
-  max-width: 600px;
+  max-width: 650px;
   display: flex;
   flex-direction: column;
   justify-content: center;

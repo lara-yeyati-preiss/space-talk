@@ -3,7 +3,7 @@
 
 by Lara Yeyati Preiss
 
-Demo: https://lara-yeyati-preiss.github.io/space-talk/talking_about_space.html
+Demo: https://lara-yeyati-preiss.github.io/space-talk/index.html
 
 ## Abstract
 Outer space is a domain as symbolic as it is physical. From the Cold War space race to the rise of commercial spaceflight, the material history of space exploration has unfolded alongside a parallel history of narrative: how space has been framed, contested, and imagined.

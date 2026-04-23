@@ -555,7 +555,7 @@
   };
   const TAS_SECTION_TITLE_PLANETS = 'The recurring themes';
   const TAS_PLANETS_OVERVIEW_SUBTITLE =
-    'How attention given to a theme changed across 1950–2024';
+    'Click any circle to see how attention given to a theme changed across 1950–2024';
   
   function updateTrendsSubtitle() {
     const el = document.getElementById('page-subtitle-trends');
@@ -622,7 +622,7 @@
     } else {
       setCaptionText(
         captionEl,
-        `Each circle's size represents the share of that decade's ${planetSrcShortLabel()} where this theme is prominent`,
+        `Share of a decade's ${planetSrcShortLabel()} where this theme is prominent`,
         null,
       );
     }
@@ -1537,7 +1537,8 @@
   // Tighter vertical padding so the SVG doesn't have unused head/foot room.
   const CLUSTER_PAD_TOP  = 28;
   const CLUSTER_PAD_BOT  = 16;
-  const CLUSTER_PAD_SIDE = 56;
+  const CLUSTER_PAD_SIDE = 140;  // left padding
+  const CLUSTER_PAD_RIGHT = 0;  // right padding
   /** < 1 compresses vertical spacing between bubble centers (radii unchanged). */
   const CLUSTER_VERTICAL_SQUASH = 0.955;
   // Keep the overview cluster from being taller than the drilldown chart, so
@@ -1589,7 +1590,7 @@
       const MAX_LAYOUT_W = 1220;
       const layoutW  = Math.min(W, MAX_LAYOUT_W);
       const offsetX  = (W - layoutW) / 2;
-      const usableW  = layoutW - CLUSTER_PAD_SIDE * 2;
+      const usableW  = layoutW - CLUSTER_PAD_SIDE - CLUSTER_PAD_RIGHT;
       const usableHRaw = viewH - CLUSTER_PAD_TOP - CLUSTER_PAD_BOT;
       const usableH = Math.max(220, usableHRaw * CLUSTER_VERTICAL_SQUASH);
   
@@ -1625,7 +1626,7 @@
       }
   
       keys.forEach(k => {
-        pos[k].x = Math.max(offsetX + CLUSTER_PAD_SIDE + MAX_R, Math.min(offsetX + layoutW - CLUSTER_PAD_SIDE - MAX_R, pos[k].x));
+        pos[k].x = Math.max(offsetX + CLUSTER_PAD_SIDE + MAX_R, Math.min(offsetX + layoutW - CLUSTER_PAD_RIGHT - MAX_R, pos[k].x));
         pos[k].y = Math.max(CLUSTER_PAD_TOP + MAX_R, Math.min(svgH - MAX_R - 2, pos[k].y));
       });
   

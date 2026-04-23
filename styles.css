@@ -261,6 +261,7 @@ body.tas-body {
   min-height: calc(100dvh - var(--nav-h));
   margin-top: clamp(40px, 6vh, 88px);
   width: 100%;
+  /* Match page padding so header aligns with page content edge */
   padding-left: clamp(20px, 4vw, 100px);
   padding-right: clamp(20px, 4vw, 100px);
   box-sizing: border-box;
@@ -278,26 +279,29 @@ body.tas-body .bubble-section #chart-wrap {
   display: flex;
   align-items: center;
   min-height: 0;
-  margin-left: 108px;
-}
-/* Align bubble chart SVG with rank chart data area */
-body.tas-body .bubble-section #bubble-svg {
-  margin-left: -108px;
-  width: calc(100% + 108px);
-}
-/* In drilldown: remove right padding from planets section so drilldown SVG can 
-   reach the same right edge as the rank chart. The right padding of the rank chart
-   section (rank-section) is 0; planets section normally has padding-right. */
+  margin-left: 0;}
+/* In drilldown: remove BOTH paddings so the SVG can span the full section width. */
 body.tas-body .bubble-section.drilldown-active {
   padding-right: 0;
+  padding-left: 0;
 }
-/* Drilldown only: SVG spans the full legend-chart-wrap width.
-   chart-wrap has margin-left:108px so the SVG pulls left by 108px to recover that space.
-   The SVG viewBox is set to legend-chart-wrap.clientWidth in drillSvgW(), so the
-   rendered canvas exactly matches the rank chart above. */
+/* Restore header alignment when section padding is zeroed in drilldown */
+body.tas-body .bubble-section.drilldown-active .bubble-header {
+  padding-left: clamp(20px, 4vw, 100px);
+  padding-right: clamp(20px, 4vw, 100px);
+}
+/* When drilldown-active, chart-wrap's margin-left shifts left by the legend column.
+   The SVG's negative margin-left compensates so it starts at the left edge. */
+body.tas-body .bubble-section.drilldown-active #chart-wrap {
+  margin-left: 0;
+}
+body.tas-body .bubble-section.drilldown-active #bubble-svg.drilldown-svg {
+  overflow: visible;
+  display: block;
+}
+/* Drilldown SVG: pull left by 200px (legend width) to start at section padding edge.
+   Row labels at x=12 inside SVG align with header above. */
 body.tas-body .bubble-section #bubble-svg.drilldown-svg {
-  margin-left: -108px;
-  width: calc(100% + 108px);
   overflow: visible;
   display: block;
 }
@@ -398,7 +402,9 @@ body.tts-body .tts-page.landing-page {
    does not peek above the fold. */
 .page-hero {
   flex-shrink: 0;
-  width: calc(100% + clamp(20px, 4vw, 72px));
+  width: calc(100% + 2 * clamp(20px, 4vw, 72px));
+  margin-left: calc(-1 * clamp(20px, 4vw, 72px));
+  margin-right: calc(-1 * clamp(20px, 4vw, 72px));
   min-width: 0;
   max-width: none;
   min-height: calc(100svh - var(--nav-h) - 22px);
@@ -406,8 +412,7 @@ body.tts-body .tts-page.landing-page {
   flex-direction: column;
   justify-content: center;
   box-sizing: border-box;
-  padding: 12px 0 28px;
-  margin-right: calc(-1 * clamp(20px, 4vw, 72px));
+  padding: 0;
 }
 
 .hero-container {
@@ -418,7 +423,7 @@ body.tts-body .tts-page.landing-page {
   gap: clamp(20px, 4vw, 60px);
   align-items: center;
   box-sizing: border-box;
-  padding: 0 clamp(12px, 3vw, 40px);
+  padding: clamp(12px, 3vh, 28px) clamp(12px, 3vw, 40px);
 }
 .hero-inner {
   width: 100%;
@@ -500,10 +505,81 @@ body.tts-body .tts-page.landing-page {
   }
 }
 
+/* ══════════════════════════════════════════════════════
+   PAGE-HERO / SCROLLY GRAIN TEXTURE
+   On mobile: the .page-hero is shown directly.
+   On desktop: the .scrolly-sticky is the first full-screen
+   frame (the scrolly replaces the hero). Both get the same
+   fractalNoise grain as the landing hero.
+   The SVG filter #page-hero-grain must be defined inline
+   in each sub-page HTML file.
+   ══════════════════════════════════════════════════════ */
+
+/* Mobile hero grain */
+.page-hero {
+  position: relative;
+  isolation: isolate;
+}
+.page-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  filter: url(#page-hero-grain);
+  opacity: 0.10;
+  background: var(--bg);
+}
+.page-hero .hero-container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Desktop scrolly first-screen grain — intro phase only.
+   The JS sets data-phase="intro" on .scrolly-sticky-inner while the
+   intro panel is active, and changes it as the user scrolls. We target
+   the sticky wrapper only when it is in that phase via a child combinator
+   trick: apply the ::before to .scrolly-sticky but only clip the visual
+   to the intro panel using the phase. Simpler: apply ::before on
+   .scrolly-sticky and let the phase-inactive panels (which fade to opacity:0)
+   sit above it — the grain is always the bottom layer so it only shows
+   through the current (visible) panel. Since the intro panel covers the
+   full viewport and all other panels transition via opacity, the grain
+   is effectively visible only while intro content is up. */
+#scrolly .scrolly-sticky {
+  isolation: isolate;
+}
+#scrolly .scrolly-sticky::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  pointer-events: none;
+  filter: url(#page-hero-grain);
+  opacity: 0.10;
+  background: var(--bg);
+  transition: opacity 0.4s ease;
+}
+/* Hide grain when the sticky inner has moved past intro phase */
+#scrolly .scrolly-sticky-inner:not([data-phase="intro"]) ~ * ,
+#scrolly .scrolly-sticky:has(.scrolly-sticky-inner:not([data-phase="intro"]))::before {
+  opacity: 0;
+}
+/* All scrolly content must sit above the grain layer */
+#scrolly .scrolly-sticky-inner {
+  position: relative;
+  z-index: 1;
+}
+
 /* Talking to space — intro scrolly (desktop): rail sets scroll height; sticky panel switches via [data-phase] */
 #scrolly {
   position: relative;
-  width: 100%;
+  width: calc(100% + 2 * clamp(20px, 4vw, 72px));
+  margin-left: calc(-1 * clamp(20px, 4vw, 72px));
+  margin-right: calc(-1 * clamp(20px, 4vw, 72px));
   min-width: 0;
   overflow-x: clip;
 }
@@ -513,6 +589,12 @@ body.tts-body .tts-page.landing-page {
   width: 100%;
   min-width: 0;
   overflow-x: clip;
+}
+
+body.tas-body #scrolly {
+  width: calc(100% + 2 * 100px);
+  margin-left: -100px;
+  margin-right: -100px;
 }
 
 @media (max-width: 900px) {
@@ -588,7 +670,7 @@ body.tts-body .tts-page.landing-page {
   }
 
   /* Hazard images on mobile: smaller, inline right of text */
-  .scrolly-hazard-image {
+  .scrolly-headlines-image {
     position: static;
     display: block;
     max-width: 80vw;
@@ -772,13 +854,13 @@ body.tts-body .tts-page.landing-page {
 
 .scrolly-sticky {
   position: sticky;
-  top: calc(var(--nav-h) + 10px);
+  top: var(--nav-h);
   z-index: 1;
   align-self: start;
   width: 100%;
-  min-height: calc(100svh - var(--nav-h) - 20px);
-  height: calc(100svh - var(--nav-h) - 20px);
-  max-height: calc(100dvh - var(--nav-h) - 20px);
+  min-height: calc(100svh - var(--nav-h));
+  height: calc(100svh - var(--nav-h));
+  max-height: calc(100dvh - var(--nav-h));
   display: flex;
   align-items: stretch;
   justify-content: center;
@@ -904,7 +986,7 @@ body.tts-body .tts-page.landing-page {
 
 .scrolly-intro-image {
   position: absolute;
-  right: -12vw;
+  right: -8vw;
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
@@ -920,7 +1002,7 @@ body.tts-body .tts-page.landing-page {
   pointer-events: none;
   object-fit: contain;
   display: block;
-  transform: translateX(15%);
+  transform: translateX(clamp(5%, 15%, 22%));
 }
 
 .scrolly-intro-block {
@@ -1117,7 +1199,7 @@ body.tts-body .tts-page.landing-page {
 }
 
 /* Hazard headline images for frontier/race/risk/market sections */
-.scrolly-hazard-image {
+.scrolly-headlines-image {
   position: fixed;
   right: clamp(0px, 0vw, 0px);
   top: 50%;
@@ -1531,7 +1613,6 @@ h1 {
   flex-wrap: wrap;
   align-items: baseline;
   gap: 6px 14px;
-  margin: 0;
   padding: 10px 0 0;
   border-top: 1px solid #2a2a28;
   opacity: 1;
@@ -1867,7 +1948,7 @@ h1 {
 #chart-wrap { position: relative; flex: 1; min-width: 0; }
 
 #legend-chart-wrap { display: flex; align-items: stretch; gap: 0; }
-#cluster-legend    { flex-shrink: 0; width: 200px; }
+#cluster-legend    { flex-shrink: 0; width: 200px; margin-bottom: 48px; }
 #cluster-legend svg { overflow: visible; }
 
 /* Talking about space — trends intro (subtitle above first chart, in document flow) */
@@ -1899,11 +1980,9 @@ h1 {
   /* Leave room for nav + page hero + rank header so the plot fits in view when possible */
   min-height: min(78vh, calc(100dvh - 170px));
   max-height: min(85vh, calc(100dvh - 130px));
-  width: 100vw;
-  max-width: 100vw;
+  width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
-  /* No left padding: chart aligns flush with title/filters/annotation above.
-     Right side: SVG owns label placement via LABEL_W; stage just avoids clipping. */
   padding: 2px 0 6px 0;
   margin-bottom: clamp(8px, 1.5vh, 24px);
   background: transparent;
@@ -2822,7 +2901,7 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: clamp(3px, 0.5vh, 6px);
-  margin-top: 40px;
+  margin-top: 20px;
 }
 .landing-intro-line {
   margin: 0;
@@ -2861,6 +2940,119 @@ h1 {
 }
 .landing-entry-placeholder a:hover {
   color: rgba(238, 240, 245, 0.80);
+}
+
+/* ── Entry point cards (replaces placeholder links) ── */
+.landing-entry-cards {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: clamp(24px, 4vw, 60px);
+  margin-top: clamp(36px, 5vh, 56px);
+  width: 100%;
+}
+.landing-entry-card {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-decoration: none;
+  color: inherit;
+  padding: clamp(28px, 4vh, 44px) clamp(20px, 3vw, 40px);
+  border: 0.5px solid rgba(238, 240, 245, 0.20);
+  transition: border-color 0.22s ease, transform 0.22s ease, background 0.22s ease;
+  will-change: transform;
+}
+.landing-entry-card:hover {
+  border-color: rgba(238, 240, 245, 0.42);
+  background: rgba(238, 240, 245, 0.03);
+  transform: scale(1.025) translateY(-2px);
+}
+.landing-entry-card::after {
+  content: "ENTER ⟶";
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: rgba(232, 232, 232, 0.88);
+  opacity: 0;
+  transition: opacity 0.22s ease;
+  pointer-events: none;
+}
+.landing-entry-card:hover::after {
+  opacity: 1;
+}
+.landing-entry-card-icon {
+  width: clamp(72px, 8vw, 110px);
+  height: clamp(72px, 8vw, 110px);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.60;
+  transition: opacity 0.22s ease;
+}
+.landing-entry-card:hover .landing-entry-card-icon {
+  opacity: 0.90;
+}
+.landing-entry-card-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  filter: saturate(0) brightness(2);
+}
+.landing-entry-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+.landing-entry-card-title {
+  font-family: var(--font-main);
+  font-size: clamp(24px, 2.8vw, 38px);
+  font-weight: 300;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: rgba(238, 240, 245, 0.92);
+}
+.landing-entry-card-desc {
+  font-family: var(--font-main);
+  font-size: clamp(15px, 1.3vw, 18px);
+  font-weight: 300;
+  line-height: 1.45;
+  color: rgba(232, 232, 232, 0.88);
+}
+
+@media (max-width: 700px) {
+  .landing-entry-cards {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .landing-entry-card {
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    padding: 20px;
+  }
+  .landing-entry-card-icon {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+  }
+  .landing-entry-card-body {
+    align-items: flex-start;
+    text-align: left;
+  }
+  .landing-entry-card-desc {
+    max-width: 100%;
+  }
 }
 
 @media (max-width: 700px) {

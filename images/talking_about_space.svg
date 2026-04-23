@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 720 720">
+  <!-- Generator: Adobe Illustrator 30.2.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <defs>
+    <style>
+      .st0 {
+        stroke-dasharray: 14;
+      }
+
+      .st0, .st1, .st2, .st3, .st4, .st5, .st6 {
+        stroke: #ddd;
+        stroke-miterlimit: 10;
+      }
+
+      .st0, .st1, .st2, .st3, .st5, .st6 {
+        fill: none;
+        stroke-width: 12px;
+      }
+
+      .st1 {
+        stroke-dasharray: 13.73 13.73;
+      }
+
+      .st2 {
+        stroke-dasharray: 14.32 14.32;
+      }
+
+      .st4 {
+        fill: #ddd;
+      }
+
+      .st5 {
+        stroke-dasharray: 13.86 13.86;
+      }
+
+      .st6 {
+        stroke-dasharray: 14.34 14.34;
+      }
+    </style>
+  </defs>
+  <circle class="st4" cx="69.22" cy="223.98" r="44.06" transform="translate(-157.67 282.98) rotate(-87.4)"/>
+  <g>
+    <line class="st3" x1="69.22" y1="223.98" x2="75.85" y2="226.21"/>
+    <line class="st2" x1="89.43" y1="230.76" x2="571.47" y2="392.39"/>
+    <line class="st3" x1="578.26" y1="394.66" x2="584.89" y2="396.89"/>
+  </g>
+  <line class="st0" x1="584.89" y1="396.89" x2="101.01" y2="550.17"/>
+  <circle class="st4" cx="584.89" cy="396.89" r="124.65"/>
+  <circle class="st4" cx="392.3" cy="111.98" r="67.94"/>
+  <g>
+    <line class="st3" x1="391.61" y1="111.98" x2="387.71" y2="117.8"/>
+    <line class="st1" x1="380.07" y1="129.2" x2="108.73" y2="534.01"/>
+    <line class="st3" x1="104.91" y1="539.71" x2="101.01" y2="545.53"/>
+  </g>
+  <line class="st0" x1="69.22" y1="223.98" x2="101.01" y2="550.17"/>
+  <circle class="st4" cx="101.01" cy="550.17" r="90.55"/>
+  <g>
+    <line class="st3" x1="392.3" y1="111.98" x2="396.22" y2="117.78"/>
+    <line class="st6" x1="404.25" y1="129.66" x2="576.96" y2="385.15"/>
+    <line class="st3" x1="580.97" y1="391.09" x2="584.89" y2="396.89"/>
+  </g>
+  <circle class="st4" cx="461.7" cy="615.86" r="60.1"/>
+  <line class="st0" x1="584.89" y1="396.89" x2="461.7" y2="615.86"/>
+  <g>
+    <line class="st3" x1="69.22" y1="223.98" x2="74.17" y2="228.93"/>
+    <line class="st5" x1="83.98" y1="238.72" x2="451.84" y2="606.02"/>
+    <line class="st3" x1="456.74" y1="610.91" x2="461.7" y2="615.86"/>
+  </g>
+  <line class="st0" x1="460.24" y1="615.59" x2="101.01" y2="550.17"/>
+</svg>

@@ -177,7 +177,6 @@
             <button type="button" class="back-link bubble-back" id="back-link">← all themes</button>
           </div>
         </div>
-        <div id="bubble-drill-slot" class="bubble-drill-slot" aria-live="polite"></div>
       </div>
     </header>
     <div id="chart-wrap">
@@ -190,6 +189,46 @@
 
 <div id="tooltip"></div>
 
+<script>
+// Set initial scrolly phase before first paint to prevent hero flash on mid-page reload.
+// Runs synchronously so the correct panel is visible from the very first frame.
+(function() {
+  function setInitialPhase() {
+    var scrolly = document.getElementById('scrolly');
+    var chartsScrolly = document.getElementById('tas-charts-scrolly');
+    if (window.innerWidth <= 900) return;
+    // Helper: given a scrolly section and its sticky inner selector,
+    // set the phase to whichever track the current scroll position falls into.
+    function applyPhase(section, innerSel) {
+      if (!section) return;
+      var inner = section.querySelector(innerSel);
+      if (!inner) return;
+      var tracks = section.querySelectorAll('.scrolly-track');
+      if (!tracks.length) return;
+      var scrolled = window.scrollY - section.getBoundingClientRect().top - window.scrollY;
+      // getBoundingClientRect gives position relative to viewport; add scrollY for page offset.
+      var sectionTop = section.getBoundingClientRect().top + window.scrollY;
+      var relScroll = window.scrollY - sectionTop;
+      var vh = window.innerHeight;
+      var current = tracks[0];
+      for (var i = 0; i < tracks.length; i++) {
+        var trackTop = tracks[i].offsetTop;
+        if (relScroll >= trackTop - vh * 0.5) current = tracks[i];
+      }
+      var phase = current.getAttribute('data-scrolly-phase');
+      if (phase) inner.setAttribute('data-phase', phase);
+    }
+    applyPhase(scrolly, '.scrolly-sticky-inner');
+    applyPhase(chartsScrolly, '.scrolly-sticky-inner');
+  }
+  // Run after DOM is ready but before any paint.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setInitialPhase);
+  } else {
+    setInitialPhase();
+  }
+})();
+</script>
 <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
 <!-- Scrollama: IntersectionObserver-based scrollytelling step detection -->
 <script src="https://cdn.jsdelivr.net/npm/scrollama@3.2.0/build/scrollama.min.js"></script>

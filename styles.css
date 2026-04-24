@@ -16,6 +16,8 @@
   --font-main: 'Hanken Grotesk', system-ui, sans-serif;
   --font-mono: 'Geist Mono', monospace;
   --accent-yellow: rgba(214, 208, 121, 0.9);
+  /* Shared left indent for both chart sections (rank + bubble) */
+  --chart-pad-left: clamp(20px, 4vw, 100px);
 }
 
 body {
@@ -152,16 +154,7 @@ body.tas-body {
   letter-spacing: -0.02em;
 }
 
-/* On this page, chart titles carry the page-title hierarchy */
-#rank-section-title,
-#bubble-section-title {
-  font-family: var(--font-main);
-  font-size: clamp(36px, 4.6vw, 46px);
-  font-weight: 300;
-  line-height: 1.05;
-  color: var(--c0);
-  letter-spacing: -0.02em;
-}
+/* Chart titles — both rank and bubble use .bubble-title for a single unified hierarchy */
 
 .rank-section {
   flex-shrink: 0;
@@ -171,7 +164,7 @@ body.tas-body {
   display: flex;
   flex-direction: column;
   margin-top: clamp(16px, 2.5vh, 36px);
-  padding-left: clamp(20px, 4vw, 100px);
+  padding-left: var(--chart-pad-left);
   box-sizing: border-box;
 }
 .chart-header {
@@ -261,9 +254,8 @@ body.tas-body {
   min-height: calc(100dvh - var(--nav-h));
   margin-top: clamp(40px, 6vh, 88px);
   width: 100%;
-  /* Match page padding so header aligns with page content edge */
-  padding-left: clamp(20px, 4vw, 100px);
-  padding-right: clamp(20px, 4vw, 100px);
+  padding-left: var(--chart-pad-left);
+  padding-right: var(--chart-pad-left);
   box-sizing: border-box;
 }
 
@@ -280,15 +272,15 @@ body.tas-body .bubble-section #chart-wrap {
   align-items: center;
   min-height: 0;
   margin-left: 0;}
-/* In drilldown: remove BOTH paddings so the SVG can span the full section width. */
+/* In drilldown: remove right padding so the SVG can reach the right edge,
+   but keep left padding so the SVG labels naturally align with the header title. */
 body.tas-body .bubble-section.drilldown-active {
   padding-right: 0;
-  padding-left: 0;
 }
-/* Restore header alignment when section padding is zeroed in drilldown */
+/* Header needs no extra padding in drilldown — it inherits the section's left padding */
 body.tas-body .bubble-section.drilldown-active .bubble-header {
-  padding-left: clamp(20px, 4vw, 100px);
-  padding-right: clamp(20px, 4vw, 100px);
+  padding-left: 0;
+  padding-right: 0;
 }
 /* When drilldown-active, chart-wrap's margin-left shifts left by the legend column.
    The SVG's negative margin-left compensates so it starts at the left edge. */
@@ -491,6 +483,7 @@ body.tts-body .tts-page.landing-page {
     clip-path: inset(50%);
     white-space: nowrap;
     border: 0;
+    visibility: hidden;
   }
   body.tas-body .page.tas-page > .page-hero {
     position: absolute;
@@ -502,6 +495,7 @@ body.tts-body .tts-page.landing-page {
     clip-path: inset(50%);
     white-space: nowrap;
     border: 0;
+    visibility: hidden;
   }
 }
 
@@ -2027,22 +2021,19 @@ h1 {
   flex-shrink: 0;
 }
 .bubble-header-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(160px, min(300px, 36vw));
-  gap: 28px 40px;
-  align-items: start;
+  display: block;
 }
 .bubble-header-main {
   min-width: 0;
 }
 .bubble-title {
   font-family: var(--font-main);
-  font-size: clamp(22px, 2.75vw, 32px);
+  font-size: clamp(28px, 3.5vw, 42px);
   font-weight: 300;
-  line-height: 1.08;
+  line-height: 1.05;
   color: var(--c0);
-  margin: 6px 0 16px;
-  letter-spacing: -0.015em;
+  margin: 0 0 12px;
+  letter-spacing: -0.02em;
 }
 .page-subtitle--planets {
   min-height: 2.75em;
@@ -2933,7 +2924,7 @@ h1 {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: stretch;
   gap: clamp(24px, 4vw, 60px);
   margin-top: clamp(36px, 5vh, 56px);
   width: 100%;
@@ -2969,6 +2960,7 @@ h1 {
   opacity: 0;
   transition: opacity 0.22s ease;
   pointer-events: none;
+  line-height: 1;
 }
 .landing-entry-card:hover::after {
   opacity: 1;

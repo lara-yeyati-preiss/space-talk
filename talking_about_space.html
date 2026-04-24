@@ -35,7 +35,7 @@
   <div class="nav-links">
     <a href="talking_about_space.html" class="active"><span class="nav-words"><span class="nav-word">talking</span><span class="nav-word">about</span><span class="nav-word">space</span></span></a>
     <a href="talking_to_space.html"><span class="nav-words"><span class="nav-word">talking</span><span class="nav-word">to</span><span class="nav-word">space</span></span></a>
-    <a href="#">methodology</a>
+    <a href="methodology.html" class="nav-link--methodology" aria-label="Methodology"><svg width="15" height="17" viewBox="0 0 15 17" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="1" width="12" height="15" rx="1.5"/><line x1="4.5" y1="5.5" x2="10.5" y2="5.5"/><line x1="4.5" y1="8.5" x2="10.5" y2="8.5"/><line x1="4.5" y1="11.5" x2="8" y2="11.5"/></svg></a>
   </div>
 </nav>
 
@@ -135,15 +135,18 @@
           <div class="scrolly-panel" data-panel="trends">
             <section class="rank-section" aria-labelledby="rank-section-title">
               <header class="chart-header chart-header--rank">
-                <h1 class="bubble-title" id="rank-section-title">The main characters</h1>
-                <p class="page-subtitle page-subtitle--rank" id="page-subtitle-trends">How attention given to different actor types changed across 1950–2024</p>
+                <h2 class="chart-title" id="rank-section-title">The main characters</h2>
+                <p class="chart-subtitle" id="page-subtitle-trends">How attention given to different actor types changed across 1950–2024</p>
                 <div class="filters filters--inline" id="rank-filters" aria-label="Source for rank chart">
                   <div class="filter-view-group filter-source-group" role="group">
                     <button type="button" class="filter-view filter-view--src filter-source--rank active" data-trends-src="nyt">NEWS</button>
                     <button type="button" class="filter-view filter-view--src filter-source--rank" data-trends-src="politics">POLITICS</button>
                     <button type="button" class="filter-view filter-view--src filter-source--rank" data-trends-src="books">BOOKS</button>
                   </div>
-                  <div class="filter-source-note" id="rank-source-note">New York Times</div>
+                  <div class="filter-source-wrap">
+                    <div class="filter-source-note" id="rank-source-note">New York Times</div>
+                    <span class="filter-source-count" id="rank-source-count">Total headlines: X</span>
+                  </div>
                 </div>
                 <p class="rank-annotation" id="rank-annotation" aria-live="polite"></p>
               </header>
@@ -163,15 +166,18 @@
     <header class="bubble-header">
       <div class="bubble-header-grid">
         <div class="bubble-header-main">
-          <h2 class="bubble-title" id="bubble-section-title">The recurring themes</h2>
-          <p class="page-subtitle page-subtitle--planets" id="page-subtitle-planets">Click any circle to see how attention given to a theme changed across 1950–2024</p>
+          <h2 class="chart-title" id="bubble-section-title">The recurring themes</h2>
+          <p class="chart-subtitle" id="page-subtitle-planets">Click any circle to see how attention given to a theme changed across 1950–2024</p>
           <div class="filters filters--inline" id="bubble-filters" aria-label="Source for bubble chart">
             <div class="filter-view-group filter-source-group" role="group">
               <button type="button" class="filter-view filter-view--src filter-source--rank active" data-trends-src="nyt">NEWS</button>
               <button type="button" class="filter-view filter-view--src filter-source--rank" data-trends-src="politics">POLITICS</button>
               <button type="button" class="filter-view filter-view--src filter-source--rank" data-trends-src="books">BOOKS</button>
             </div>
-            <div class="filter-source-note" id="planets-source-note">New York Times</div>
+            <div class="filter-source-wrap">
+              <div class="filter-source-note" id="planets-source-note">New York Times</div>
+              <span class="filter-source-count" id="planets-source-count">Total headlines: X</span>
+            </div>
           </div>
           <div id="bubble-drill-row" class="bubble-drill-row" hidden>
             <button type="button" class="back-link bubble-back" id="back-link">← all themes</button>
@@ -185,6 +191,13 @@
   </section>
 
   <div id="detail-panel" style="display:none;min-height:0;"></div>
+
+<footer class="page-footer-nav">
+  <a class="page-footer-nav-link" href="talking_to_space.html">
+    Talking <span class="accent">to</span>&nbsp;space
+    <span class="page-footer-nav-arrow"><svg width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="0" y1="5" x2="11" y2="5"/><polyline points="7 1 11 5 7 9"/></svg></span>
+  </a>
+</footer>
 </div>
 
 <div id="tooltip"></div>
@@ -233,5 +246,28 @@
 <!-- Scrollama: IntersectionObserver-based scrollytelling step detection -->
 <script src="https://cdn.jsdelivr.net/npm/scrollama@3.2.0/build/scrollama.min.js"></script>
 <script src="talking_about_space.js?v=2026-04-18a"></script>
+<script>
+// Update source count labels when NEWS/POLITICS/BOOKS tab switches
+(function() {
+  var countLabels = {
+    nyt:      'Total headlines: X',
+    politics: 'Total excerpts: X',
+    books:    'Total books: X'
+  };
+  function updateCounts(src) {
+    var label = countLabels[src] || '';
+    ['rank-source-count', 'planets-source-count'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.textContent = label;
+    });
+  }
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('[data-trends-src]');
+    if (btn) updateCounts(btn.dataset.trendsSrc);
+  });
+  // Set initial state
+  updateCounts('nyt');
+})();
+</script>
 </body>
 </html>

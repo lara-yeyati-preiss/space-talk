@@ -79,7 +79,73 @@ body.tts-body:not(:has(.landing-page)) .nav-logo { display: block; }
 .nav-words { display: inline; white-space: nowrap; }
 .nav-word { display: inline; }
 .nav-word + .nav-word::before { content: " "; }
-/* Custom nav dropdown — replaces native <select> */
+/* Methodology nav link — icon-only, lower visual hierarchy than section links */
+.nav-link--methodology {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  color: var(--c65);
+  transition: color 0.15s;
+  position: relative;
+  text-decoration: none;
+}
+.nav-link--methodology:hover {
+  color: var(--c0) !important;
+}
+.nav-link--methodology svg {
+  display: block;
+  flex-shrink: 0;
+}
+/* Tooltip — opens downward, sits close to the icon, has a small top caret */
+.nav-link--methodology::after {
+  content: "methodology";
+  position: absolute;
+  top: calc(100% + 9px);
+  right: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--c65);
+  background: #1e1e1e;
+  border: 0.5px solid rgba(240,240,240,0.20);
+  padding: 5px 10px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  z-index: 10001;
+}
+/* Caret pointing up toward the icon */
+.nav-link--methodology::before {
+  content: '';
+  position: absolute;
+  top: calc(100% + 3px);
+  right: 10px;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 6px solid rgba(240,240,240,0.20);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  z-index: 10002;
+}
+.nav-link--methodology:hover::after,
+.nav-link--methodology:hover::before {
+  opacity: 1;
+}
+@media (max-width: 900px) {
+  .nav-link--methodology::after {
+    right: 0;
+    font-size: 10px;
+  }
+  .nav-link--methodology::before {
+    right: 8px;
+  }
+}
 .nav-dropdown {
   position: relative;
 }
@@ -154,6 +220,30 @@ body.tas-body {
   letter-spacing: -0.02em;
 }
 
+/* ── Unified chart title + subtitle — applies to both rank and bubble sections ── */
+.chart-title {
+  font-family: var(--font-main);
+  font-size: clamp(28px, 3.5vw, 42px);
+  font-weight: 300;
+  line-height: 1.05;
+  color: var(--c0);
+  margin: 2px 0 10px;
+  letter-spacing: -0.02em;
+}
+.chart-subtitle {
+  font-family: var(--font-main);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: rgba(240, 240, 240, 0.82);
+  max-width: min(72ch, 100%);
+  margin-bottom: 14px;
+  min-height: 0;
+}
+/* Legacy aliases — keep old class names working */
+.bubble-title { font-family: var(--font-main); font-size: clamp(28px, 3.5vw, 42px); font-weight: 300; line-height: 1.05; color: var(--c0); margin: 2px 0 10px; letter-spacing: -0.02em; }
+.page-subtitle--rank, .page-subtitle--planets { font-family: var(--font-main); font-size: 20px; line-height: 1.5; color: rgba(240,240,240,0.82); max-width: min(72ch,100%); margin-bottom: 4px; min-height: 0; }
+
 /* Chart titles — both rank and bubble use .bubble-title for a single unified hierarchy */
 
 .rank-section {
@@ -170,10 +260,6 @@ body.tas-body {
 .chart-header {
   max-width: 100%;
   margin-bottom: 2px;
-}
-/* Rank section uses same heading class as Planets (`.bubble-title`) for matching hierarchy */
-.chart-header--rank .bubble-title {
-  margin: 2px 0 10px;
 }
 .page-subtitle--rank {
   min-height: 0;
@@ -1775,7 +1861,7 @@ h1 {
 }
 
 /* Source attribution label to the right of filter buttons */
-.filter-source-note {
+.filter-source-note, .filter-source-count {
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.04em;
@@ -1786,6 +1872,15 @@ h1 {
   line-height: 1.45;
   white-space: nowrap;
 }
+/* Source count — sits on its own line below the source name */
+.filter-source-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  align-self: center;
+}
+
+.source-sep { display: none; }
 #rank-filters .filter-view--src:nth-child(1),
 #bubble-filters .filter-view--src:nth-child(1) {
   border-radius: 13px 0 0 13px;
@@ -2844,10 +2939,58 @@ h1 {
   transform: translateX(6px);
 }
 
-
 /* ══════════════════════════════════════════════════════
-   LANDING — INTRO + ENTRY POINTS (one screen)
+   PAGE FOOTER — cross-page navigation button
    ══════════════════════════════════════════════════════ */
+.page-footer-nav {
+  display: flex;
+  justify-content: flex-end;
+  padding: clamp(32px, 6vh, 64px) 0 clamp(36px, 5vh, 56px);
+  box-sizing: border-box;
+}
+body.tas-body .page-footer-nav {
+  padding-left: 0;
+  padding-right: 0;
+}
+.page-footer-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--c65);
+  font-family: var(--font-main);
+  font-size: clamp(15px, 1.4vw, 19px);
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  border: 0.5px solid rgba(238,240,245,0.42);
+  padding: 10px 18px 10px 20px;
+  transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+.page-footer-nav-link:hover {
+  color: var(--c0);
+  border-color: rgba(238,240,245,0.72);
+  background: rgba(238,240,245,0.04);
+}
+.page-footer-nav-link .accent {
+  font-style: italic;
+  color: var(--accent-yellow);
+}
+.page-footer-nav-arrow {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: currentColor;
+  transition: transform 0.18s ease;
+}
+.page-footer-nav-link:hover .page-footer-nav-arrow {
+  transform: translateX(4px);
+}
+@media (max-width: 900px) {
+  .page-footer-nav {
+    padding: clamp(24px, 4vh, 40px) 20px;
+  }
+}
 .landing-intro {
   position: relative;
   z-index: 4;
@@ -2865,6 +3008,22 @@ h1 {
   flex-direction: column;
   gap: clamp(20px, 3vh, 32px);
   width: 100%;
+}
+/* Abundance list items (Universal Declaration, Wikipedia, etc.) — 60% opacity */
+.scrolly-panel[data-panel="abundance"] .scrolly-line:not(.scrolly-line--intro):not(.scrolly-line--spacer) {
+  color: rgba(235, 238, 242, 0.60);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+/* Star bullet — 4-point sparkle matching the radial diagram stars */
+.abundance-star {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  background: rgba(235, 238, 242, 0.50);
+  clip-path: polygon(50% 0%, 61% 35%, 100% 50%, 61% 65%, 50% 100%, 39% 65%, 0% 50%, 39% 35%);
 }
 /* Paired lines sit tighter together */
 .landing-intro-pair {
@@ -2896,10 +3055,15 @@ h1 {
 .landing-intro-line--echo {
   font-style: normal;
 }
-/* Bold key phrases in echo line */
+/* Remove bold key phrases — plain weight throughout */
 .landing-intro-line--echo strong {
-  font-weight: 500;
-  color: rgba(238, 240, 245, 0.95);
+  font-weight: 300;
+  color: inherit;
+}
+
+/* Pair lines: reduced opacity */
+.landing-intro-line--pair {
+  opacity: 0.60;
 }
 
 /* ── Entry point links ── */
@@ -2939,20 +3103,23 @@ h1 {
   text-decoration: none;
   color: inherit;
   padding: clamp(28px, 4vh, 44px) clamp(20px, 3vw, 40px);
-  border: 0.5px solid rgba(238, 240, 245, 0.20);
+  border: 0.5px solid rgba(238, 240, 245, 0.42);
   transition: border-color 0.22s ease, transform 0.22s ease, background 0.22s ease;
   will-change: transform;
 }
 .landing-entry-card:hover {
-  border-color: rgba(238, 240, 245, 0.42);
+  border-color: rgba(238, 240, 245, 0.72);
   background: rgba(238, 240, 245, 0.03);
   transform: scale(1.025) translateY(-2px);
 }
-.landing-entry-card::after {
-  content: "ENTER ⟶";
+/* ENTER badge moved to inline HTML element for correct alignment */
+.landing-entry-card-enter {
   position: absolute;
   top: 16px;
   right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-family: var(--font-mono);
   font-size: 13px;
   letter-spacing: 0.06em;
@@ -2962,8 +3129,13 @@ h1 {
   pointer-events: none;
   line-height: 1;
 }
-.landing-entry-card:hover::after {
+.landing-entry-card:hover .landing-entry-card-enter {
   opacity: 1;
+}
+/* Arrow SVG inside ENTER badge — matches bubble "← all themes" style */
+.landing-entry-card-enter svg {
+  display: block;
+  flex-shrink: 0;
 }
 .landing-entry-card-icon {
   width: clamp(72px, 8vw, 110px);

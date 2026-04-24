@@ -475,8 +475,8 @@ body.tts-body .tts-page.landing-page {
   height: 50vh;
   max-height: 60vh;
   object-fit: contain;
-  opacity: 0.1;
   pointer-events: none;
+  opacity: 0.00001;
 }
 
 /* Desktop: visual opener is scrolly — keep hero in DOM for #page-title + decade JS (visually hidden) */
@@ -667,17 +667,6 @@ body.tas-body #scrolly {
   /* Protagonists panel */
   #scrolly .scrolly-panel[data-panel="protagonists"] {
     padding: clamp(24px, 4vh, 48px) 0;
-  }
-
-  /* Hazard images on mobile: smaller, inline right of text */
-  .scrolly-headlines-image {
-    position: static;
-    display: block;
-    max-width: 80vw;
-    max-height: 40vh;
-    opacity: 0.35;
-    margin: clamp(16px, 3vh, 28px) 0 0;
-    transform: none;
   }
 
   /* Progressive pull text */
@@ -986,7 +975,7 @@ body.tas-body #scrolly {
 
 .scrolly-intro-image {
   position: absolute;
-  right: -8vw;
+  right: -16vw;
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
@@ -997,7 +986,7 @@ body.tas-body #scrolly {
 .scrolly-intro-image img {
   height: min(110vh, 880px);
   width: auto;
-  opacity: 0.065;
+  opacity: 0.02;
   mix-blend-mode: screen;
   pointer-events: none;
   object-fit: contain;
@@ -1207,7 +1196,7 @@ body.tas-body #scrolly {
   max-width: clamp(280px, 50vw, 650px);
   max-height: 65vh;
   object-fit: contain;
-  opacity: 0.2;
+  opacity: 0.3;
   pointer-events: none;
   z-index: 100;
 }
@@ -2914,7 +2903,9 @@ h1 {
 }
 /* Paired "It is…" lines: slightly dimmed */
 .landing-intro-line--pair {
-  color: rgba(238, 240, 245, 0.62);
+  font-style: italic;
+  color: var(--accent-yellow);
+  opacity: 0.8;
 }
 .landing-intro-line--echo {
   font-style: normal;

@@ -975,7 +975,7 @@ body.tas-body #scrolly {
 
 .scrolly-intro-image {
   position: absolute;
-  right: -16vw;
+  right: -17vw;
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;

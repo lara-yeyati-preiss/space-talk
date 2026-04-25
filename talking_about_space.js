@@ -119,8 +119,8 @@
     discovery_science:      '#053081',
     applied_space_science:  '#3A3A5E',
     power_rivalry:          '#5E1E1E',
-    risk_hazard:            '#3B6B52',
-    economic_financial:     '#615438',
+    risk_hazard:            '#615438', 
+    economic_financial:     '#3B6B52', 
     existential_reflection: '#633D54',
   };
   const ACTOR_COLORS = {
@@ -147,27 +147,27 @@
   
   const THEME_LABELS = {
     discovery_science:      'Studying the cosmos',
-    applied_space_science:  'Going to space',
+    applied_space_science:  'Space missions',
     power_rivalry:          'Space race & rivalry',
     risk_hazard:            'Risk & disaster',
     economic_financial:     'Markets & commerce',
     existential_reflection: 'Meaning & identity',
   };
   const ACTOR_LABELS_MAP = {
-    national_state_us:          'National state',
-    rival_space_powers:         'Rival space powers',
-    international_institutions: 'International institutions',
+    national_state_us:          'U.S. national state',
+    rival_space_powers:         'Geopolitical rivals',
+    international_institutions: 'Other international actors',
     private_sector:             'Private sector',
     scientific_community:       'Scientific community',
   };
+
   const ACTOR_DESCS = {
-    national_state_us:          'The United States federal government and its agencies — NASA, the Air Force, Congress, and the White House — as the primary domestic institutional actor in space affairs.',
-    rival_space_powers:         'Adversarial or competing foreign state programs — the Soviet Union during the Cold War, and China as the contemporary rival — framed as threat, benchmark, or competitor.',
-    international_institutions: 'Multilateral and intergovernmental space bodies, frameworks, and shared programs — including ESA, the ISS, UN-linked governance structures, and other institutionalized forms of international cooperation in space.',
-    scientific_community:       'Universities, research institutes, observatories, and individual scientists engaged in knowledge production as the organizing purpose of space activity.',
-    private_sector:             'Commercial companies, aerospace contractors, launch startups, and entrepreneurs — from early defense contractors to SpaceX, Blue Origin, and the broader new space economy.',
+    national_state_us:          'U.S. federal institutions and agencies — NASA, Congress, the White House, the military, and other state bodies — as the domestic institutional center of space activity.',
+    rival_space_powers:         'Foreign state programs framed through rivalry, threat, competition, or strategic comparison — especially the Soviet Union/Russia and China.',
+    international_institutions: 'Formal and informal global space contexts, including multilateral agencies, treaties, partnerships, foreign space programs, and related international framing.',
+    private_sector:             'Commercial companies, contractors, launch startups, satellite operators, and entrepreneurs — from aerospace contractors to SpaceX, Blue Origin, and the new space economy.',
+    scientific_community:       'Scientists, universities, observatories, research institutes, and expert communities producing knowledge about space.',
   };
-  
   // ── CLUSTER POSITIONS ─────────────────────────────────────────────────────
   // px: 0=left, 1=right. py: 0=top, 1=bottom.
   
@@ -209,7 +209,36 @@
   // settles can make the initial layout look “clamped”. We defer the very first
   // cluster draw until after the trends chart’s post-measurement pass.
   let _deferClusterFirstPaint = true;
-  
+  function sourceCountLabel(src) {
+  const counts = DATA?.total_docs?.[src] || {};
+  const sourceMeta = {
+    nyt: {
+      unit: 'headlines',
+      total: counts.theme_total_docs ?? counts.actor_total_docs,
+    },
+    politics: {
+      unit: 'excerpts',
+      total: counts.theme_total_docs ?? counts.actor_total_docs,
+    },
+    books: {
+      unit: 'books',
+      total: counts.theme_total_docs ?? counts.actor_total_docs,
+    },
+  };
+
+  const meta = sourceMeta[src];
+  if (!meta || meta.total == null) return '';
+
+  return `Total ${meta.unit}: ${Number(meta.total).toLocaleString()}`;
+}
+
+function updateSourceCounts() {
+  const rankCount = document.getElementById('rank-source-count');
+  const planetsCount = document.getElementById('planets-source-count');
+
+  if (rankCount) rankCount.textContent = sourceCountLabel(trendSrc);
+  if (planetsCount) planetsCount.textContent = sourceCountLabel(planetSrc);
+}
   function syncTrendFilters() {
     const root = document.querySelector('#rank-filters');
     if (!root) return;
@@ -219,6 +248,7 @@
     const sourceLabels = { nyt: 'New York Times', politics: 'American Presidency Project', books: 'Goodreads' };
     const sourceNote = root.querySelector('.filter-source-note');
     if (sourceNote) sourceNote.textContent = 'Source: ' + (sourceLabels[trendSrc] || trendSrc);
+    updateSourceCounts();
   }
   
   function syncPlanetFilters() {
@@ -230,7 +260,8 @@
     const sourceLabels = { nyt: 'New York Times', politics: 'American Presidency Project', books: 'Goodreads' };
     const sourceNote = root.querySelector('.filter-source-note');
     if (sourceNote) sourceNote.textContent = 'Source: ' + (sourceLabels[planetSrc] || planetSrc);
-  }
+  updateSourceCounts();
+}
   
   function syncTasFilterDOM() {
     syncTrendFilters();
@@ -549,9 +580,9 @@
   const TAS_RANK_SUBTITLE =
     'How attention given to different actor types changed across 1950–2024';
   const TAS_TRENDS_ANNOTATIONS = {
-    nyt:      'Early coverage centers on geopolitical rivalry between space powers. Growing attention to the private sector, reframing space through the language of markets, ambition, and resource extraction.',
-    politics: 'Editorial note (placeholder): In POLITICS, lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum',
-    books:    'Editorial note (placeholder): In BOOKS, lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum',
+    nyt: 'Early coverage centers on <span style="color:#c85a3a;font-weight:600;">geopolitical rivalry</span> between space powers. Growing attention to the <span style="color:#68a485ff;font-weight:600;">private sector</span>, reframing space through the language of markets, ambition, and resource extraction.',
+    politics: 'Political rhetoric remains anchored in the <span style="color:#b9c7d9;font-weight:600;">U.S. state</span>, while rivalry and international cooperation appear as strategic lenses.',
+    books: 'Fiction distributes agency across states, rivals, institutions, companies, and scientists — less as policy actors than as narrative systems for conflict, discovery, and imagined futures.',
   };
   const TAS_SECTION_TITLE_PLANETS = 'The recurring themes';
   const TAS_PLANETS_OVERVIEW_SUBTITLE =
@@ -565,19 +596,7 @@
   function updateTrendsAnnotation() {
     const el = document.getElementById('rank-annotation');
     if (!el) return;
-    const raw = TAS_TRENDS_ANNOTATIONS[trendSrc] || '';
-    const escHtml = (s) =>
-      String(s)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-    const hRed  = (s) => `<span style="color:#c85a3a;font-weight:600;">${escHtml(s)}</span>`;
-    const hBrick = (s) => `<span style="color:#a2a47aff;font-weight:600;">${escHtml(s)}</span>`;
-    const safe = escHtml(raw)
-      .replace(/\bgeopolitical rivalry\b/gi, hRed('geopolitical rivalry'))
-      .replace(/\bprivate sector\b/gi, hBrick('private sector'));
-    el.innerHTML = safe;
+    el.innerHTML = TAS_TRENDS_ANNOTATIONS[trendSrc] || '';
   }
   
   function updateSectionTitles() {
@@ -914,8 +933,8 @@
   /** Per-actor stroke colors for highlighted series on the rank chart.
    *  Earthy warm tones for better contrast against dark background. */
   const TRENDS_ACTOR_COLORS = {
-    private_sector:    '#a2a47aff', // autumn brick red
-    rival_space_powers:'#7d4040ff', // earthy terracotta/rust
+    private_sector:    '#68a485ff', 
+    rival_space_powers:'#7d4040ff', 
   };
   /** Rank chart: which series are highlighted (in all sources). */
   const TRENDS_HIGHLIGHT_ACTORS = new Set(['private_sector', 'rival_space_powers']);
@@ -1636,55 +1655,63 @@
     return { positions: _stablePositions[cacheKey], svgH };
   }
   
-  function drawConstellationLines(svg, keys, positions, coMatrix, lineColor, radii) {
-    // Draw pairwise co-occurrence lines between clusters.
-    //
-    // Input is a co-occurrence matrix where higher means “themes/actors tend to
-    // appear together”. We normalize by the maximum so stroke/opacity scale
-    // remains stable per source. A threshold avoids a hairball.
-    if (!coMatrix) return;
-    let maxCo = 0;
-    keys.forEach(a => keys.forEach(b => {
-      if (a !== b) maxCo = Math.max(maxCo, coMatrix[a]?.[b] || 0);
-    }));
-    if (maxCo === 0) return;
-  
-    const THRESHOLD = 0.30;
-    for (let i = 0; i < keys.length; i++) {
-      for (let j = i + 1; j < keys.length; j++) {
-        const a = keys[i], b = keys[j];
-        const raw  = coMatrix[a]?.[b] || 0;
-        const norm = raw / maxCo;
-        if (norm < THRESHOLD) continue;
-        const opacity = 0.12 + (norm - THRESHOLD) / (1 - THRESHOLD) * 0.52;
-        const strokeW = 0.6 + norm * 1.8;
-  
-        const ax = positions[a].x, ay = positions[a].y;
-        const bx = positions[b].x, by = positions[b].y;
-        const dx = bx - ax, dy = by - ay;
-        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-        const nx = dx / dist, ny = dy / dist;
-        const ra = (radii && radii[a]) ? radii[a] : MAX_CLUSTER_R;
-        const rb = (radii && radii[b]) ? radii[b] : MAX_CLUSTER_R;
-        // Stroke is centered on the path; offset by half width so dashes don’t bleed into the bubbles.
-        const edgePad = strokeW * 0.5 + 0.35;
-  
-        el('line', {
-          x1: ax + nx * (ra + edgePad), y1: ay + ny * (ra + edgePad),
-          x2: bx - nx * (rb + edgePad), y2: by - ny * (rb + edgePad),
-          stroke: lineColor,
-          'stroke-width': strokeW,
-          'stroke-dasharray': '10,8',
-          'stroke-dashoffset': '0',
-          'stroke-linecap': 'butt',
-          opacity,
-          class: 'constellation-line',
-          'data-end-a': a,
-          'data-end-b': b,
-        }, svg);
-      }
+ function drawConstellationLines(svg, keys, positions, coMatrix, lineColor, radii) {
+  if (!coMatrix) return;
+
+  let maxCo = 0;
+  keys.forEach(a => keys.forEach(b => {
+    if (a !== b) maxCo = Math.max(maxCo, coMatrix[a]?.[b] || 0);
+  }));
+  if (maxCo === 0) return;
+
+  const THRESHOLD = 0.08;
+  const MIN_OPACITY = 0.18;
+  const MAX_OPACITY = 0.82;
+  const MIN_STROKE = 1.0;
+  const MAX_STROKE = 2.8;
+
+  for (let i = 0; i < keys.length; i++) {
+    for (let j = i + 1; j < keys.length; j++) {
+      const a = keys[i], b = keys[j];
+      const raw = coMatrix[a]?.[b] || 0;
+      const norm = raw / maxCo;
+
+      if (norm < THRESHOLD) continue;
+
+      const t = (norm - THRESHOLD) / (1 - THRESHOLD);
+      const curved = Math.pow(t, 1.25);
+
+      const opacity = MIN_OPACITY + curved * (MAX_OPACITY - MIN_OPACITY);
+      const strokeW = MIN_STROKE + curved * (MAX_STROKE - MIN_STROKE);
+
+      const ax = positions[a].x, ay = positions[a].y;
+      const bx = positions[b].x, by = positions[b].y;
+      const dx = bx - ax, dy = by - ay;
+      const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+      const nx = dx / dist, ny = dy / dist;
+      const ra = (radii && radii[a]) ? radii[a] : MAX_CLUSTER_R;
+      const rb = (radii && radii[b]) ? radii[b] : MAX_CLUSTER_R;
+      const edgePad = strokeW * 0.5 + 0.35;
+
+      el('line', {
+        x1: ax + nx * (ra + edgePad),
+        y1: ay + ny * (ra + edgePad),
+        x2: bx - nx * (rb + edgePad),
+        y2: by - ny * (rb + edgePad),
+        stroke: lineColor,
+        'stroke-width': strokeW,
+        'stroke-dasharray': '8,9',
+        'stroke-linecap': 'round',
+        opacity,
+        class: 'constellation-line',
+        'data-end-a': a,
+        'data-end-b': b,
+        'data-co': raw.toFixed(4),
+        'data-co-norm': norm.toFixed(4),
+      }, svg);
     }
   }
+}
   
   /** Overview hover: dim unrelated co-occurrence lines; highlight + animate lines tied to `hoveredKey`. */
   function setConstellationLineHover(svg, hoveredKey) {
@@ -1697,10 +1724,10 @@
       const incident = a === hoveredKey || b === hoveredKey;
       if (incident) {
         l.classList.add('constellation-line--highlight');
-        const baseOp = parseFloat(l.getAttribute('opacity') || '0.35');
-        l.style.opacity = String(Math.min(0.96, baseOp + 0.4));
+        const baseOp = parseFloat(l.getAttribute('opacity') || '0.25');
+        l.style.opacity = String(Math.min(0.9, baseOp + 0.22));
       } else {
-        l.style.opacity = '0.08';
+        l.style.opacity = '0.035';
       }
     });
   }
@@ -2619,18 +2646,10 @@
   // ── BOOT ──────────────────────────────────────────────────────────────────
   
   async function boot() {
-    // Data is split across two JSON files (static metadata + per-decade shares).
-    // We fetch both in parallel and merge into a single `window.VIZ_DATA` object
-    // to keep the rest of the code simple.
-    const [svdRes, bdtRes] = await Promise.all([
-      fetch('./data_viz/space_viz_data.json'),
-      fetch('./data_viz/bubble_data_themes.json'),
-    ]);
-    const svd = await svdRes.json();
-    const bdt = await bdtRes.json();
-    window.VIZ_DATA = { ...svd, ...bdt };
+    const res = await fetch('./data_viz/space_viz_data.json');
+    window.VIZ_DATA = await res.json();
     DATA = window.VIZ_DATA;
-  
+
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);
     } else {

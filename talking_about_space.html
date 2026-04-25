@@ -246,28 +246,5 @@
 <!-- Scrollama: IntersectionObserver-based scrollytelling step detection -->
 <script src="https://cdn.jsdelivr.net/npm/scrollama@3.2.0/build/scrollama.min.js"></script>
 <script src="talking_about_space.js?v=2026-04-18a"></script>
-<script>
-// Update source count labels when NEWS/POLITICS/BOOKS tab switches
-(function() {
-  var countLabels = {
-    nyt:      'Total headlines: X',
-    politics: 'Total excerpts: X',
-    books:    'Total books: X'
-  };
-  function updateCounts(src) {
-    var label = countLabels[src] || '';
-    ['rank-source-count', 'planets-source-count'].forEach(function(id) {
-      var el = document.getElementById(id);
-      if (el) el.textContent = label;
-    });
-  }
-  document.addEventListener('click', function(e) {
-    var btn = e.target.closest('[data-trends-src]');
-    if (btn) updateCounts(btn.dataset.trendsSrc);
-  });
-  // Set initial state
-  updateCounts('nyt');
-})();
-</script>
 </body>
 </html>

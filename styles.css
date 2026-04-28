@@ -312,6 +312,9 @@ body.tas-body {
 .rank-svg line[stroke-dasharray] {
   stroke-dasharray: 3, 3;
 }
+.rank-svg line[class*="decade"] {
+  stroke-width: 0.5 !important;
+}
 .bubble-header .filters.filters--inline {
   margin-bottom: 10px;
 }
@@ -351,7 +354,7 @@ body.tas-body .bubble-section #legend-chart-wrap {
   min-height: 0;
   align-items: center;
   margin-top: auto;
-  margin-bottom: auto;
+  margin-bottom: 60px;
 }
 body.tas-body .bubble-section #chart-wrap {
   display: flex;
@@ -426,7 +429,7 @@ button.bubble-back.back-link {
   background: none;
   border: none;
   padding: 8px 4px 8px 0;
-  margin-top: 0;
+  margin-top: 20px;
   font-family: var(--font-mono);
   font-size: 18px;
   font-weight: 500;
@@ -1664,7 +1667,7 @@ h1 {
 .tas-header-fixed-panel__surface .filters {
   margin-bottom: 0;
 }
-/* Flex default `min-width: 0` on `.filter-source-group` was letting “NEWS · … · BOOKS” shrink narrower than its text. */
+/* Flex default `min-width: 0` on `.filter-source-group` was letting “NEWS · POLITICS” shrink narrower than its text. */
 #rank-filters .filter-source-group,
 #bubble-filters .filter-source-group {
   min-width: max-content;
@@ -1737,7 +1740,7 @@ h1 {
 
 .filters {
   display: flex; align-items: center;
-  gap: 14px;                /* gap between the two groups */
+  gap: 10px;                /* tighter gap now that we only have 2 source chips */
   margin-bottom: 14px; flex-wrap: nowrap;
 }
 
@@ -1757,7 +1760,7 @@ h1 {
     width 0.36s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Source-only filter rows: fixed slot for NEWS · POLITICS · BOOKS */
+/* Source-only filter rows: fixed slot for NEWS · POLITICS */
 #rank-filters .filter-source-group {
   flex: 0 0 var(--rank-filter-slot, max-content);
   width: var(--rank-filter-slot, max-content);
@@ -1768,8 +1771,7 @@ h1 {
 }
 #rank-filters .filter-view-group.filter-source-group,
 #bubble-filters .filter-view-group.filter-source-group {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: flex;
   align-items: stretch;
   justify-items: stretch;
 }
@@ -1823,7 +1825,7 @@ h1 {
   margin-left: -1px;
 }
 
-/* Three-segment source toggle — sharp capsule; grid columns = equal width so padding looks even (POLITICS vs NEWS/BOOKS) */
+/* Two-segment source toggle */
 #rank-filters .filter-view.filter-view--src,
 #bubble-filters .filter-view.filter-view--src {
   appearance: none;
@@ -1836,9 +1838,9 @@ h1 {
   font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.06em;
-  padding: 8px 18px;
+  padding: 8px 14px;
   min-width: 0;
-  width: 100%;
+  width: auto;
   box-sizing: border-box;
   border-radius: 0;
   overflow: visible;
@@ -1846,6 +1848,8 @@ h1 {
   border: 1px solid rgba(255, 255, 255, 0.58);
   color: rgba(240, 240, 240, 0.92);
   -webkit-font-smoothing: antialiased;
+  white-space: nowrap;
+  flex: 0 0 auto;
 }
 #rank-filters .filter-view.filter-view--src.active,
 #bubble-filters .filter-view.filter-view--src.active {
@@ -1888,22 +1892,13 @@ h1 {
 }
 #rank-filters .filter-view--src:nth-child(2),
 #bubble-filters .filter-view--src:nth-child(2) {
-  border-radius: 0;
-  border-left: none;
-  border-right: none;
-  margin-left: -1px;
-}
-#rank-filters .filter-view--src:nth-child(3),
-#bubble-filters .filter-view--src:nth-child(3) {
   border-radius: 0 13px 13px 0;
   border-left: none;
   margin-left: -1px;
 }
-/* Full-height 1px separators between segments */
+/* Full-height 1px separator between the two segments */
 #rank-filters .filter-view--src:nth-child(2)::before,
-#rank-filters .filter-view--src:nth-child(3)::before,
-#bubble-filters .filter-view--src:nth-child(2)::before,
-#bubble-filters .filter-view--src:nth-child(3)::before {
+#bubble-filters .filter-view--src:nth-child(2)::before {
   content: '';
   position: absolute;
   left: 0;
@@ -1915,9 +1910,7 @@ h1 {
   z-index: 2;
 }
 #rank-filters .filter-view--src:nth-child(2).active::before,
-#rank-filters .filter-view--src:nth-child(3).active::before,
-#bubble-filters .filter-view--src:nth-child(2).active::before,
-#bubble-filters .filter-view--src:nth-child(3).active::before {
+#bubble-filters .filter-view--src:nth-child(2).active::before {
   background: rgba(0, 0, 0, 0.28);
 }
 
@@ -1966,7 +1959,7 @@ h1 {
   }
 }
 
-/* ── Source tabs group (NEWS / POLITICS / BOOKS) ── */
+/* ── Source tabs group (NEWS / POLITICS) ── */
 .filter-source-group {
   display: flex;
   align-items: center;
@@ -3229,9 +3222,16 @@ body.tas-body .page-footer-nav {
   color: var(--c80); line-height: 1.55; word-wrap: break-word;
 }
 .dp-hl-text.uppercase { text-transform: uppercase; }
+.dp-hl-text a { cursor: pointer; }
 .dp-hl-title {
-  font-family: var(--font-mono); font-size: 11px; color: var(--c65);
-  margin-top: 2px; font-style: italic; line-height: 1.45;
+  font-family: var(--font-mono); font-size: 10px; color: var(--c65);
+  margin-top: 2px; margin-bottom: 4px; font-style: italic; line-height: 1.4;
+}
+.dp-hl-title a { 
+  cursor: pointer; 
+  text-decoration: underline; 
+  text-underline-offset: 2px;
+  color: var(--c65);
 }
 
 /* ══════════════════════════════════════════════════════
@@ -3255,12 +3255,12 @@ body.tas-body .page-footer-nav {
 }
 .sm-theme-tag {
   font-family: var(--font-mono); font-size: 10px;
-  letter-spacing: 0.14em; color: rgba(20,20,20,0.75); text-transform: uppercase;
+  letter-spacing: 0.14em; color: rgba(20,20,20,0.88); text-transform: uppercase;
 }
 .sm-close {
   background: none; border: none; cursor: pointer;
   font-family: var(--font-mono); font-size: 10px;
-  letter-spacing: 0.12em; color: rgba(20,20,20,0.60);
+  letter-spacing: 0.12em; color: rgba(20,20,20,0.85);
   padding: 0; transition: color 0.15s;
 }
 .sm-close:hover { color: #111; }
@@ -3272,7 +3272,7 @@ body.tas-body .page-footer-nav {
 }
 .sm-hint {
   font-family: var(--font-mono); font-size: 10px;
-  color: rgba(240,240,240,0.38); padding: 0 24px 16px;
+  color: rgba(240,240,240,0.55); padding: 0 24px 16px;
   background: #1e1e1e; letter-spacing: 0.05em;
 }
 .sm-items { padding: 0 24px 28px; background: #1e1e1e; }
@@ -3490,7 +3490,7 @@ body.tas-body .page-footer-nav {
   color: rgba(240,240,240,0.82); line-height: 1.5; margin-bottom: 20px;
 }
 
-/* Format tabs — same style as filter-source (NEWS · POLITICS · BOOKS) */
+/* Format tabs — same style as filter-source (NEWS · POLITICS) */
 .format-selector {
   display: flex; align-items: center; gap: 0; margin-bottom: 22px;
 }

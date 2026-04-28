@@ -16,10 +16,25 @@
     'power_rivalry','applied_space_science','economic_financial',
     'risk_hazard','discovery_science','existential_reflection'
   ];
-  const ACTORS = [
-    'national_state_us','rival_space_powers','international_institutions',
-    'private_sector','scientific_community'
-  ];
+const ACTORS_BY_SOURCE = {
+  nyt: [
+    'astronauts_cosmonauts',
+    'national_state_us',
+    'rival_space_powers',
+    'private_sector',
+    'scientific_community'
+  ],
+  politics: [
+    'national_state_us',
+    'rival_space_powers',
+    'international_institutions',
+    'private_sector'
+  ]
+};
+
+function getActorsForSource(src) {
+  return DATA?.actors_by_source?.[src] || ACTORS_BY_SOURCE[src] || ACTORS_BY_SOURCE.nyt;
+}
   const DECADES  = [1950,1960,1970,1980,1990,2000,2010,2020];
   const MIN_YEAR = 1950, MAX_YEAR = 2023;
   
@@ -64,7 +79,7 @@
   const NS = 'http://www.w3.org/2000/svg';
   
   const LABEL_W     = 240;
-  const CHART_PAD        = 180;  // right gutter for rank chart end-labels (wider to fit actor names)
+  const CHART_PAD        = 230;  // right gutter for rank chart end-labels (wider to fit actor names)
   const DRILL_CHART_PAD  = 20; // right gutter for drilldown: reserves space for last circle radius
   const DRILL_MAX_R = 85;
   const DRILL_ROW_H = 140;
@@ -77,41 +92,91 @@
   // Decade is the tick decade (1950..2020) that the callout should point to.
   // Labels are single-line; year in parentheses is part of the label text.
   const TRENDS_ACTOR_CALLOUTS = {
-    national_state_us: [
-      { decade: 1960, label: 'Moon landing (1969)' },
-      { decade: 1980, label: 'Strategic Defense Initiative (1983)' },
-      { decade: 2010, label: 'Shuttle program ends (2011)' },
-    ],
-    rival_space_powers: [
-      { decade: 1950, label: 'Sputnik launch (1957)' },
-      { decade: 2000, label: "China's first crewed flight (2003)" },
-      { decade: 2020, label: 'Artemis & new space race (2022)' },
-    ],
-    international_institutions: [
-      { decade: 1990, label: 'ISS assembly begins (1998)' },
-      { decade: 2010, label: 'International partnerships scale up (2010s)' },
-    ],
-    private_sector: [
-      { decade: 2000, label: 'Falcon 1 reaches orbit (2008)' },
-      { decade: 2010, label: 'Falcon 9 reuse proven (2017)' },
-    ],
-    scientific_community: [
-      { decade: 1990, label: 'Hubble Space Telescope launched (1990)' },
-      { decade: 2020, label: 'James Webb Space Telescope (2021)' },
-    ],
+    national_state_us: {
+      nyt: [
+        { decade: 1950, label: 'NASA established (1958)', placeAbove: false },
+        { decade: 1960, label: 'Kennedy\'s Moon speech (1961)' },
+        { decade: 1960, label: 'Outer Space Treaty signed (1967)' },
+        { decade: 2010, label: 'Space Shuttle program ends (2011)' },
+      ],
+      politics: [
+        { decade: 1950, label: 'NASA established (1958)' },
+        { decade: 1960, label: 'Kennedy\'s Moon speech (1961)' },
+        { decade: 1960, label: 'Outer Space Treaty signed (1967)' },
+        { decade: 2010, label: 'Space Shuttle program ends (2011)' },
+      ],
+    },
+    rival_space_powers: {
+      nyt: [
+        { decade: 1950, label: 'Sputnik 1 launched (1957)' },
+        { decade: 1960, label: 'Yuri Gagarin flight (1961)' },
+        { decade: 1970, label: 'Apollo 11 Moon landing (1969)' },
+        { decade: 2000, label: 'China\'s first crewed flight (2003)' },
+      ],
+      politics: [
+        { decade: 1950, label: 'Sputnik 1 launched (1957)' },
+        { decade: 1960, label: 'Yuri Gagarin flight (1961)' },
+        { decade: 1970, label: 'Apollo 11 Moon landing (1969)' },
+        { decade: 2000, label: 'China\'s first crewed flight (2003)' },
+      ],
+    },
+    international_institutions: {
+      nyt: [
+        { decade: 1960, label: 'Outer Space Treaty signed (1967)' },
+        { decade: 1990, label: 'ISS assembly begins (1998)' },
+        { decade: 2020, label: 'Artemis Accords signed (2020)' },
+      ],
+      politics: [
+        { decade: 1960, label: 'Outer Space Treaty signed (1967)' },
+        { decade: 1990, label: 'ISS assembly begins (1998)', placeAbove: false },
+        { decade: 2020, label: 'Artemis Accords signed (2020)', placeAbove: true },
+      ],
+    },
+    private_sector: {
+      nyt: [
+        { decade: 2000, label: 'SpaceX founded (2002)' },
+        { decade: 2000, label: 'Falcon 1 reaches orbit (2008)', placeAbove: false },
+        { decade: 2010, label: 'Falcon 9 first landing (2015)' },
+        { decade: 2020, label: 'Commercial Crew program begins (2020)', placeAbove: true },
+      ],
+      politics: [
+        { decade: 2000, label: 'SpaceX founded (2002)' },
+        { decade: 2000, label: 'Falcon 1 reaches orbit (2008)', placeAbove: false },
+        { decade: 2010, label: 'Falcon 9 first landing (2015)', placeAbove: false },
+        { decade: 2020, label: 'Commercial Crew program begins (2020)', placeAbove: true },
+      ],
+    },
+    astronauts_cosmonauts: {
+      nyt: [
+        { decade: 1960, label: 'Yuri Gagarin orbits Earth (1961)' },
+        { decade: 1960, label: 'John Glenn orbits Earth (1962)' },
+        { decade: 1970, label: 'Apollo 11 Moon landing (1969)' },
+        { decade: 2020, label: 'Crew Dragon Demo-2 mission (2020)' },
+      ],
+      politics: [],
+    },
+    scientific_community: {
+      nyt: [
+        { decade: 1990, label: 'First exoplanet discovered (1995)' },
+        { decade: 2010, label: 'Gravitational waves detected (2015)' },
+        { decade: 2020, label: 'James Webb images released (2022)' },
+      ],
+      politics: [],
+    },
   };
   
   /** Set of decades that have at least one callout for the currently hovered actor.
    *  Used by tick rendering to decide which ticks stay highlighted on hover. */
   function getCalloutDecades(actorKey) {
-    const items = TRENDS_ACTOR_CALLOUTS[actorKey] || [];
+    const entry = TRENDS_ACTOR_CALLOUTS[actorKey];
+    const items = entry ? (entry[trendSrc] || entry.nyt || []) : [];
     return new Set(items.map(it => it.decade));
   }
   
-  const MAX_CLUSTER_R = 114;
-  const MIN_CLUSTER_R = 62;
+  const MAX_CLUSTER_R = 120;
+  const MIN_CLUSTER_R = 50;
   
-  const SRC_ABBR = { nyt:'NEWS', politics:'POLITICS', books:'BOOKS' };
+  const SRC_ABBR = { nyt:'NEWS', politics:'POLITICS' };
   
   // ── COLORS ────────────────────────────────────────────────────────────────
   
@@ -123,13 +188,23 @@
     economic_financial:     '#3B6B52', 
     existential_reflection: '#633D54',
   };
-  const ACTOR_COLORS = {
-    national_state_us:          '#395b7f',
-    rival_space_powers:         '#9b4c47',
-    international_institutions: '#476155',
-    private_sector:             '#6B5A80',
-    scientific_community:       '#867d58',
-  };
+const ACTOR_COLORS = {
+  astronauts_cosmonauts: '#E67E22',
+  national_state_us: '#395b7f',
+  rival_space_powers: '#9b4c47',
+  international_institutions: '#476155',
+  private_sector: '#6B5A80',
+  scientific_community: '#867d58',
+};
+
+const ACTOR_LABELS_MAP = {
+  astronauts_cosmonauts: 'Astronauts',
+  national_state_us: 'National state',
+  rival_space_powers: 'Geopolitical rivals',
+  international_institutions: 'International partnerships',
+  private_sector: 'Private sector',
+  scientific_community: 'Scientific community',
+};
   
   /** Matches `buildDefs` linearGradient stops (bubble fill) for mobile drill bars. */
   function drillBarBubbleBackground(kind, key) {
@@ -147,18 +222,11 @@
   
   const THEME_LABELS = {
     discovery_science:      'Studying the cosmos',
-    applied_space_science:  'Space missions',
+    applied_space_science:  'Space operations & missions',
     power_rivalry:          'Space race & rivalry',
-    risk_hazard:            'Risk & disaster',
+    risk_hazard:            'Risk & hazards',
     economic_financial:     'Markets & commerce',
     existential_reflection: 'Meaning & identity',
-  };
-  const ACTOR_LABELS_MAP = {
-    national_state_us:          'U.S. national state',
-    rival_space_powers:         'Geopolitical rivals',
-    international_institutions: 'Other international actors',
-    private_sector:             'Private sector',
-    scientific_community:       'Scientific community',
   };
 
   const ACTOR_DESCS = {
@@ -172,20 +240,19 @@
   // px: 0=left, 1=right. py: 0=top, 1=bottom.
   
   const THEME_POSITIONS = {
-    power_rivalry:          { px: 0.20, py: 0.28 },
-    applied_space_science:  { px: 0.50, py: 0.32 },
-    discovery_science:      { px: 0.76, py: 0.22 },
-    risk_hazard:            { px: 0.12, py: 0.75 },
-    // Nudge down/right slightly (fine-tuned by eye).
-    existential_reflection: { px: 0.44, py: 0.84 },
-    economic_financial:     { px: 0.68, py: 0.78 },
+    power_rivalry:          { px: 0.14, py: 0.28 },
+    applied_space_science:  { px: 0.44, py: 0.32 },
+    discovery_science:      { px: 0.70, py: 0.22 },
+    risk_hazard:            { px: 0.06, py: 0.75 },
+    existential_reflection: { px: 0.38, py: 0.84 },
+    economic_financial:     { px: 0.62, py: 0.78 },
   };
   const ACTOR_POSITIONS = {
-    national_state_us:          { px: 0.22, py: 0.28 },
-    rival_space_powers:         { px: 0.55, py: 0    },
-    scientific_community:       { px: 0.72, py: 0.60 },
-    international_institutions: { px: 0.38, py: 0.80 },
-    private_sector:             { px: 0.14, py: 0.75 },
+    national_state_us:          { px: 0.16, py: 0.28 },
+    rival_space_powers:         { px: 0.49, py: 0    },
+    scientific_community:       { px: 0.66, py: 0.60 },
+    international_institutions: { px: 0.32, py: 0.80 },
+    private_sector:             { px: 0.08, py: 0.75 },
   };
   
   // ── STATE ─────────────────────────────────────────────────────────────────
@@ -198,6 +265,8 @@
   let activeTheme = null;
   let DATA        = null;
   let _activeDrillW = null;
+  /** When set, the rank chart keeps this actor highlighted (click-to-pin). */
+  let _pinnedActor = null;
   /** True while a drilldown chart is being rendered — tells chartW() to use DRILL_CHART_PAD. */
   let _inDrilldown = false;
   let PAD_BOTTOM    = 0;
@@ -220,10 +289,7 @@
       unit: 'excerpts',
       total: counts.theme_total_docs ?? counts.actor_total_docs,
     },
-    books: {
-      unit: 'books',
-      total: counts.theme_total_docs ?? counts.actor_total_docs,
-    },
+
   };
 
   const meta = sourceMeta[src];
@@ -245,7 +311,7 @@ function updateSourceCounts() {
     root.querySelectorAll('.filter-source--rank').forEach(b =>
       b.classList.toggle('active', b.dataset.trendsSrc === trendSrc));
     
-    const sourceLabels = { nyt: 'New York Times', politics: 'American Presidency Project', books: 'Goodreads' };
+    const sourceLabels = { nyt: 'New York Times', politics: 'American Presidency Project' };
     const sourceNote = root.querySelector('.filter-source-note');
     if (sourceNote) sourceNote.textContent = 'Source: ' + (sourceLabels[trendSrc] || trendSrc);
     updateSourceCounts();
@@ -257,7 +323,7 @@ function updateSourceCounts() {
     root.querySelectorAll('.filter-source--rank').forEach(b =>
       b.classList.toggle('active', b.dataset.trendsSrc === planetSrc));
     
-    const sourceLabels = { nyt: 'New York Times', politics: 'American Presidency Project', books: 'Goodreads' };
+    const sourceLabels = { nyt: 'New York Times', politics: 'American Presidency Project' };
     const sourceNote = root.querySelector('.filter-source-note');
     if (sourceNote) sourceNote.textContent = 'Source: ' + (sourceLabels[planetSrc] || planetSrc);
   updateSourceCounts();
@@ -519,6 +585,9 @@ function updateSourceCounts() {
     root.querySelectorAll('.filter-source--rank').forEach(btn => {
       btn.addEventListener('click', () => {
         trendSrc = btn.dataset.trendsSrc;
+        _pinnedActor = null;
+        // Clear height cache so the chart remeasures on source switch
+        drawTrendsChart._cachedH = null;
         syncTrendFilters();
         drawTrendsChart();
         updateCaption();
@@ -580,9 +649,8 @@ function updateSourceCounts() {
   const TAS_RANK_SUBTITLE =
     'How attention given to different actor types changed across 1950–2024';
   const TAS_TRENDS_ANNOTATIONS = {
-    nyt: 'Early coverage centers on <span style="color:#c85a3a;font-weight:600;">geopolitical rivalry</span> between space powers. Growing attention to the <span style="color:#68a485ff;font-weight:600;">private sector</span>, reframing space through the language of markets, ambition, and resource extraction.',
-    politics: 'Political rhetoric remains anchored in the <span style="color:#b9c7d9;font-weight:600;">U.S. state</span>, while rivalry and international cooperation appear as strategic lenses.',
-    books: 'Fiction distributes agency across states, rivals, institutions, companies, and scientists — less as policy actors than as narrative systems for conflict, discovery, and imagined futures.',
+    nyt: 'Coverage opens with Soviet rivalry as the dominant frame, before <span style="color:#7aabcf;">national institutional</span> space activities take center stage, with the astronaut figure at the heart of the coverage for the following two decades. The landscape changes in the past decade, as the <span style="color:#8cbf7a;">private sector</span> overtakes all other actors, reframing space through the language of markets, resource extraction, and individual ambition.',
+    politics: 'Following the focus on Soviet rivalry during the peak of the space race in the 1960s, political rhetoric remains anchored in <span style="color:#7aabcf;">U.S. leadership</span> across subsequent decades. By the 2020s, <span style="color:#c9956a;">international partnerships</span> emerge as an increasingly prominent mode of action, reflected in initiatives such as the Artemis Accords and a broader emphasis on cooperation in space governance.',
   };
   const TAS_SECTION_TITLE_PLANETS = 'The recurring themes';
   const TAS_PLANETS_OVERVIEW_SUBTITLE =
@@ -629,7 +697,7 @@ function updateSourceCounts() {
   }
   
   function planetSrcShortLabel() {
-    return { nyt: 'headlines', politics: 'politics', books: 'books' }[planetSrc] || planetSrc;
+    return { nyt: 'headlines', politics: 'politics' }[planetSrc] || planetSrc;
   }
   
   function updatePlanetsSubtitle() {
@@ -700,7 +768,6 @@ function updateSourceCounts() {
     const srcLabel = {
       nyt:      { count: 'headlines',                source: 'New York Times'             },
       politics: { count: 'political communications', source: 'American Presidency Project' },
-      books:    { count: 'books',                    source: 'Goodreads'                  },
     }[planetSrc] || { count: planetSrc, source: '' };
   
     const countEl = document.getElementById('drilldown-count');
@@ -796,11 +863,20 @@ function updateSourceCounts() {
   
   function buildDefs(svg) {
     const defs = el('defs', {}, svg);
+    // Bubble noise filter — strong grain for filled circles
     const f = el('filter', { id: 'noise', x: '0%', y: '0%', width: '100%', height: '100%', 'color-interpolation-filters': 'sRGB' }, defs);
     el('feTurbulence', { type: 'fractalNoise', baseFrequency: '1.5', numOctaves: '4', stitchTiles: 'stitch', result: 'n' }, f);
     el('feColorMatrix', { in: 'n', type: 'saturate', values: '0', result: 'gn' }, f);
     el('feBlend', { in: 'SourceGraphic', in2: 'gn', mode: 'soft-light', result: 'b' }, f);
     el('feComposite', { in: 'b', in2: 'SourceGraphic', operator: 'in' }, f);
+    // Line noise filter — much lighter grain so thin strokes don't look uneven
+    const lf = el('filter', { id: 'line-noise', x: '-5%', y: '-50%', width: '110%', height: '200%', 'color-interpolation-filters': 'sRGB' }, defs);
+    el('feTurbulence', { type: 'fractalNoise', baseFrequency: '0.9', numOctaves: '3', stitchTiles: 'stitch', result: 'n' }, lf);
+    el('feColorMatrix', { in: 'n', type: 'saturate', values: '0', result: 'gn' }, lf);
+    const feMerge1 = el('feComponentTransfer', { in: 'gn', result: 'lgn' }, lf);
+    el('feFuncA', { type: 'linear', slope: '0.18' }, feMerge1); // very subtle — 18% grain opacity
+    el('feBlend', { in: 'SourceGraphic', in2: 'lgn', mode: 'soft-light', result: 'b' }, lf);
+    el('feComposite', { in: 'b', in2: 'SourceGraphic', operator: 'in' }, lf);
     for (const [key, hex] of Object.entries(THEME_COLORS)) {
       const g = el('linearGradient', { id: `grad-${key}`, x1: '0.15', y1: '0', x2: '0.5', y2: '1' }, defs);
       el('stop', { offset: '0%', 'stop-color': hex, 'stop-opacity': '1.0' }, g);
@@ -885,7 +961,7 @@ function updateSourceCounts() {
       // Draw tick mark above decade label
       el('line', { x1: x, y1: axisY - 3, x2: x, y2: axisY + 3, stroke: '#f0f0f0', 'stroke-width': '0.75', opacity: '0.65' }, svg);
       // Decade label in mono font
-      tx(dec + 's', { x: x, y: decY, 'text-anchor': 'middle', style: `font-family:var(--font-mono);font-size:18px;font-weight:500;letter-spacing:0.05em;fill:${decLabelFill};` }, svg);
+      tx(dec + 's', { x: x, y: decY, 'text-anchor': 'middle', style: `font-family:var(--font-mono);font-size:16px;font-weight:500;letter-spacing:0.05em;fill:${decLabelFill};` }, svg);
     });
   
     const lmLbl = decY + 2 + LM_TICK + LM_LBL_H - 2;
@@ -925,20 +1001,19 @@ function updateSourceCounts() {
   const TRENDS_LABEL_LINE_GAP = 7;
   // Smaller top inset so the plot gets taller upward without moving the axis.
   const TRENDS_PAD_TOP = 8;
-  /** Lighten theme/actor hex for series strokes on the trends chart only. */
-  const TREND_CHART_LIGHTEN = 0.24;
-  /** In NEWS view, make highlighted colored actors pop more on dark bg. */
-  const TREND_CHART_LIGHTEN_NEWS_HL = 0.34;
-  /** Rank chart: single highlight color for all series. */
-  /** Per-actor stroke colors for highlighted series on the rank chart.
-   *  Earthy warm tones for better contrast against dark background. */
   const TRENDS_ACTOR_COLORS = {
-    private_sector:    '#68a485ff', 
-    rival_space_powers:'#7d4040ff', 
+    national_state_us:        '#7aabcf',
+    rival_space_powers:       '#c97c5d',
+    private_sector:           '#8cbf7a',
+    international_institutions: '#c9956a',  // warm terracotta — distinct from green private sector
+    astronauts_cosmonauts:    '#d4a45a',
+    scientific_community:     '#b09e72',
   };
-  /** Rank chart: which series are highlighted (in all sources). */
-  const TRENDS_HIGHLIGHT_ACTORS = new Set(['private_sector', 'rival_space_powers']);
-  
+
+  const TRENDS_HIGHLIGHT_ACTORS_BY_SOURCE = {
+    nyt:      new Set(['national_state_us', 'private_sector']),
+    politics: new Set(['national_state_us', 'international_institutions']),
+  };
   /** Rank label for axis and tooltips (e.g. #1, #2). */
   function trendsOrdinalRank(r) {
     return `#${r}`;
@@ -962,29 +1037,41 @@ function updateSourceCounts() {
     if (linesG) {
       linesG.querySelectorAll('.rank-series').forEach(node => {
         if (!hoverKeyOrNull) {
-          // Reset everything — remove all inline opacity overrides
           node.style.opacity = '';
           node.style.pointerEvents = '';
           node.style.cursor = '';
           node.classList.remove('rank-series--ghost');
-          node.querySelectorAll('.rank-tick').forEach(tick => {
-            tick.style.opacity = '';
+          // Restore original dash/weight based on whether highlighted actor
+          const sid = node.getAttribute('data-series');
+          const wasHighlighted = isTrendsHighlightedActor(sid);
+          node.querySelectorAll('.rank-series-line').forEach(path => {
+            const sid2 = node.getAttribute('data-series');
+            const wasH = isTrendsHighlightedActor(sid2);
+            path.setAttribute('stroke-dasharray', 'none');
+            path.setAttribute('stroke-width', '2.5');
+            path.setAttribute('opacity', wasH ? '0.92' : '0.78');
+            path.setAttribute('stroke', wasH
+              ? (TRENDS_ACTOR_COLORS[sid2] || 'rgba(240,240,240,0.75)')
+              : 'rgba(240,240,240,0.72)');
           });
+          node.querySelectorAll('.rank-tick').forEach(tick => { tick.style.opacity = ''; });
           return;
         }
         const sid = node.getAttribute('data-series');
         const on = sid === hoverKeyOrNull;
         if (on) {
           node.style.opacity = '1';
-          // Only ticks whose decade has a callout event stay fully opaque.
-          // All other ticks on this series are dimmed.
+          node.querySelectorAll('.rank-series-line').forEach(path => {
+            path.setAttribute('stroke-dasharray', 'none');
+            path.setAttribute('stroke-width', '4');
+            path.setAttribute('opacity', '1');
+          });
           node.querySelectorAll('.rank-tick').forEach(tick => {
             const dec = parseInt(tick.getAttribute('data-decade'), 10);
-            const hasCallout = dec && calloutDecs.has(dec);
-            tick.style.opacity = hasCallout ? '1' : '0.18';
+            tick.style.opacity = (dec && calloutDecs.has(dec)) ? '1' : '0.2';
           });
         } else {
-          node.style.opacity = '0.12';
+          node.style.opacity = '0.08';
         }
         node.style.pointerEvents = '';
         node.style.cursor = 'default';
@@ -999,10 +1086,13 @@ function updateSourceCounts() {
           node.classList.remove('rank-label--ghost');
           node.style.pointerEvents = '';
           node.style.cursor = '';
+          node.querySelector('text')?.style.setProperty('fill', 'rgba(240,240,240,0.72)');
           return;
         }
         const active = id === hoverKeyOrNull;
-        node.style.opacity = active ? '1' : '0.12';
+        node.style.opacity = active ? '1' : '0.08';
+        const color = 'rgba(240,240,240,0.72)';
+        node.querySelector('text')?.style.setProperty('fill', color);
         node.style.pointerEvents = '';
         node.style.cursor = 'default';
         node.classList.remove('rank-label--ghost');
@@ -1053,9 +1143,24 @@ function updateSourceCounts() {
         animation: tas-label-fade 0.3s ease forwards;
         animation-delay: var(--label-delay, 0s);
       }
+      /* Fixed height for editorial note: prevents chart from jumping when switching sources */
+      .rank-annotation {
+        min-height: 100px !important;
+        max-height: 100px !important;
+        overflow: hidden;
+      }
+      .rank-annotation:empty {
+        display: block !important;
+        min-height: 100px !important;
+        max-height: 100px !important;
+      }
     `;
     document.head.appendChild(s);
   })();
+
+  function isTrendsHighlightedActor(actorKey) {
+    return TRENDS_HIGHLIGHT_ACTORS_BY_SOURCE[trendSrc]?.has(actorKey) || false;
+  }
 
   function drawTrendsChart() {
     const svg = document.getElementById('rank-svg');
@@ -1066,6 +1171,11 @@ function updateSourceCounts() {
       svg.innerHTML = '';
       return;
     }
+
+    // Ensure drilldown state doesn't bleed into the rank chart layout.
+    _inDrilldown = false;
+    _activeDrillW = null;
+    trendsLayout = null;
   
     const TW = Math.max(300, block.getBoundingClientRect().width || block.clientWidth || 800);
 
@@ -1085,7 +1195,7 @@ function updateSourceCounts() {
     trendsLayout = { W: TW, leftCol: TRENDS_LEFT_COL, rightPad: TRENDS_RIGHT_PAD };
     _activeDrillW = TW;
   
-    const keys = ACTORS;
+    const keys = getActorsForSource(trendSrc);
     const labelFor = key => ACTOR_LABELS_MAP[key] || key;
     const nRanks = keys.length;
   
@@ -1184,13 +1294,14 @@ function updateSourceCounts() {
     function renderTrendsActorAnnotations(actorKeyOrNull) {
       clearTrendsAnnotations();
       if (!actorKeyOrNull) return;
-      const items = (TRENDS_ACTOR_CALLOUTS[actorKeyOrNull] || []).filter(d => DECADES.includes(d.decade));
+      const entry = TRENDS_ACTOR_CALLOUTS[actorKeyOrNull];
+      const items = (entry ? (entry[trendSrc] || entry.nyt || []) : []).filter(d => DECADES.includes(d.decade));
       if (!items.length) return;
 
-      const maxItems = 3;
+      const maxItems = 10;
       const pick = items.slice(0, maxItems);
       const tickHalf = 8;
-      const gap = 8;
+      const gap = 16;  // larger gap so text clears the line
       const lineH = 15; // px between label line 1 and year line
 
       // Split each label into text + year (everything inside parentheses is the year part)
@@ -1211,43 +1322,69 @@ function updateSourceCounts() {
         const x = target.x;
         const y = target.y;
         const nearTop = y < plotTop + 50;
-        // Default: above unless near top
-        const preferAbove = !nearTop;
-        return { x, y, main, year, preferAbove, placeAbove: preferAbove, i };
+        // Respect explicit placeAbove hint from callout data; otherwise prefer above unless near top
+        const preferAbove = it.placeAbove != null ? it.placeAbove : !nearTop;
+        return { x, y, main, year, preferAbove, placeAbove: preferAbove, i, hasHint: it.placeAbove != null };
       }).filter(Boolean);
 
       // Collision pass: for pairs of annotations that are x-close, ensure they go opposite sides
+      // but only if neither has an explicit placement hint
       for (let a = 0; a < resolved.length; a++) {
         for (let b = a + 1; b < resolved.length; b++) {
           const ra = resolved[a], rb = resolved[b];
+          if (ra.hasHint && rb.hasHint) continue; // both pinned — skip
           const xDist = Math.abs(ra.x - rb.x);
           if (xDist < 120) {
             // They're close enough to potentially collide — force one above, one below
-            ra.placeAbove = true;
-            rb.placeAbove = false;
+            if (!ra.hasHint) ra.placeAbove = true;
+            if (!rb.hasHint) rb.placeAbove = false;
           }
         }
       }
 
       const labelStyle = 'font-family:"Archivo Narrow",sans-serif;font-size:13px;font-style:italic;fill:#f0f0f0;opacity:0.65;';
       const yearStyle  = 'font-family:"Archivo Narrow",sans-serif;font-size:12px;font-style:italic;fill:#f0f0f0;opacity:0.45;';
+      const MAX_ANNO_CHARS = 25;
+      function wrapAnno(s) {
+        if (!s || s.length <= MAX_ANNO_CHARS) return { line1: s, line2: null };
+        const cut = s.lastIndexOf(' ', MAX_ANNO_CHARS);
+        const breakAt = cut > 6 ? cut : MAX_ANNO_CHARS;
+        return { line1: s.slice(0, breakAt).trim(), line2: s.slice(breakAt).trim() };
+      }
 
-      resolved.forEach(({ x, y, main, year, placeAbove }) => {
-        const totalH = year ? lineH : 0; // extra height for year line
-        // Baseline Y for the main text line
+      resolved.forEach(({ x, y, main: mainRaw, year, placeAbove }) => {
+        const { line1: annoLine1, line2: annoLine2 } = wrapAnno(mainRaw);
+        const annoLineH = 14;
+        const totalAnnoH = annoLine2 ? annoLineH * 2 : annoLineH;
+        const totalH = year ? lineH : 0;
         const rawLabelY = placeAbove
-          ? y - tickHalf - gap - (year ? lineH : 0) // push up extra if year below main
-          : y + tickHalf + gap + 13;                // 13 = cap-height approx
-        const labelY = Math.max(plotTop + 14, Math.min(plotBot - totalH - 4, rawLabelY));
-        const yearY  = labelY + lineH;
-
-        // Clamp x
-        const approxHalfW = Math.min(150, Math.max(48, Math.round(main.length * 3.8)));
+          ? y - tickHalf - gap - totalAnnoH - (year ? lineH : 0)
+          : y + tickHalf + gap + annoLineH;
+        const labelY = Math.max(plotTop + 14, Math.min(plotBot - totalAnnoH - totalH - 4, rawLabelY));
+        const anno2Y = labelY + annoLineH;
+        const yearY  = (annoLine2 ? anno2Y : labelY) + lineH + 2;
+        const longestLine = annoLine2 && annoLine2.length > annoLine1.length ? annoLine2 : annoLine1;
+        const approxHalfW = Math.min(100, Math.max(40, Math.round(longestLine.length * 2.8)));
         const textX = Math.max(xPlotLeft + approxHalfW + 4, Math.min(xPlotRight - approxHalfW - 4, x));
-
         const g = el('g', { class: 'rank-anno', 'pointer-events': 'none' }, annoG);
+        const charW = 6.2;
+        const maxLineW = Math.max(annoLine1.length, annoLine2 ? annoLine2.length : 0) * charW;
+        const padX = 6, padY = 3;
+        const backdropH = totalAnnoH + (year ? lineH + 4 : 0) + padY * 2;
+        el('rect', {
+          x: textX - maxLineW / 2 - padX,
+          y: labelY - annoLineH - padY,
+          width: maxLineW + padX * 2,
+          height: backdropH,
+          fill: 'rgba(18,18,18,0.76)',
+          rx: 2,
+        }, g);
         const t = el('text', { x: textX, y: labelY, 'text-anchor': 'middle', style: labelStyle }, g);
-        t.textContent = main;
+        t.textContent = annoLine1;
+        if (annoLine2) {
+          const t2 = el('text', { x: textX, y: anno2Y, 'text-anchor': 'middle', style: labelStyle }, g);
+          t2.textContent = annoLine2;
+        }
         if (year) {
           const ty = el('text', { x: textX, y: yearY, 'text-anchor': 'middle', style: yearStyle }, g);
           ty.textContent = year;
@@ -1256,13 +1393,25 @@ function updateSourceCounts() {
     }
 
     function setTrendsHoverState(kOrNull) {
-      setTrendsSeriesHighlight(svg, linesG, kOrNull);
-      renderTrendsActorAnnotations(kOrNull);
+      // If something is pinned and we're clearing hover, keep the pin visible
+      const effective = kOrNull || _pinnedActor || null;
+      setTrendsSeriesHighlight(svg, linesG, effective);
+      renderTrendsActorAnnotations(effective);
+    }
+
+    function togglePin(k) {
+      if (_pinnedActor === k) {
+        _pinnedActor = null;
+        setTrendsHoverState(null);
+      } else {
+        _pinnedActor = k;
+        setTrendsHoverState(k);
+      }
     }
 
     const drawOrder = [...keys].sort((a, b) => {
-      const ah = TRENDS_HIGHLIGHT_ACTORS.has(a) ? 1 : 0;
-      const bh = TRENDS_HIGHLIGHT_ACTORS.has(b) ? 1 : 0;
+      const ah = isTrendsHighlightedActor(a) ? 1 : 0;
+const bh = isTrendsHighlightedActor(b) ? 1 : 0;
       return ah - bh; // non-highlighted first, highlighted last (on top)
     });
 
@@ -1271,6 +1420,8 @@ function updateSourceCounts() {
       const seriesG = el('g', { class: 'rank-series', 'data-series': k }, linesG);
       const pts = [];
       DECADES.forEach(dec => {
+        // Politics has no data for the 1950s — skip so the line starts at 1960
+        if (dec === 1950 && trendSrc === 'politics') return;
         const m = ranksByDec[dec];
         if (!m || m[k] == null) return;
         const rank = m[k];
@@ -1285,11 +1436,15 @@ function updateSourceCounts() {
         dTrim = pts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x},${p.y}`).join(' ').trim();
       }
   
-      const isHighlighted = TRENDS_HIGHLIGHT_ACTORS.has(k);
-      const lineStroke = isHighlighted
-        ? (TRENDS_ACTOR_COLORS[k] || '#c4a44a')
-        : TRENDS_NEUTRAL_STROKE;
-  
+      const isHighlighted = isTrendsHighlightedActor(k);
+      const lineStroke    = isHighlighted
+        ? (TRENDS_ACTOR_COLORS[k] || 'rgba(240,240,240,0.75)')
+        : 'rgba(240,240,240,0.72)';
+      const seriesStrokeW = 2.5;
+      const tickStrokeW   = 1.8;
+      const seriesOpacity = isHighlighted ? '0.92' : '0.78';
+      const strokeDash    = 'none';
+
       el('path', {
         d: dTrim,
         fill: 'none',
@@ -1299,9 +1454,6 @@ function updateSourceCounts() {
         'stroke-linecap': 'round',
         'pointer-events': 'stroke',
       }, seriesG);
-      const seriesStrokeW = isHighlighted ? 2.55 : 1.95;
-      const tickStrokeW = isHighlighted ? 4.15 : 3.15;
-      const seriesOpacity = isHighlighted ? '0.96' : '0.86';
 
       const linePathEl = el('path', {
         d: dTrim,
@@ -1310,6 +1462,7 @@ function updateSourceCounts() {
         'stroke-width': seriesStrokeW,
         'stroke-linejoin': 'round',
         'stroke-linecap': 'round',
+        'stroke-dasharray': strokeDash,
         'pointer-events': 'none',
         opacity: seriesOpacity,
         class: 'rank-series-line',
@@ -1346,7 +1499,7 @@ function updateSourceCounts() {
           y2: p.y + tickHalf,
           stroke: tickStroke,
           'stroke-width': tickStrokeW,
-          'stroke-linecap': 'butt',
+          'stroke-linecap': 'round',
           class: 'rank-tick',
           'data-decade': p.dec,
           'pointer-events': 'none',
@@ -1377,14 +1530,18 @@ function updateSourceCounts() {
         xEnd: last.x,
       });
   
-      seriesG.style.cursor = 'default';
+      seriesG.style.cursor = 'pointer';
       seriesG.addEventListener('mouseover', e => {
         if (seriesG.contains(e.relatedTarget)) return;
-        setTrendsHoverState(k);
+        if (!_pinnedActor) setTrendsHoverState(k);
       });
       seriesG.addEventListener('mouseout', e => {
         if (seriesG.contains(e.relatedTarget)) return;
-        setTrendsHoverState(null);
+        if (!_pinnedActor) setTrendsHoverState(null);
+      });
+      seriesG.addEventListener('click', e => {
+        e.stopPropagation();
+        togglePin(k);
       });
     });
   
@@ -1397,39 +1554,50 @@ function updateSourceCounts() {
     let lastLy = -1e9;
     labelRows.forEach(row => {
       let ly = row.y + 4;
-      if (ly - lastLy < 20) ly = lastLy + 20;
+      if (ly - lastLy < 18) ly = lastLy + 18;
       lastLy = ly;
-      const lx = row.xEnd + TRENDS_LABEL_LINE_GAP + 12;
-      // Labels live in the right-pad zone; allow full SVG width minus a small edge gutter.
+      const lx = row.xEnd + TRENDS_LABEL_LINE_GAP + 8;
       const maxW = Math.max(80, TW - lx - 8);
       const hit = el('g', { class: 'rank-end-label', 'data-series': row.k }, labelsG);
       hit.style.setProperty('--label-delay', `${labelBaseDelay}s`);
       hit.style.cursor = 'default';
-      const tw = Math.min(maxW, Math.max(72, row.lab.length * 7.1));
-      const th = 20;
+      const tw = Math.min(maxW, Math.max(60, row.lab.length * 6.2));
+      const th = 18;
       el('rect', {
-        x: lx - 2,
-        y: ly - th + 5,
-        width: tw + 4,
-        height: th,
-        fill: 'transparent',
-        'pointer-events': 'all',
+        x: lx - 2, y: ly - th + 4,
+        width: tw + 4, height: th,
+        fill: 'transparent', 'pointer-events': 'all',
       }, hit);
       tx(row.lab, {
-        x: lx,
-        y: ly,
+        x: lx, y: ly,
         'text-anchor': 'start',
-        style: 'font-family:"Archivo Narrow",sans-serif;font-size:19px;font-weight:500;fill:rgba(240,240,240,0.90);pointer-events:none;',
+        style: 'font-family:"Archivo Narrow",sans-serif;font-size:16px;font-weight:400;fill:rgba(240,240,240,0.72);pointer-events:none;',
       }, hit);
+      hit.style.cursor = 'pointer';
       hit.addEventListener('mouseover', e => {
         if (hit.contains(e.relatedTarget)) return;
-        setTrendsHoverState(row.k);
+        if (!_pinnedActor) setTrendsHoverState(row.k);
       });
       hit.addEventListener('mouseout', e => {
         if (hit.contains(e.relatedTarget)) return;
-        setTrendsHoverState(null);
+        if (!_pinnedActor) setTrendsHoverState(null);
+      });
+      hit.addEventListener('click', e => {
+        e.stopPropagation();
+        togglePin(row.k);
       });
     });
+
+    // Click anywhere outside a line/label clears pin
+    const _clearPinOnDoc = (e) => {
+      if (_pinnedActor && !e.target.closest('.rank-series') && !e.target.closest('.rank-end-label')) {
+        _pinnedActor = null;
+        setTrendsHoverState(null);
+      }
+    };
+    document.removeEventListener('click', svg._clearPinHandler);
+    svg._clearPinHandler = _clearPinOnDoc;
+    document.addEventListener('click', _clearPinOnDoc);
   
     // Axis line runs from the first decade to the last decade plotted,
     // not to xPlotRight — which grows on wide screens beyond decadeX(2020).
@@ -1443,10 +1611,24 @@ function updateSourceCounts() {
       // Rank chart: remove curated milestone landmarks + disable axis tooltip wiring.
       skipLandmarks: true,
       disableTooltips: true,
-      // Match decade label color to rank number labels.
-      decLabelFill: 'rgba(240,240,240,0.72)',
+      // Match decade label color to bubble chart axis labels.
+      decLabelFill: '#f0f0f0',
     });
   
+    // For the POLITICS source, we have no data for the 1950s.
+    // Render a subtle "insufficient data" label just above the axis, between 1950s and 1960s ticks.
+    if (trendSrc === 'politics') {
+      const x1950 = decadeX(1950);
+      const x1960 = decadeX(1960);
+      const labelX = (x1950 + x1960) / 2;
+      const labelY = plotBot - 8; // just above the axis baseline
+      tx('insufficient data', {
+        x: labelX, y: labelY,
+        'text-anchor': 'middle',
+        style: 'font-family:"Archivo Narrow",sans-serif;font-size:11px;font-style:italic;fill:rgba(240,240,240,0.38);',
+      }, svg);
+    }
+
     setTrendsHoverState(null);
   
     trendsLayout = null;
@@ -1458,7 +1640,7 @@ function updateSourceCounts() {
     // But circles live on those decades too, so we “punch gaps” around circles
     // so the line doesn’t visually cut through the data marks.
     const lineTop = Number.isFinite(opts.lineTop) ? opts.lineTop : PAD_TOP;
-    const lineBot = PAD_TOP + rowsH;
+    const lineBot = Number.isFinite(opts.lineBot) ? opts.lineBot : PAD_TOP + rowsH;
     DECADES.forEach(dec => {
       const x = decadeX(dec);
       const excl = (circleExclusions || [])
@@ -1481,22 +1663,52 @@ function updateSourceCounts() {
   }
   
   // ── SHARE HELPERS ─────────────────────────────────────────────────────────
-  
-  function getThemeShare(src, umb, dec)  { return DATA.bubble_data[src]?.[umb]?.[String(dec)] || 0; }
-  function getActorShare(src, actor, dec){ return DATA.actor_data?.[src]?.[actor]?.[String(dec)] || 0; }
-  
-  /** Per-decade ranks by share (desc); ties broken by key for a stable order. */
-  function trendsDecadeRanks(keys, dec, view, src) {
-    if (dec === 1950 && src === 'politics') return null;
-    const rows = keys.map(k => ({
-      k,
-      share: view === 'theme' ? getThemeShare(src, k, dec) : getActorShare(src, k, dec),
-    }));
-    rows.sort((a, b) => (b.share !== a.share ? b.share - a.share : a.k.localeCompare(b.k)));
-    const byKey = {};
-    rows.forEach((row, i) => { byKey[row.k] = i + 1; });
-    return byKey;
+ function getThemeShare(src, umb, dec) {
+  return DATA.bubble_data?.[src]?.[umb]?.[String(dec)] || 0;
+}
+
+function getActorShare(src, actor, dec) {
+  // Prefer precomputed share from actor_rank_data; fall back to actor_data
+  return DATA.actor_rank_data?.[src]?.[actor]?.[String(dec)]?.share
+    || DATA.actor_data?.[src]?.[actor]?.[String(dec)]
+    || 0;
+}
+
+function trendsDecadeRanks(keys, dec, kind, src) {
+  if (kind !== 'actor') return null;
+
+  const out = {};
+
+  // Preferred: precomputed ranks from actor_rank_data
+  const hasRankData = DATA.actor_rank_data?.[src];
+
+  if (hasRankData) {
+    keys.forEach(actor => {
+      const item = DATA.actor_rank_data?.[src]?.[actor]?.[String(dec)];
+      if (item && Number.isFinite(Number(item.rank))) {
+        out[actor] = Number(item.rank);
+      }
+    });
+
+    if (Object.keys(out).length > 0) return out;
   }
+
+  // Fallback: compute ranks from actor_data shares
+  const rows = keys.map(k => ({
+    k,
+    share: getActorShare(src, k, dec),
+  }));
+
+  rows.sort((a, b) =>
+    b.share !== a.share ? b.share - a.share : keys.indexOf(a.k) - keys.indexOf(b.k)
+  );
+
+  rows.forEach((row, i) => {
+    out[row.k] = i + 1;
+  });
+
+  return out;
+}
   function getThemeOverall(src, umb)     { return DATA.overall_share?.[src]?.[umb] || 0; }
   function getActorOverall(src, actor)   { return DATA.actor_overall_share?.[src]?.[actor] || 0; }
   
@@ -1505,32 +1717,32 @@ function updateSourceCounts() {
     // is comparable to POLITICS/BOOKS for the same theme.
     // This returns the maximum share seen for this theme across all sources/decades.
     let m = 0;
-    for (const src of ['nyt','politics','books']) for (const d of DECADES) m = Math.max(m, getThemeShare(src, umb, d));
+    for (const src of ['nyt','politics']) for (const d of DECADES) m = Math.max(m, getThemeShare(src, umb, d));
     return m || 1;
   }
   function getThemeAllMin(umb) {
     // Minimum non-zero share (used for radius scaling). We ignore 0’s so that
     // sparse series don’t collapse the scale.
     let m = Infinity;
-    for (const src of ['nyt','politics','books']) for (const d of DECADES) { const v = getThemeShare(src, umb, d); if (v > 0) m = Math.min(m, v); }
+    for (const src of ['nyt','politics']) for (const d of DECADES) { const v = getThemeShare(src, umb, d); if (v > 0) m = Math.min(m, v); }
     return m === Infinity ? 0 : m;
   }
   function getActorAllMax(actor) {
     // Same as `getThemeAllMax` but for actor drilldowns.
     let m = 0;
-    for (const src of ['nyt','politics','books']) for (const d of DECADES) m = Math.max(m, getActorShare(src, actor, d));
+    for (const src of ['nyt','politics']) for (const d of DECADES) m = Math.max(m, getActorShare(src, actor, d));
     return m || 1;
   }
   function getActorAllMin(actor) {
     // Same as `getThemeAllMin` but for actor drilldowns.
     let m = Infinity;
-    for (const src of ['nyt','politics','books']) for (const d of DECADES) { const v = getActorShare(src, actor, d); if (v > 0) m = Math.min(m, v); }
+    for (const src of ['nyt','politics']) for (const d of DECADES) { const v = getActorShare(src, actor, d); if (v > 0) m = Math.min(m, v); }
     return m === Infinity ? 0 : m;
   }
   
   // ── PLANET LABEL ──────────────────────────────────────────────────────────
   
-  function drawPlanetLabel(g, cx, cy, r, label, pct) {
+  function drawPlanetLabel(g, cx, cy, r, label, pct, showPct = false) {
     const words    = label.split(' ');
     const mid      = Math.ceil(words.length / 2);
     const line1    = words.slice(0, mid).join(' ');
@@ -1538,13 +1750,16 @@ function updateSourceCounts() {
     const fontSize = r >= 62 ? 18 : r >= 46 ? 16 : 15;
     const pctSize  = r >= 62 ? 13 : 11;
     const lbl      = el('g', { 'pointer-events': 'none' }, g);
+    const lineSpacing = fontSize * 1.25;
+    const baseStyle = `font-family:"Archivo Narrow",sans-serif;font-size:${fontSize}px;font-weight:500;fill:rgba(255,255,255,0.93);`;
     if (line2) {
-      tx(line1, { x: cx, y: cy - fontSize/2 - 2, 'text-anchor': 'middle', style: `font-family:"Archivo Narrow",sans-serif;font-size:${fontSize}px;font-weight:500;fill:rgba(255,255,255,0.93);` }, lbl);
-      tx(line2, { x: cx, y: cy + fontSize/2 + 4, 'text-anchor': 'middle', style: `font-family:"Archivo Narrow",sans-serif;font-size:${fontSize}px;font-weight:500;fill:rgba(255,255,255,0.93);` }, lbl);
-      tx(fmtPct(pct), { x: cx, y: cy + fontSize + 12, 'text-anchor': 'middle', style: `font-family:"Archivo Narrow",sans-serif;font-size:${pctSize}px;fill:rgba(255,255,255,0.55);` }, lbl);
+      // Two lines: center the block on cy using dominant-baseline:central
+      tx(line1, { x: cx, y: cy - lineSpacing / 2, 'text-anchor': 'middle', 'dominant-baseline': 'central', style: baseStyle }, lbl);
+      tx(line2, { x: cx, y: cy + lineSpacing / 2, 'text-anchor': 'middle', 'dominant-baseline': 'central', style: baseStyle }, lbl);
+      if (showPct) tx(fmtPct(pct), { x: cx, y: cy + lineSpacing + 4, 'text-anchor': 'middle', 'dominant-baseline': 'central', style: `font-family:"Archivo Narrow",sans-serif;font-size:${pctSize}px;fill:rgba(255,255,255,0.55);` }, lbl);
     } else {
-      tx(line1, { x: cx, y: cy + fontSize/2 - 4, 'text-anchor': 'middle', style: `font-family:"Archivo Narrow",sans-serif;font-size:${fontSize}px;font-weight:500;fill:rgba(255,255,255,0.93);` }, lbl);
-      tx(fmtPct(pct), { x: cx, y: cy + fontSize + 6, 'text-anchor': 'middle', style: `font-family:"Archivo Narrow",sans-serif;font-size:${pctSize}px;fill:rgba(255,255,255,0.55);` }, lbl);
+      tx(line1, { x: cx, y: cy, 'text-anchor': 'middle', 'dominant-baseline': 'central', style: baseStyle }, lbl);
+      if (showPct) tx(fmtPct(pct), { x: cx, y: cy + lineSpacing, 'text-anchor': 'middle', 'dominant-baseline': 'central', style: `font-family:"Archivo Narrow",sans-serif;font-size:${pctSize}px;fill:rgba(255,255,255,0.55);` }, lbl);
     }
   }
   
@@ -1556,7 +1771,7 @@ function updateSourceCounts() {
   // Tighter vertical padding so the SVG doesn't have unused head/foot room.
   const CLUSTER_PAD_TOP  = 28;
   const CLUSTER_PAD_BOT  = 16;
-  const CLUSTER_PAD_SIDE = 140;  // left padding
+  const CLUSTER_PAD_SIDE = 90;  // left padding (reduced to push bubbles further left)
   const CLUSTER_PAD_RIGHT = 0;  // right padding
   /** < 1 compresses vertical spacing between bubble centers (radii unchanged). */
   const CLUSTER_VERTICAL_SQUASH = 0.955;
@@ -1564,7 +1779,7 @@ function updateSourceCounts() {
   // switching between overview and drilldown doesn't change the page bottom.
   const OVERVIEW_SVG_MAX_H =
     PAD_TOP +
-    (3 * DRILL_ROW_H + 2 * 16) + // rowsH uses ROW_GAP=16 in drilldown
+    (2 * DRILL_ROW_H + 1 * 16) + // rowsH uses ROW_GAP=16 in drilldown (2 rows now)
     AXIS_EXTRA + DEC_LBL_H + LM_TICK + LM_LBL_H + 6; // maxLmOff is 0 in this project
 
   function clusterViewportHeight() {
@@ -1587,7 +1802,7 @@ function updateSourceCounts() {
     // Small bottom gutter so the last circle isn't flush with the frame edge.
     const GUTTER = 16;
     const h = Math.max(360, Math.floor(frameH - headerH - GUTTER));
-    return Math.min(h, OVERVIEW_SVG_MAX_H);
+    return h;
   }
   
   function scaledMdsPositions(keys, radii, posObj, W, viewH = clusterViewportHeight()) {
@@ -1664,9 +1879,9 @@ function updateSourceCounts() {
   }));
   if (maxCo === 0) return;
 
-  const THRESHOLD = 0.08;
-  const MIN_OPACITY = 0.18;
-  const MAX_OPACITY = 0.82;
+  const THRESHOLD = 0.06;
+  const MIN_OPACITY = 0.08;
+  const MAX_OPACITY = 0.88;
   const MIN_STROKE = 1.0;
   const MAX_STROKE = 2.8;
 
@@ -1857,7 +2072,7 @@ function updateSourceCounts() {
     // ── LAYOUT: compute per-item radius based on share, then stack vertically ─
     const vw    = wrap.clientWidth || window.innerWidth - 40;
     const MAX_R = Math.min(vw * 0.44, MAX_CLUSTER_R);
-    const MIN_R = MIN_CLUSTER_R * 0.55;
+    const MIN_R = MIN_CLUSTER_R * 0.50;
     const MOB_PAD = 12;
   
     const radii = {};
@@ -1914,10 +2129,8 @@ function updateSourceCounts() {
       if (line2) {
         mkTx(line1, cx, cy - fs/2 - 2, baseStyle);
         mkTx(line2, cx, cy + fs/2 + 4, baseStyle);
-        mkTx(fmtPct(share), cx, cy + fs + 12, pctStyle);
       } else {
         mkTx(line1, cx, cy + fs/2 - 4, baseStyle);
-        mkTx(fmtPct(share), cx, cy + fs + 6, pctStyle);
       }
       g.appendChild(lblG);
   
@@ -1960,7 +2173,7 @@ function updateSourceCounts() {
     // because the desktop source filter can scroll off-screen.
     const tabs = document.createElement('div');
     tabs.className = 'mob-src-tabs';
-    ['nyt','politics','books'].forEach(src => {
+    ['nyt','politics'].forEach(src => {
       const tab = document.createElement('button');
       tab.className = 'mob-src-tab' + (src === planetSrc ? ' active' : '');
       tab.textContent = SRC_ABBR[src];
@@ -2159,17 +2372,13 @@ function updateSourceCounts() {
     const svg   = document.getElementById('bubble-svg');
     svg.innerHTML = '';
     const theme = DATA.themes[umb];
-    const rowSources = ['nyt','politics','books'];
+    const rowSources = ['nyt','politics'];
   
     // ── SCALE: shared across rows so comparisons are meaningful ──────────────
     const sharedMax = getThemeAllMax(umb);
     const sharedMin = getThemeAllMin(umb);
 
     // ── HEIGHT: scale rows to fit available frame so back button + decades always visible ───
-    // The drilldown must never overflow the sticky frame. We compute the real
-    // available height first, then derive a scaled row height that fits 3 rows
-    // + gaps + axis within it. This guarantees the back button and decade labels
-    // are never obscured by the SVG on any screen size.
     _activeDrillW   = drillSvgW();
     const maxLmOff  = calculateMaxLandmarkOffset(getLandmarks(umb, { timelineView: 'theme' }), _activeDrillW);
     const axisFootH = AXIS_EXTRA + DEC_LBL_H + LM_TICK + LM_LBL_H + maxLmOff + 6;
@@ -2179,43 +2388,40 @@ function updateSourceCounts() {
     const _hdr_dd   = document.querySelector('.bubble-header');
     const _hdrH_dd  = _hdr_dd ? _hdr_dd.getBoundingClientRect().height : 180;
     const availH    = Math.max(280, Math.floor(window.innerHeight - _navH_dd - _panelPad - _hdrH_dd - 16));
-    const ROW_GAP   = 16;
-    const maxRowH   = Math.floor((availH - PAD_TOP - axisFootH - 2 * ROW_GAP) / 3);
-    const drillRowH = Math.min(DRILL_ROW_H, Math.max(56, maxRowH));
-    const rowsH     = 3 * drillRowH + 2 * ROW_GAP;
-    const svgH      = PAD_TOP + rowsH + axisFootH;
+    // Row 0 sits near top. Row 1 a fixed gap below. SVG sized to fit both + axis.
+    const TOP_MARGIN = 4;
+    const BOT_MARGIN = 12;
+    const ROW_GAP    = DRILL_MAX_R * 2 + 40;   // gap between circle centers: diameter + 40px breathing room
+    const cy0 = TOP_MARGIN + DRILL_MAX_R;
+    const cy1 = cy0 + ROW_GAP;
+    const svgH = Math.round(cy1 + DRILL_MAX_R + axisFootH + BOT_MARGIN);
+    const rowCenters = [cy0, cy1];
+
+    // Dummy drillRowH for drawDecadeLines lineTop/lineBot compatibility
+    const drillRowH = cy0;
 
     // ViewBox width: use full available width for drilldown to fill the container
     const drillViewBoxW = _activeDrillW;
     svg.setAttribute('viewBox', `0 0 ${drillViewBoxW} ${svgH}`);
     svg.setAttribute('preserveAspectRatio', 'none');
     svg.removeAttribute('height');
-    // Cap CSS render height to availH so SVG never overflows the sticky frame.
-    svg.style.cssText = 'display:block;width:100%;max-height:' + availH + 'px;overflow:visible;';
+    svg.style.cssText = 'display:block;width:100%;max-height:' + svgH + 'px;overflow:visible;';
     buildDefs(svg);
   
     const decLinesG = el('g', {}, svg);
   
-    // "compared across" / "sources" sit in the gap between row 0 and row 1,
-    // raised well above the "in NEWS" label at row 1 center.
-    const comparedY = PAD_TOP + drillRowH + Math.round(ROW_GAP * 0.3);
-    tx('compared across', { x: 12, y: comparedY, 'text-anchor': 'start',
-      style: 'font-family:"Archivo Narrow",sans-serif;font-size:14px;font-style:italic;fill:rgba(240,240,240,0.62);' }, svg);
-    tx('sources', { x: 12, y: comparedY + 16, 'text-anchor': 'start',
-      style: 'font-family:"Archivo Narrow",sans-serif;font-size:14px;font-style:italic;fill:rgba(240,240,240,0.62);' }, svg);
-  
     const inactiveSources = rowSources.filter(s => s !== planetSrc);
-    const displayOrder    = [planetSrc, inactiveSources[0], inactiveSources[1]];
+    const displayOrder    = [planetSrc, inactiveSources[0]];
     const orderedSources  = [...inactiveSources, planetSrc];
     const circleExclusions = [];
   
     orderedSources.forEach(src => {
       const idx      = displayOrder.indexOf(src);
-      const cy       = PAD_TOP + idx * (drillRowH + ROW_GAP) + drillRowH / 2;
+      const cy       = rowCenters[idx];
       const isActive = src === planetSrc;
   
       el('line', {
-        x1: LABEL_W, y1: cy, x2: decadeX(2020), y2: cy,
+        x1: src === 'politics' ? decadeX(1960) : LABEL_W, y1: cy, x2: decadeX(2020), y2: cy,
         stroke: '#f0f0f0', 'stroke-width': '0.5', 'stroke-dasharray': '2,3', opacity: isActive ? '0.30' : '0.18'
       }, svg);
   
@@ -2224,7 +2430,7 @@ function updateSourceCounts() {
   
       DECADES.forEach(dec => {
         if (dec === 1950 && src === 'politics') {
-          el('rect', { x: decadeX(1950) - 52, y: cy - 9, width: 104, height: 18, fill: '#1a1a1a' }, svg);
+          el('rect', { x: decadeX(1950) - 54, y: cy - 10, width: 108, height: 20, fill: '#1d1d1d' }, svg);
           tx('insufficient data', { x: decadeX(1950), y: cy,
             'text-anchor': 'middle', 'dominant-baseline': 'middle',
             style: `font-family:"Archivo Narrow",sans-serif;font-size:11px;font-style:italic;fill:${isActive ? 'rgba(240,240,240,0.44)' : 'rgba(240,240,240,0.40)'};`,
@@ -2233,9 +2439,12 @@ function updateSourceCounts() {
         }
   
         const share = getThemeShare(src, umb, dec);
-        const scaleR  = drillRowH / DRILL_ROW_H;
-        const r     = shareToRRanged(share, sharedMin, sharedMax, Math.round(DRILL_MAX_R * scaleR));
-        if (r <= 0) return;
+        const maxR   = DRILL_MAX_R;
+        const r     = shareToRRanged(share, sharedMin, sharedMax, maxR);
+        
+        // Don't render circles if there are no samples for this decade
+        let samples = DATA.samples?.[src]?.[umb]?.[String(dec)] || [];
+        if (r <= 0 || samples.length === 0) return;
   
         circleExclusions.push({ dec, cy, r });
   
@@ -2279,8 +2488,8 @@ function updateSourceCounts() {
   
   // Vertical decade guides should start at the first row’s baseline (so they
   // don’t extend into the header area above the top row).
-  drawDecadeLines(decLinesG, rowsH, circleExclusions, { lineTop: PAD_TOP + DRILL_ROW_H / 2 });
-    drawAxis(svg, rowsH, umb, { timelineView: 'theme', skipLandmarks: true });
+  drawDecadeLines(decLinesG, svgH - axisFootH, circleExclusions, { lineTop: cy0 - DRILL_MAX_R, lineBot: svgH - axisFootH});
+    drawAxis(svg, svgH - axisFootH - PAD_TOP, umb, { timelineView: 'theme', skipLandmarks: true, baselineY: svgH - axisFootH });
   }
   
   // ── ACTOR DRILLDOWN ───────────────────────────────────────────────────────
@@ -2289,7 +2498,7 @@ function updateSourceCounts() {
     _inDrilldown = true; // tell chartW() to use the wider right gutter
     const svg = document.getElementById('bubble-svg');
     svg.innerHTML = '';
-    const rowSources = ['nyt','politics','books'];
+    const rowSources = ['nyt','politics'];
     const label      = ACTOR_LABELS_MAP[actor] || actor;
   
     const sharedMax = getActorAllMax(actor);
@@ -2304,42 +2513,40 @@ function updateSourceCounts() {
     const _hdr_ad   = document.querySelector('.bubble-header');
     const _hdrH_ad  = _hdr_ad ? _hdr_ad.getBoundingClientRect().height : 180;
     const availH    = Math.max(280, Math.floor(window.innerHeight - _navH_ad - _panelPad - _hdrH_ad - 16));
-    const ROW_GAP   = 16;
-    const maxRowH   = Math.floor((availH - PAD_TOP - axisFootH - 2 * ROW_GAP) / 3);
-    const drillRowH = Math.min(DRILL_ROW_H, Math.max(56, maxRowH));
-    const rowsH     = 3 * drillRowH + 2 * ROW_GAP;
-    const svgH      = PAD_TOP + rowsH + axisFootH;
+    // Row 0 sits near top. Row 1 a fixed gap below. SVG sized to fit both + axis.
+    const TOP_MARGIN = 4;
+    const BOT_MARGIN = 12;
+    const ROW_GAP    = DRILL_MAX_R * 2 + 40;
+    const cy0 = TOP_MARGIN + DRILL_MAX_R;
+    const cy1 = cy0 + ROW_GAP;
+    const svgH = Math.round(cy1 + DRILL_MAX_R + axisFootH + BOT_MARGIN);
+    const rowCenters = [cy0, cy1];
+
+    // Dummy drillRowH for drawDecadeLines lineTop/lineBot compatibility
+    const drillRowH = cy0;
 
     // ViewBox width: use full available width for drilldown to fill the container
     const drillViewBoxW = _activeDrillW;
     svg.setAttribute('viewBox', `0 0 ${drillViewBoxW} ${svgH}`);
     svg.setAttribute('preserveAspectRatio', 'none');
     svg.removeAttribute('height');
-    svg.style.cssText = 'display:block;width:100%;max-height:' + availH + 'px;overflow:visible;';
+    svg.style.cssText = 'display:block;width:100%;max-height:' + svgH + 'px;overflow:visible;';
     buildDefs(svg);
   
     const decLinesG = el('g', {}, svg);
   
-    // "compared across" / "sources" sit in the gap between row 0 and row 1,
-    // raised well above the "in NEWS" label at row 1 center.
-    const comparedY = PAD_TOP + drillRowH + Math.round(ROW_GAP * 0.3);
-    tx('compared across', { x: 12, y: comparedY, 'text-anchor': 'start',
-      style: 'font-family:"Archivo Narrow",sans-serif;font-size:14px;font-style:italic;fill:rgba(240,240,240,0.62);' }, svg);
-    tx('sources', { x: 12, y: comparedY + 16, 'text-anchor': 'start',
-      style: 'font-family:"Archivo Narrow",sans-serif;font-size:14px;font-style:italic;fill:rgba(240,240,240,0.62);' }, svg);
-  
     const inactiveSources = rowSources.filter(s => s !== planetSrc);
-    const displayOrder    = [planetSrc, inactiveSources[0], inactiveSources[1]];
+    const displayOrder    = [planetSrc, inactiveSources[0]];
     const orderedSources  = [...inactiveSources, planetSrc];
     const circleExclusions = [];
   
     orderedSources.forEach(src => {
       const idx      = displayOrder.indexOf(src);
-      const cy       = PAD_TOP + idx * (drillRowH + ROW_GAP) + drillRowH / 2;
+      const cy       = rowCenters[idx];
       const isActive = src === planetSrc;
   
       el('line', {
-        x1: LABEL_W, y1: cy, x2: decadeX(2020), y2: cy,
+        x1: src === 'politics' ? decadeX(1960) : LABEL_W, y1: cy, x2: decadeX(2020), y2: cy,
         stroke: '#f0f0f0', 'stroke-width': '0.5', 'stroke-dasharray': '2,3', opacity: isActive ? '0.30' : '0.18'
       }, svg);
   
@@ -2348,7 +2555,7 @@ function updateSourceCounts() {
   
       DECADES.forEach(dec => {
         if (dec === 1950 && src === 'politics') {
-          el('rect', { x: decadeX(1950) - 52, y: cy - 9, width: 104, height: 18, fill: '#1a1a1a' }, svg);
+          el('rect', { x: decadeX(1950) - 54, y: cy - 10, width: 108, height: 20, fill: '#1d1d1d' }, svg);
           tx('insufficient data', { x: decadeX(1950), y: cy,
             'text-anchor': 'middle', 'dominant-baseline': 'middle',
             style: `font-family:"Archivo Narrow",sans-serif;font-size:11px;font-style:italic;fill:${isActive ? 'rgba(240,240,240,0.44)' : 'rgba(240,240,240,0.40)'};`,
@@ -2357,8 +2564,8 @@ function updateSourceCounts() {
         }
   
         const share = getActorShare(src, actor, dec);
-        const scaleR  = drillRowH / DRILL_ROW_H;
-        const r     = shareToRRanged(share, sharedMin, sharedMax, Math.round(DRILL_MAX_R * scaleR));
+        const maxR   = DRILL_MAX_R;
+        const r     = shareToRRanged(share, sharedMin, sharedMax, maxR);
         if (r <= 0) return;
   
         circleExclusions.push({ dec, cy, r });
@@ -2403,8 +2610,8 @@ function updateSourceCounts() {
   
   // Vertical decade guides should start at the first row’s baseline (so they
   // don’t extend into the header area above the top row).
-  drawDecadeLines(decLinesG, rowsH, circleExclusions, { lineTop: PAD_TOP + DRILL_ROW_H / 2 });
-    drawAxis(svg, rowsH, null, { timelineView: 'actor', actorDrill: actor, skipLandmarks: true });
+  drawDecadeLines(decLinesG, svgH - axisFootH, circleExclusions, { lineTop: cy0 - DRILL_MAX_R, lineBot: svgH - axisFootH });
+    drawAxis(svg, svgH - axisFootH - PAD_TOP, null, { timelineView: 'actor', actorDrill: actor, skipLandmarks: true, baselineY: svgH - axisFootH });
   }
   
   // ── ENTER / EXIT ──────────────────────────────────────────────────────────
@@ -2473,6 +2680,12 @@ function updateSourceCounts() {
   
   function buildSamplesList(samples, src) {
     const sorted = [...samples].sort((a, b) => (b.score || 0) - (a.score || 0));
+    console.log(`buildSamplesList called with src='${src}', total samples: ${sorted.length}`);
+    if (sorted[0]) {
+      const keys = Object.keys(sorted[0]);
+      console.log('First sample object keys:', keys);
+      console.log('First sample object:', sorted[0]);
+    }
     return sorted.map(s => {
       let yearCell = `<span class="dp-hl-year">${s.year || ''}</span>`;
       let content  = '';
@@ -2483,26 +2696,15 @@ function updateSourceCounts() {
           ? `<a href="${esc(s.url)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${headlineText}</a>`
           : headlineText;
   
-      } else if (src === 'politics') {
+       } else {
         const excerpt = highlightPoliticsKeywords(esc(s.t || ''));
-        const title   = s.title ? esc(s.title) : '';
-        const titleEl = title
-          ? (s.url ? `<div class="dp-hl-title"><a href="${esc(s.url)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:2px;">${title}</a></div>` : `<div class="dp-hl-title">${title}</div>`)
+        // For politics samples: use 'title' field
+        const title   = s.title        // If there's a URL, make the title a link; otherwise just show the title text.
+        const titleEl = title && s.url
+          ? `<div class="dp-hl-title"><a href="${esc(s.url)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:2px;">${title}</a></div>`
           : '';
         content = `${titleEl}<span class="dp-hl-text">${excerpt}</span>`;
-  
-      } else {
-        const titleText = esc(s.title || s.t || '');
-        const titleEl   = s.url
-          ? `<a href="${esc(s.url)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;"><span class="dp-hl-text">${titleText}</span></a>`
-          : `<span class="dp-hl-text">${titleText}</span>`;
-        let summaryHtml = '';
-        if (s.summary) {
-          summaryHtml = `<div class="dp-hl-title" style="font-style:normal;">${esc(s.summary)}</div>`;
-        }
-        content = `<div style="flex:1;">${titleEl}${s.author ? `<div class="dp-hl-title">${esc(s.author)}</div>` : ''}${summaryHtml}</div>`;
       }
-  
       return `<div class="dp-hl-item">${yearCell}<div style="flex:1;">${content}</div></div>`;
     }).join('');
   }
@@ -2520,6 +2722,11 @@ function updateSourceCounts() {
     let samples = kind === 'theme'
       ? (DATA.samples?.[planetSrc]?.[key]?.[String(dec)] || [])
       : (DATA.actor_samples?.[planetSrc]?.[key]?.[String(dec)] || []);
+    
+    console.log(`openSamplesModal: kind='${kind}', planetSrc='${planetSrc}', key='${key}', dec=${dec}`);
+    console.log(`Loading from: DATA.actor_samples['${planetSrc}']['${key}']['${dec}']`);
+    console.log(`Raw samples from JSON (first 2):`, samples.slice(0, 2));
+    
     samples = [...samples].sort((a, b) => (b.score || 0) - (a.score || 0));
   
     const label = kind === 'theme'
@@ -2533,12 +2740,12 @@ function updateSourceCounts() {
       document.body.appendChild(modal);
     }
   
-    const maxItems = planetSrc === 'politics' ? 3 : (planetSrc === 'books' ? 5 : 10);
+    const maxItems = planetSrc === 'politics' ? 5 : 10;
     samples = samples.slice(0, maxItems);
   
     const srcTag = SRC_ABBR[planetSrc] || planetSrc.toUpperCase();
-    const srcDb  = { nyt: 'New York Times', politics: 'American Presidency Project', books: 'Goodreads / Open Library' }[planetSrc] || '';
-    const hintText = { nyt: 'Click on a headline to see source', politics: 'Click on a document title to see source', books: 'Click on a book to see source' }[planetSrc] || '';
+    const srcDb  = { nyt: 'New York Times', politics: 'American Presidency Project' }[planetSrc] || '';
+    const hintText = { nyt: 'Click on a headline to see source', politics: 'Click on a document title to see source' }[planetSrc] || '';
   
     const itemsHtml = samples.length === 0
       ? `<div class="sm-empty">No samples available for this decade.</div>`
@@ -2548,7 +2755,7 @@ function updateSourceCounts() {
       <div class="sm-backdrop"></div>
       <div class="sm-dialog">
         <div class="sm-topbar">
-          <span class="sm-theme-tag">${esc(srcTag)}<span style="opacity:0.35;margin:0 8px;">·</span>Source: ${esc(srcDb)}</span>
+          <span class="sm-theme-tag">SAMPLES: ${esc(srcTag)}<span style="opacity:0.8;margin:0 8px;">|</span>Source: ${esc(srcDb)}</span>
           <button class="sm-close" aria-label="Close">✕ CLOSE</button>
         </div>
         <div class="sm-src-line">${esc(label)} in the ${dec}s</div>
@@ -2646,7 +2853,7 @@ function updateSourceCounts() {
   // ── BOOT ──────────────────────────────────────────────────────────────────
   
   async function boot() {
-    const res = await fetch('./data_viz/space_viz_data.json');
+    const res = await fetch('./data_viz/space_viz_data.json?t=' + Date.now());
     window.VIZ_DATA = await res.json();
     DATA = window.VIZ_DATA;
 

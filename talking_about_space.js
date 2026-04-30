@@ -81,7 +81,7 @@ function getActorsForSource(src) {
   const LABEL_W     = 240;
   const CHART_PAD        = 230;  // right gutter for rank chart end-labels (wider to fit actor names)
   const DRILL_CHART_PAD  = 20; // right gutter for drilldown: reserves space for last circle radius
-  const DRILL_MAX_R = 85;
+  const DRILL_MAX_R = 74;
   const DRILL_ROW_H = 140;
   const PAD_TOP     = 20;
   const AXIS_EXTRA  = 6;
@@ -174,7 +174,7 @@ function getActorsForSource(src) {
   }
   
   const MAX_CLUSTER_R = 120;
-  const MIN_CLUSTER_R = 50;
+  const MIN_CLUSTER_R = 46;
   
   const SRC_ABBR = { nyt:'NEWS', politics:'POLITICS' };
   
@@ -240,19 +240,12 @@ const ACTOR_LABELS_MAP = {
   // px: 0=left, 1=right. py: 0=top, 1=bottom.
   
   const THEME_POSITIONS = {
-    power_rivalry:          { px: 0.14, py: 0.28 },
-    applied_space_science:  { px: 0.44, py: 0.32 },
-    discovery_science:      { px: 0.70, py: 0.22 },
-    risk_hazard:            { px: 0.06, py: 0.75 },
-    existential_reflection: { px: 0.38, py: 0.84 },
-    economic_financial:     { px: 0.62, py: 0.78 },
-  };
-  const ACTOR_POSITIONS = {
-    national_state_us:          { px: 0.16, py: 0.28 },
-    rival_space_powers:         { px: 0.49, py: 0    },
-    scientific_community:       { px: 0.66, py: 0.60 },
-    international_institutions: { px: 0.32, py: 0.80 },
-    private_sector:             { px: 0.08, py: 0.75 },
+    power_rivalry:          { px: 0.12, py: 0.28 },
+    applied_space_science:  { px: 0.5, py: 0.10 },
+    discovery_science:      { px: 0.7, py: 0.10 },
+    risk_hazard:            { px: 0.10, py: 0.75 },
+    existential_reflection: { px: 0.38, py: 0.69 },
+    economic_financial:     { px: 0.72, py: 0.76 },
   };
   
   // ── STATE ─────────────────────────────────────────────────────────────────
@@ -265,6 +258,10 @@ const ACTOR_LABELS_MAP = {
   let activeTheme = null;
   let DATA        = null;
   let _activeDrillW = null;
+  /** Stores the display order locked at drilldown entry time: [activeSrc, otherSrc].
+   *  null means not in drilldown. Switching source inside drilldown does NOT change this. */
+  let _drillEnteredFromOverview = false;
+  let _drillRowOrder = null;  // e.g. ['politics','nyt'] or ['nyt','politics']
   /** When set, the rank chart keeps this actor highlighted (click-to-pin). */
   let _pinnedActor = null;
   /** True while a drilldown chart is being rendered — tells chartW() to use DRILL_CHART_PAD. */
@@ -616,6 +613,9 @@ function updateSourceCounts() {
     syncDrilldownBackLinks();
     updatePlanetsSubtitle();
     updateSectionTitles();
+    // Sync CTA text
+    const cta = document.getElementById('overview-cta');
+    if (cta) cta.textContent = activeTheme ? 'CLICK A DECADE TO SEE SAMPLES' : 'CLICK A THEME TO SEE DETAILS';
     if (IS_MOBILE()) {
       activeTheme ? drawMobileDrilldown(activeTheme, 'theme') : drawMobileCluster('theme');
       return;
@@ -635,6 +635,11 @@ function updateSourceCounts() {
     syncDrilldownBackLinks();
     updateCaption();
     drawTrendsChart();
+    
+    // Update CTA text — single element always visible, text changes by state
+    const cta = document.getElementById('overview-cta');
+    if (cta) cta.textContent = activeTheme ? 'CLICK A DECADE TO SEE SAMPLES' : 'CLICK A THEME TO SEE DETAILS';
+    
     if (IS_MOBILE()) {
       activeTheme ? drawMobileDrilldown(activeTheme, 'theme') : drawMobileCluster('theme');
       return;
@@ -654,7 +659,7 @@ function updateSourceCounts() {
   };
   const TAS_SECTION_TITLE_PLANETS = 'The recurring themes';
   const TAS_PLANETS_OVERVIEW_SUBTITLE =
-    'Click any circle to see how attention given to a theme changed across 1950–2024';
+    'How attention given to different themes changed across 1950–2024';
   
   function updateTrendsSubtitle() {
     const el = document.getElementById('page-subtitle-trends');
@@ -854,9 +859,11 @@ function updateSourceCounts() {
   }
   function shareToRRanged(share, minShare, maxShare, maxR) {
     if (!share || share <= MIN_SHARE) return 0;
-    const range = maxShare - minShare;
-    if (range <= 0) return maxR;
-    return 8 + Math.sqrt((share - minShare) / range) * (maxR - 8);
+    // Scale from 0 (not minShare) so that a value of 26% when max is 40%
+    // actually looks like ~65% of the max bubble — not near-zero because
+    // it happens to be close to the minimum non-zero value.
+    if (maxShare <= 0) return maxR;
+    return 8 + Math.sqrt(share / maxShare) * (maxR - 8);
   }
   
   // ── DEFS ──────────────────────────────────────────────────────────────────
@@ -988,7 +995,7 @@ function updateSourceCounts() {
       const x = decadeX(dec);
       el('line', {
         x1: x, y1: yTop, x2: x, y2: yBot,
-        stroke: 'rgba(240,240,240,0.20)', 'stroke-width': 0.85, 'stroke-dasharray': '4,4',
+        stroke: 'rgba(240,240,240,0.20)', 'stroke-width': 1.2, 'stroke-dasharray': '4,4',
       }, g);
     });
   }
@@ -1231,7 +1238,7 @@ function updateSourceCounts() {
       const y = trendsBumpRankY(r, nRanks, plotTop, plotH);
       el('line', {
         x1: xPlotLeft, y1: y, x2: xPlotRight, y2: y,
-        stroke: 'rgba(240,240,240,0.12)', 'stroke-width': 1, 'stroke-dasharray': '4,4',
+        stroke: 'rgba(240,240,240,0.12)', 'stroke-width': 1.3, 'stroke-dasharray': '4,4',
       }, svg);
     }
   
@@ -1712,19 +1719,24 @@ function trendsDecadeRanks(keys, dec, kind, src) {
   function getThemeOverall(src, umb)     { return DATA.overall_share?.[src]?.[umb] || 0; }
   function getActorOverall(src, actor)   { return DATA.actor_overall_share?.[src]?.[actor] || 0; }
   
+function getThemeProminenceShare(src, umb, dec) {
+    // Prominence-based share: top_counts_by_decade / decade_doc_counts
+    // Used for drilldown bubble sizing — ensures bubble and tooltip are consistent.
+    const count    = DATA.top_counts_by_decade?.[src]?.[umb]?.[String(dec)] || 0;
+    const decTotal = DATA.decade_doc_counts?.[src]?.[String(dec)] || 1;
+    return count / decTotal;
+  }
   function getThemeAllMax(umb) {
-    // We scale drilldown circles consistently across sources, so a value in NEWS
-    // is comparable to POLITICS/BOOKS for the same theme.
-    // This returns the maximum share seen for this theme across all sources/decades.
+    // Maximum prominence share across all sources and decades for this theme.
+    // Scales drilldown circles consistently so NEWS and POLITICS are comparable.
     let m = 0;
-    for (const src of ['nyt','politics']) for (const d of DECADES) m = Math.max(m, getThemeShare(src, umb, d));
+    for (const src of ['nyt','politics']) for (const d of DECADES) m = Math.max(m, getThemeProminenceShare(src, umb, d));
     return m || 1;
   }
   function getThemeAllMin(umb) {
-    // Minimum non-zero share (used for radius scaling). We ignore 0’s so that
-    // sparse series don’t collapse the scale.
+    // Minimum non-zero prominence share (used for radius scaling floor).
     let m = Infinity;
-    for (const src of ['nyt','politics']) for (const d of DECADES) { const v = getThemeShare(src, umb, d); if (v > 0) m = Math.min(m, v); }
+    for (const src of ['nyt','politics']) for (const d of DECADES) { const v = getThemeProminenceShare(src, umb, d); if (v > 0) m = Math.min(m, v); }
     return m === Infinity ? 0 : m;
   }
   function getActorAllMax(actor) {
@@ -1771,8 +1783,8 @@ function trendsDecadeRanks(keys, dec, kind, src) {
   // Tighter vertical padding so the SVG doesn't have unused head/foot room.
   const CLUSTER_PAD_TOP  = 28;
   const CLUSTER_PAD_BOT  = 16;
-  const CLUSTER_PAD_SIDE = 90;  // left padding (reduced to push bubbles further left)
-  const CLUSTER_PAD_RIGHT = 0;  // right padding
+  const CLUSTER_PAD_SIDE = 60;  // left padding
+  const CLUSTER_PAD_RIGHT = 20;  // right padding
   /** < 1 compresses vertical spacing between bubble centers (radii unchanged). */
   const CLUSTER_VERTICAL_SQUASH = 0.955;
   // Keep the overview cluster from being taller than the drilldown chart, so
@@ -1821,7 +1833,7 @@ function trendsDecadeRanks(keys, dec, kind, src) {
     const cacheKey = keys.join(',') + ':' + W + ':' + viewH + ':' + CLUSTER_VERTICAL_SQUASH;
     if (!_stablePositions[cacheKey]) {
       const MAX_R        = MAX_CLUSTER_R;
-      const MAX_LAYOUT_W = 1220;
+      const MAX_LAYOUT_W = 1600;
       const layoutW  = Math.min(W, MAX_LAYOUT_W);
       const offsetX  = (W - layoutW) / 2;
       const usableW  = layoutW - CLUSTER_PAD_SIDE - CLUSTER_PAD_RIGHT;
@@ -1880,10 +1892,8 @@ function trendsDecadeRanks(keys, dec, kind, src) {
   if (maxCo === 0) return;
 
   const THRESHOLD = 0.06;
-  const MIN_OPACITY = 0.08;
-  const MAX_OPACITY = 0.88;
-  const MIN_STROKE = 1.0;
-  const MAX_STROKE = 2.8;
+  const MIN_STROKE = 0.3;
+  const MAX_STROKE = 7.0;
 
   for (let i = 0; i < keys.length; i++) {
     for (let j = i + 1; j < keys.length; j++) {
@@ -1896,7 +1906,7 @@ function trendsDecadeRanks(keys, dec, kind, src) {
       const t = (norm - THRESHOLD) / (1 - THRESHOLD);
       const curved = Math.pow(t, 1.25);
 
-      const opacity = MIN_OPACITY + curved * (MAX_OPACITY - MIN_OPACITY);
+      // Only width encodes co-occurrence, not opacity
       const strokeW = MIN_STROKE + curved * (MAX_STROKE - MIN_STROKE);
 
       const ax = positions[a].x, ay = positions[a].y;
@@ -1916,8 +1926,8 @@ function trendsDecadeRanks(keys, dec, kind, src) {
         stroke: lineColor,
         'stroke-width': strokeW,
         'stroke-dasharray': '8,9',
-        'stroke-linecap': 'round',
-        opacity,
+        'stroke-linecap': 'butt',
+        opacity: 0.5,
         class: 'constellation-line',
         'data-end-a': a,
         'data-end-b': b,
@@ -1952,12 +1962,10 @@ function trendsDecadeRanks(keys, dec, kind, src) {
   function getOrCreateLegend() {
     let legend = document.getElementById('cluster-legend');
     if (!legend) {
-      // Build a small two-row legend explaining:
-      // - circle area encodes share
-      // - line opacity encodes co-occurrence
-      //
-      // This is injected dynamically so the HTML stays simple and both views
-      // (themes and actors) can share the same legend container.
+      // Build legend with two rows:
+      // - circle area encodes share (with hover highlighting)
+      // - line weight encodes co-occurrence (with hover highlighting)
+      // Shown only in overview (themes/actors cluster views). CTA text is placed separately in drilldown.
       legend = document.createElement('div');
       legend.id = 'cluster-legend';
       legend.style.cssText = [
@@ -1982,6 +1990,7 @@ function trendsDecadeRanks(keys, dec, kind, src) {
   
       const circleLabel = document.createElement('span');
       circleLabel.id = 'legend-circle-label';
+      circleLabel.style.cssText = 'cursor:default;';
       legend.appendChild(circleLabel);
   
       // Row 2: dashed line icon
@@ -1997,28 +2006,86 @@ function trendsDecadeRanks(keys, dec, kind, src) {
   
       const lineLabel = document.createElement('span');
       lineLabel.id = 'legend-line-label';
+      lineLabel.style.cssText = 'cursor:default;';
       legend.appendChild(lineLabel);
   
       // Insert legend as left column beside #chart-wrap
       const chartWrap = document.getElementById('chart-wrap');
       let legendWrap = document.getElementById('legend-chart-wrap');
       if (!legendWrap) {
-        // We wrap `#chart-wrap` so the legend can live beside it while keeping
-        // existing markup intact. This wrapper changes effective chart width,
-        // which is why we clear `_stablePositions` below.
         legendWrap = document.createElement('div');
         legendWrap.id = 'legend-chart-wrap';
         chartWrap.parentNode.insertBefore(legendWrap, chartWrap);
         legendWrap.appendChild(chartWrap);
       }
-      // Original positioning: bottom-aligned, with a reserved bottom inset.
-      // Visually lift the legend WITHOUT increasing layout height.
-      // Using padding-bottom here increases `#legend-chart-wrap` height and makes
-      // the overview scroll farther than drilldown (where the legend is hidden).
       legend.style.cssText += ';flex-shrink:0;width:200px;padding-top:0;align-self:flex-end;padding-bottom:0;transform:translateY(-98px);';
       legendWrap.insertBefore(legend, chartWrap);
   
-      // Clear position cache — chart-wrap is now narrower by 160px
+      // Hover highlight handlers — both icon SVG and text label trigger the effect
+      const circleLabel2 = document.getElementById('legend-circle-label');
+      const lineLabel2 = document.getElementById('legend-line-label');
+      const bubbleSvg = document.getElementById('bubble-svg');
+
+      function onCircleLegendEnter() {
+        const bsvg = document.getElementById('bubble-svg');
+        if (bsvg) {
+          bsvg.querySelectorAll('circle[fill*="url"]').forEach(c => {
+            c.style.opacity = '0.7';
+          });
+          bsvg.querySelectorAll('.constellation-line').forEach(l => {
+            l.style.opacity = '0.1';
+          });
+        }
+      }
+      function onCircleLegendLeave() {
+        const bsvg = document.getElementById('bubble-svg');
+        if (bsvg) {
+          bsvg.querySelectorAll('circle[fill*="url"]').forEach(c => {
+            c.style.opacity = '1';
+          });
+          bsvg.querySelectorAll('.constellation-line').forEach(l => {
+            const rawOp = parseFloat(l.getAttribute('opacity') || '0.5');
+            l.style.opacity = rawOp.toString();
+          });
+        }
+      }
+      function onLineLegendEnter() {
+        const bsvg = document.getElementById('bubble-svg');
+        if (bsvg) {
+          bsvg.querySelectorAll('.constellation-line').forEach(l => {
+            l.style.opacity = '1';
+          });
+          bsvg.querySelectorAll('circle[fill*="url"]').forEach(c => {
+            c.style.opacity = '0.35';
+          });
+        }
+      }
+      function onLineLegendLeave() {
+        const bsvg = document.getElementById('bubble-svg');
+        if (bsvg) {
+          bsvg.querySelectorAll('.constellation-line').forEach(l => {
+            const rawOp = parseFloat(l.getAttribute('opacity') || '0.5');
+            l.style.opacity = rawOp.toString();
+          });
+          bsvg.querySelectorAll('circle[fill*="url"]').forEach(c => {
+            c.style.opacity = '1';
+          });
+        }
+      }
+
+      circleLabel2.addEventListener('mouseenter', onCircleLegendEnter);
+      circleLabel2.addEventListener('mouseleave', onCircleLegendLeave);
+      cSvg.style.cursor = 'default';
+      cSvg.addEventListener('mouseenter', onCircleLegendEnter);
+      cSvg.addEventListener('mouseleave', onCircleLegendLeave);
+
+      lineLabel2.addEventListener('mouseenter', onLineLegendEnter);
+      lineLabel2.addEventListener('mouseleave', onLineLegendLeave);
+      lSvg.style.cursor = 'default';
+      lSvg.addEventListener('mouseenter', onLineLegendEnter);
+      lSvg.addEventListener('mouseleave', onLineLegendLeave);
+  
+      // Clear position cache — chart-wrap is now narrower
       Object.keys(_stablePositions).forEach(k => delete _stablePositions[k]);
     }
     return legend;
@@ -2029,7 +2096,7 @@ function trendsDecadeRanks(keys, dec, kind, src) {
     const kindWord  = kind === 'theme' ? 'theme' : 'actor';
     const kindWords = kind === 'theme' ? 'themes' : 'actors';
     document.getElementById('legend-circle-label').innerHTML = `circle area = <br>percentage by ${kindWord}`;
-    document.getElementById('legend-line-label').innerHTML   = `line opacity =<br>co-occurrence between ${kindWords}`;
+    document.getElementById('legend-line-label').innerHTML   = `line weight =<br>co-occurrence between ${kindWords}`;
     document.getElementById('cluster-legend').style.display  = 'inline-grid';
   }
   
@@ -2256,9 +2323,6 @@ function trendsDecadeRanks(keys, dec, kind, src) {
   
     // ── LAYOUT: stable cached cluster positions ──────────────────────────────
     const { positions, svgH } = scaledMdsPositions(UMBRELLAS, radii, THEME_POSITIONS, W);
-    // Set viewBox to logical coordinates; CSS controls actual render size.
-    // width:100% + max-height:svgH constrains the SVG to the available frame
-    // so bubbles never overflow and the back-link button stays accessible.
     svg.setAttribute('viewBox', `0 0 ${W} ${svgH}`);
     svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
     svg.removeAttribute('height');
@@ -2298,60 +2362,14 @@ function trendsDecadeRanks(keys, dec, kind, src) {
       });
     });
 
-  }
-  
-  // ── ACTOR CLUSTER ─────────────────────────────────────────────────────────
-  
-  function drawActorCluster() {
-    const svg = document.getElementById('bubble-svg');
-    svg.innerHTML = '';
-    updateLegend(planetSrc, 'actor');  // show legend first so svgW() is correct
-    const W = svgW();
-    buildDefs(svg);
-  
-    const shares   = {};
-    ACTORS.forEach(a => shares[a] = getActorOverall(planetSrc, a));
-    const maxShare = Math.max(...Object.values(shares)) || 1;
-    const minShare = Math.min(...Object.values(shares).filter(v => v > 0)) || 0;
-  
-    const radii = {};
-    ACTORS.forEach(a => radii[a] = clusterRadius(shares[a], minShare, maxShare));
-  
-    const { positions, svgH } = scaledMdsPositions(ACTORS, radii, ACTOR_POSITIONS, W);
-    svg.setAttribute('viewBox', `0 0 ${W} ${svgH}`);
-    svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-    svg.removeAttribute('height');
-    svg.style.cssText = 'display:block;width:100%;max-height:' + svgH + 'px;overflow:visible;';
-  
-    const coMatrix = DATA.actor_cooccurrence?.[planetSrc];
-    drawConstellationLines(svg, ACTORS, positions, coMatrix, '#f0f0f0', radii);
-  
-    const allGroups = [];
-    ACTORS.forEach(actor => {
-      const share = shares[actor];
-      const r     = radii[actor];
-      const { x: cx, y: cy } = positions[actor];
-      const label = ACTOR_LABELS_MAP[actor] || actor;
-  
-      const g = el('g', { class: 'bubble-circle' }, svg);
-      g.style.cursor = 'pointer';
-      const c = el('circle', { cx, cy, r, fill: `url(#agrad-${actor})`, filter: 'url(#noise)' }, g);
-      drawPlanetLabel(g, cx, cy, r, label, share);
-      allGroups.push(g);
-  
-      g.addEventListener('mouseenter', () => {
-        allGroups.forEach(og => { if (og !== g) og.style.opacity = '0.25'; });
-        setConstellationLineHover(svg, actor);
-        c.setAttribute('r', r * 1.05);
+    // Hover on constellation lines dims the planets
+    svg.querySelectorAll('.constellation-line').forEach(line => {
+      line.style.cursor = 'default';
+      line.addEventListener('mouseenter', () => {
+        allGroups.forEach(og => { og.style.opacity = '0.3'; });
       });
-      g.addEventListener('mouseleave', () => {
+      line.addEventListener('mouseleave', () => {
         allGroups.forEach(og => { og.style.opacity = ''; });
-        setConstellationLineHover(svg, null);
-        c.setAttribute('r', r);
-      });
-      g.addEventListener('click', e => {
-        e.stopPropagation();
-        enterActorDrilldown(actor);
       });
     });
 
@@ -2410,12 +2428,13 @@ function trendsDecadeRanks(keys, dec, kind, src) {
   
     const decLinesG = el('g', {}, svg);
   
-    const inactiveSources = rowSources.filter(s => s !== planetSrc);
-    const displayOrder    = [planetSrc, inactiveSources[0]];
-    const orderedSources  = [...inactiveSources, planetSrc];
+    // Row ordering logic:
+    // - If entered from overview: active source at entry goes first (locked in _drillRowOrder)
+    // - Switching source within drilldown does NOT reorder rows
+    const displayOrder = _drillRowOrder || ['nyt', 'politics'];
     const circleExclusions = [];
   
-    orderedSources.forEach(src => {
+    displayOrder.forEach(src => {
       const idx      = displayOrder.indexOf(src);
       const cy       = rowCenters[idx];
       const isActive = src === planetSrc;
@@ -2438,15 +2457,20 @@ function trendsDecadeRanks(keys, dec, kind, src) {
           return;
         }
   
-        const share = getThemeShare(src, umb, dec);
-        const maxR   = DRILL_MAX_R;
-        const r     = shareToRRanged(share, sharedMin, sharedMax, maxR);
-        
-        // Don't render circles if there are no samples for this decade
-        let samples = DATA.samples?.[src]?.[umb]?.[String(dec)] || [];
-        if (r <= 0 || samples.length === 0) return;
-  
-        circleExclusions.push({ dec, cy, r });
+const decStr = String(dec);
+const count    = DATA.top_counts_by_decade?.[src]?.[umb]?.[decStr] || 0;
+const decTotal = DATA.decade_doc_counts?.[src]?.[decStr] || 1;
+const share    = count / decTotal;
+const maxR     = DRILL_MAX_R;
+const r        = shareToRRanged(share, sharedMin, sharedMax, maxR);
+
+// Don't render circles if there are no samples for this decade
+let samples = DATA.samples?.[src]?.[umb]?.[String(dec)] || [];
+if (r <= 0 || samples.length === 0) return;
+
+circleExclusions.push({ dec, cy, r });
+
+const countStr = count > 0 ? `<br>total count: ${count}` : '';
   
         const c = el('circle', {
           cx: decadeX(dec), cy, r,
@@ -2461,7 +2485,7 @@ function trendsDecadeRanks(keys, dec, kind, src) {
           c.addEventListener('mouseenter', e => {
             svg.querySelectorAll('[data-active-circle]').forEach(o => { if (o !== c) o.style.opacity = '0.45'; });
             c.setAttribute('r', r * 1.06);
-            showTip(e, `<span class="tt-title">${dec}s · ${theme.label}</span><span class="tt-body">share of decade: ${fmtPct(share)}</span>`);
+            showTip(e, `<span class="tt-title">${dec}s · ${theme.label}</span><span class="tt-body">share of decade: ${fmtPct(share)}${countStr}</span>`);
           });
           c.addEventListener('mousemove', moveTip);
           c.addEventListener('mouseleave', () => {
@@ -2535,12 +2559,12 @@ function trendsDecadeRanks(keys, dec, kind, src) {
   
     const decLinesG = el('g', {}, svg);
   
-    const inactiveSources = rowSources.filter(s => s !== planetSrc);
-    const displayOrder    = [planetSrc, inactiveSources[0]];
-    const orderedSources  = [...inactiveSources, planetSrc];
+    // Keep rows in fixed order (nyt always top, politics always bottom)
+    // Don't reorder based on which source is active
+    const displayOrder    = ['nyt', 'politics'];
     const circleExclusions = [];
   
-    orderedSources.forEach(src => {
+    displayOrder.forEach(src => {
       const idx      = displayOrder.indexOf(src);
       const cy       = rowCenters[idx];
       const isActive = src === planetSrc;
@@ -2563,12 +2587,20 @@ function trendsDecadeRanks(keys, dec, kind, src) {
           return;
         }
   
-        const share = getActorShare(src, actor, dec);
-        const maxR   = DRILL_MAX_R;
-        const r     = shareToRRanged(share, sharedMin, sharedMax, maxR);
-        if (r <= 0) return;
-  
+const decStr   = String(dec);
+        const count    = DATA.top_counts_by_decade?.[src]?.[umb]?.[decStr] || 0;
+        const decTotal = DATA.decade_doc_counts?.[src]?.[decStr] || 1;
+        const share    = count / decTotal;
+        const maxR     = DRILL_MAX_R;
+        const r        = shareToRRanged(share, sharedMin, sharedMax, maxR);
+
+        // Don't render circles if there are no samples for this decade
+        let samples = DATA.samples?.[src]?.[umb]?.[String(dec)] || [];
+        if (r <= 0 || samples.length === 0) return;
+
         circleExclusions.push({ dec, cy, r });
+
+        const countStr = count > 0 ? `<br>total count: ${count}` : '';
   
         const c = el('circle', {
           cx: decadeX(dec), cy, r,
@@ -2583,7 +2615,7 @@ function trendsDecadeRanks(keys, dec, kind, src) {
           c.addEventListener('mouseenter', e => {
             svg.querySelectorAll('[data-active-circle]').forEach(o => { if (o !== c) o.style.opacity = '0.45'; });
             c.setAttribute('r', r * 1.06);
-            showTip(e, `<span class="tt-title">${dec}s · ${label}</span><span class="tt-body">share of decade: ${fmtPct(share)}</span>`);
+            showTip(e, `<span class="tt-title">${dec}s · ${label}</span><span class="tt-body">share of decade: ${fmtPct(share)}${countStr}</span>`);
           });
           c.addEventListener('mousemove', moveTip);
           c.addEventListener('mouseleave', () => {
@@ -2638,33 +2670,29 @@ function trendsDecadeRanks(keys, dec, kind, src) {
   function enterThemeDrilldown(umb) {
     activeTheme = umb;
     syncDrilldownBackLinks();
-    hideLegend();
-    updateCaption();
+    _drillEnteredFromOverview = true;
+    _drillRowOrder = [planetSrc, planetSrc === 'nyt' ? 'politics' : 'nyt'];
+    const cta = document.getElementById('overview-cta');
+    if (cta) cta.textContent = 'CLICK A DECADE TO SEE SAMPLES';
     if (IS_MOBILE()) {
+      hideLegend();
       drawMobileDrilldown(umb, 'theme');
     } else {
+      hideLegend();
       updateDescBlock(umb, 'theme');
       setDrilldownImage(`./data_themes/themes_images/${umb}.png`);
       drawThemeDrilldown(umb);
     }
-  }
-  
-  function enterActorDrilldown(actor) {
-    syncDrilldownBackLinks();
-    hideLegend();
     updateCaption();
-    if (IS_MOBILE()) {
-      drawMobileDrilldown(actor, 'actor');
-    } else {
-      updateDescBlock(actor, 'actor');
-      setDrilldownImage(null);
-      drawActorDrilldown(actor);
-    }
   }
   
   function exitDrilldown() {
     _inDrilldown = false;
     _setDrilldownActive(false);
+    _drillEnteredFromOverview = false;
+    _drillRowOrder = null;
+    const cta = document.getElementById('overview-cta');
+    if (cta) cta.textContent = 'CLICK A THEME TO SEE DETAILS';
     if (!IS_MOBILE()) {
       hideDescBlock();
       setDrilldownImage(null);

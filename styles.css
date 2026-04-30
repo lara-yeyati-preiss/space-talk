@@ -387,8 +387,8 @@ body.tas-body .bubble-section #bubble-svg.drilldown-svg {
   display: block;
 }
 .bubble-header-main .bubble-drill-row {
-  margin-top: 4px;
-  margin-bottom: 6px; /* keep back button clear of SVG on short screens */
+  margin-top: 0;
+  margin-bottom: 0;
 }
 .bubble-drill-row {
   display: flex;
@@ -429,7 +429,7 @@ button.bubble-back.back-link {
   background: none;
   border: none;
   padding: 8px 4px 8px 0;
-  margin-top: 20px;
+  margin-top: 0;
   font-family: var(--font-mono);
   font-size: 18px;
   font-weight: 500;
@@ -4324,4 +4324,92 @@ body.tas-body .page-footer-nav {
   stroke: currentColor;
   width: 100%;
   height: 100%;
+}
+
+/* ── METHODOLOGY PAGE ────────────────────────────────────────────────────── */
+
+.method-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: calc(var(--nav-h) + clamp(48px, 8vh, 88px)) clamp(20px, 5vw, 40px) clamp(80px, 12vh, 120px);
+  box-sizing: border-box;
+}
+.method-page h1 {
+  font-family: var(--font-main);
+  font-size: clamp(28px, 3.5vw, 40px);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--c0);
+  margin: 0 0 clamp(40px, 7vh, 72px);
+}
+.method-section { margin-bottom: clamp(36px, 6vh, 60px); }
+.method-section-title {
+  font-family: var(--font-main);
+  font-size: clamp(18px, 1.6vw, 21px);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c0);
+  margin: 0 0 24px;
+}
+.method-section-title .accent {
+  font-style: normal;
+  color: var(--accent-yellow);
+}
+.method-subsection { margin-bottom: clamp(24px, 4vh, 40px); }
+.method-subsection-title {
+  font-family: var(--font-main);
+  font-size: clamp(18px, 1.6vw, 21px);
+  font-weight: 500;
+  color: rgba(240, 240, 245, 0.92);
+  margin: 0 0 14px;
+  letter-spacing: -0.01em;
+}
+.method-page p {
+  font-family: var(--font-main);
+  font-size: clamp(15px, 1.3vw, 17px);
+  font-weight: 300;
+  line-height: 1.75;
+  color: rgba(235, 238, 242, 0.82);
+  margin: 0 0 1.2em;
+  max-width: 68ch;
+}
+.method-page p:last-child { margin-bottom: 0; }
+.method-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.4em;
+}
+.method-list li {
+  font-family: var(--font-main);
+  font-size: clamp(15px, 1.3vw, 17px);
+  font-weight: 300;
+  line-height: 1.65;
+  color: rgba(235, 238, 242, 0.82);
+  padding: 3px 0 3px 18px;
+  position: relative;
+  max-width: 68ch;
+}
+.method-list li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: rgba(235, 238, 242, 0.28);
+  font-weight: 300;
+}
+.method-rule {
+  border: none;
+  border-top: 1px solid rgba(240, 240, 245, 0.18);
+  margin: clamp(36px, 6vh, 60px) 0;
+}
+.method-cite {
+  border-left: 2px solid rgba(214, 208, 121, 0.30);
+  padding: 14px 0 14px 20px;
+  margin: 20px 0 24px;
+}
+.method-cite p {
+  font-style: italic;
+  color: rgba(235, 238, 242, 0.65);
+  margin: 0;
 }

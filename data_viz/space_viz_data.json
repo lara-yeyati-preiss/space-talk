@@ -2183,28 +2183,28 @@
             "url": "https://www.nytimes.com/1958/04/14/archives/sputnik-ii-reported-down-in-caribbean-sputnik-ii-down-scientists.html"
           },
           {
+            "t": "EXPERT CAUTIONS ON SPUTNIK FEAR'S; Warns U.S. Not to Rush Into 'Crash Program' to Speed Rise of Scientists",
+            "year": 1958,
+            "score": 0.3762,
+            "url": "https://www.nytimes.com/1958/05/18/archives/expert-cautions-on-sputnik-fears-warns-us-not-to-rush-into-crash.html"
+          },
+          {
             "t": "SCIENCE NOTES; Death of a Sputnik Traced by New Radio System",
             "year": 1958,
             "score": 0.3577,
             "url": "https://www.nytimes.com/1958/01/19/archives/science-notes-death-of-a-sputnik-traced-by-new-radio-system.html"
           },
           {
+            "t": "LACK OF ENGINEERS LAID TO SPACE RACE",
+            "year": 1959,
+            "score": 0.3529,
+            "url": "https://www.nytimes.com/1959/10/18/archives/lack-of-engineers-laid-to-space-race.html"
+          },
+          {
             "t": "NEW DATA ON SPUTNIK I; U. S. Scientists Figure Rocket Fell in Outer Mongolia",
             "year": 1958,
             "score": 0.3417,
             "url": "https://www.nytimes.com/1958/06/27/archives/new-data-on-sputnik-i-u-s-scientists-figure-rocket-fell-in-outer.html"
-          },
-          {
-            "t": "WEIGHTLESSNESS -- MAJOR PROBLEM FOR ASTRONAUTS",
-            "year": 1959,
-            "score": 0.3399,
-            "url": "https://www.nytimes.com/1959/07/12/archives/weightlessness-major-problem-for-astronauts.html"
-          },
-          {
-            "t": "Fall of Sputnik III Surmised",
-            "year": 1959,
-            "score": 0.3125,
-            "url": "https://www.nytimes.com/1959/04/30/archives/fall-of-sputnik-iii-surmised.html"
           }
         ],
         "1960": [
@@ -2719,16 +2719,16 @@
             "url": "https://www.nytimes.com/1965/12/14/archives/nasa-contract-to-trw-inc.html"
           },
           {
+            "t": "Electric Drive Is Planned to Aid Cyclists; Gar Wood Jr., Son of Racer, Invents a Wheel Unit A Space Simulator for Astronauts Uses Mirrors Wide Variety of Ideas Covered By Patents Issued During Week",
+            "year": 1969,
+            "score": 0.3697,
+            "url": "https://www.nytimes.com/1969/03/15/archives/electric-drive-is-planned-to-aid-cyclists-gar-wood-jr-son-of-racer.html"
+          },
+          {
             "t": "76 PATENTS OF NASA ARE LISTED FOR USE",
             "year": 1963,
             "score": 0.3427,
             "url": "https://www.nytimes.com/1963/09/18/archives/76-patents-of-nasa-are-listed-for-use.html"
-          },
-          {
-            "t": "London TV and Apollo 11 Luring South Africans",
-            "year": 1969,
-            "score": 0.3309,
-            "url": "https://www.nytimes.com/1969/07/08/archives/london-tv-and-apollo-11-luring-south-africans.html"
           }
         ],
         "1970": [
@@ -2775,22 +2775,22 @@
             "url": "https://www.nytimes.com/1971/03/21/archives/contractors-vie-for-space-shuttle-funds-space-shuttle-program-stirs.html"
           },
           {
+            "t": "$22 Million Runway Is Begun in Florida For Landings of Space Shuttle Vehicles",
+            "year": 1974,
+            "score": 0.3826,
+            "url": "https://www.nytimes.com/1974/04/02/archives/22million-runway-is-begun-in-florida-for-landings-of-space-shuttle.html"
+          },
+          {
             "t": "ADDISON ROTHROCK, EX\u2010NASA OFFICIAL",
             "year": 1971,
             "score": 0.3709,
             "url": "https://www.nytimes.com/1971/06/27/archives/addisoar-rothrock-exnasa-official.html"
           },
           {
-            "t": "Peter Ten Eyck Of NASA Weds Arlene B. Rome",
-            "year": 1970,
-            "score": 0.3401,
-            "url": "https://www.nytimes.com/1970/04/26/archives/peter-ten-eyck-of-nasa-weds-arlene-b-rome.html"
-          },
-          {
-            "t": "Easco Subsidiary Receives $28\u2010Million NASA Contract",
-            "year": 1973,
-            "score": 0.337,
-            "url": "https://www.nytimes.com/1973/05/22/archives/easco-subsidiary-receives-28million-nasa-contract.html"
+            "t": "Apollo 15 Stamps Sale Linked To NASA and Ex\u2010Hughes Aides",
+            "year": 1972,
+            "score": 0.3441,
+            "url": "https://www.nytimes.com/1972/09/19/archives/apollo-15-stamps-sale-linked-to-nasa-and-exhughes-aides.html"
           }
         ],
         "1980": [
@@ -3129,6 +3129,12 @@
             "year": 1959,
             "score": 0.2933,
             "url": "https://www.nytimes.com/1959/02/15/archives/knowledge-of-man-urged-in-space-age.html"
+          },
+          {
+            "t": "MEETING THE SPACE AGE",
+            "year": 1958,
+            "score": 0.2824,
+            "url": "https://www.nytimes.com/1958/04/03/archives/meeting-the-space-age.html"
           }
         ],
         "1960": [
@@ -3337,10 +3343,22 @@
             "url": "https://www.nytimes.com/2024/04/05/opinion/nasa-astronauts-stem-humanities.html"
           },
           {
+            "t": "Why NASA Is Trying to Go Back to the Moon",
+            "year": 2025,
+            "score": 0.3906,
+            "url": "https://www.nytimes.com/2025/03/06/science/nasa-moon-landing.html"
+          },
+          {
             "t": "A mix of pride and anticipation mounts ahead of the moon landing.",
             "year": 2023,
             "score": 0.3698,
             "url": "https://www.nytimes.com/live/2023/08/23/science/india-moon-landing-chandrayaan-3/a-mix-of-pride-and-anticipation-mounts-ahead-of-the-moon-landing"
+          },
+          {
+            "t": "Why do all of these passengers get to be called astronauts?",
+            "year": 2021,
+            "score": 0.3476,
+            "url": "https://www.nytimes.com/live/2021/07/11/science/virgin-galactic-launch-richard-branson/why-do-all-of-these-passengers-get-to-be-called-astronauts"
           },
           {
             "t": "Humans Are Divided and Unhappy. What Better Time to Contact Alien Life?",
@@ -3377,11 +3395,25 @@
         ],
         "1960": [
           {
+            "t": "EARLIER this year, I requested my Science Advisory Committee to examine the Nation's resources of scientific and technical personnel in relation to the demands being placed upon these resources--for military security, space exploration, economic progress, medical advancement, assistance to developing nations and education of future manpower. The Committee has now submitted the first in a series of reports. In it, the Committee states that this country faces an impending shortage of engineers, mathematicians, and physical scientists who combine high ability with graduate education. The Committee has made recommendations for immediate action.",
+            "year": 1962,
+            "score": 0.3016,
+            "title": "Statement by the President on the Report of the President's Science Advisory Committee, \"Meeting Manpower Needs in Science and Technology.\"",
+            "url": "https://www.presidency.ucsb.edu/documents/statement-the-president-the-report-the-presidents-science-advisory-committee-meeting"
+          },
+          {
             "t": "This manner of opening the fair is in keeping with the exposition's space age theme. Literally we are reaching out through space on the new ocean to a star which we have never seen, to intercept sound in the form of radio waves already ten thousand years old, to start the fair.",
             "year": 1962,
             "score": 0.2997,
             "title": "Remarks in Palm Beach Upon Opening by Remote Control the Seattle World's fair.",
             "url": "https://www.presidency.ucsb.edu/documents/remarks-palm-beach-upon-opening-remote-control-the-seattle-worlds-fair"
+          },
+          {
+            "t": " How we can make the training of our teachers commensurate with the demands of the space age, and how we can provide more incentive and greater professional recognition for our teachers.\n\nThe Institute will have another important function as well. It will take us into the space age in education. We are on the threshold of great changes, many brought about by the possibilities inherent in new technology; and though in the past, advances in technology have tended to mean standardization and the submersion of the individual, the most recent developments and others in the offing promise the opposite. Our schools a generation from now may be very different from those of today. The use of electronics, of television, of computerized knowledge banks promises to allow far greater scope for programs tailored to the individual. Busy work and dead time may be all but eliminated. Through greater efficiency and effectiveness, the rate of learning may increase geometrically. It is possible that students will spend far less time in the classroom and will also spend less time in school. Through what is called programmed learning, they may be able to learn many things more effectively at home. Learning will be brought closer to daily life, rejoined to the community and to the family. We must be ready to use all possibilities our new technology makes available, and this the National Institute for the Educational Future will help us to do.",
+            "year": 1968,
+            "score": 0.266,
+            "title": "Remarks on the CBS Radio Network: \"Education for Excellence, Freedom, and Diversity\"",
+            "url": "https://www.presidency.ucsb.edu/documents/remarks-the-cbs-radio-network-education-for-excellence-freedom-and-diversity"
           }
         ],
         "1970": [
@@ -3412,6 +3444,13 @@
             "score": 0.3928,
             "title": "Statement on Signing the Metric Conversion Act of 1975.",
             "url": "https://www.presidency.ucsb.edu/documents/statement-signing-the-metric-conversion-act-1975"
+          },
+          {
+            "t": "In the future, we will use solar energy in many other ways, including the direct conversion of sunlight into electricity. We already use this method for limited purposes, such as in our space program, but scientific discoveries will be needed to make it more useful directly in our homes and factories.",
+            "year": 1979,
+            "score": 0.3711,
+            "title": "Energy Address to the Nation.",
+            "url": "https://www.presidency.ucsb.edu/documents/energy-address-the-nation"
           }
         ],
         "1980": [
@@ -3421,6 +3460,13 @@
             "score": 0.3568,
             "title": "Remarks at the Annual Meeting of the American Medical Association House of Delegates in Chicago, Illinois",
             "url": "https://www.presidency.ucsb.edu/documents/remarks-the-annual-meeting-the-american-medical-association-house-delegates-chicago"
+          },
+          {
+            "t": "We know that scientific knowledge must be renewed and expanded. And so, we will continue the American tradition of strong, broad-based support for the basic research and R&D in the areas of science and technology. The approach is going to be well-balanced and fair, and it includes both large science and technology projects as well as small science principal investigator funding. In large science and technology, look at the opportunities ahead: the superconducting supercollider and the human genome initiatives or space station Freedom, which will lead us toward the stars. And then the small science potential is no less dazzling. We want to stay on the path to doubling the National Science Foundation budget -- if Congress will cooperate -- and give our youth a special incentive to excel in science, math, and engineering through our new program of National Science Scholars.",
+            "year": 1989,
+            "score": 0.3205,
+            "title": "Remarks at the Presentation Ceremony for the National Medals of Science and Technology",
+            "url": "https://www.presidency.ucsb.edu/documents/remarks-the-presentation-ceremony-for-the-national-medals-science-and-technology-1"
           },
           {
             "t": "We also want to see how we in government can do our part in helping this process along. Now, I have to confess that I'm one of those people who, when the Government offers to help, gets very nervous. We've learned from experience that the helping hand of government too often has a crushing weight. I'm reminded of what Wernher von Braun once said about America's space program. He said, \"We can lick gravity, but sometimes the paperwork is overwhelming.\" [Laughter] Well, this is not to say that government doesn't have an important role, especially at the basic research level. We must continue to support our outstanding researchers in all disciplines, giving them the freedom of resources and flexibility they need to dream their dreams and make their experiments. One key for doing this is the National Science Foundation, and we have proposed, as you've been told, to double its budget over the next 5 years. As you may know, the National Science Foundation and NASA provided funding for Dr. Paul Chu's landmark experiments at the University of Houston.",
@@ -3474,6 +3520,13 @@
             "score": 0.3534,
             "title": "Statement on Congressional Action on Departments of Veterans Affairs and Housing and Urban Development, and Independent Agencies Appropriations Legislation",
             "url": "https://www.presidency.ucsb.edu/documents/statement-congressional-action-departments-veterans-affairs-and-housing-and-urban"
+          },
+          {
+            "t": "The budget I will submit to Congress in just a few days will include a $2.8 billion increase in our 21st century research fund. This will support a $1 billion increase in biomedical research for the National Institutes of Health; $675 million, which is double the previous largest dollar increase for the National Science Foundation in its entire 50-year history; and major funding increases in areas from information technology to space exploration to the development of cleaner sources of energy.",
+            "year": 2000,
+            "score": 0.2875,
+            "title": "Remarks at the California Institute of Technology in Pasadena, California",
+            "url": "https://www.presidency.ucsb.edu/documents/remarks-the-california-institute-technology-pasadena-california"
           }
         ],
         "2010": [
@@ -4151,18 +4204,18 @@
             "url": "https://www.presidency.ucsb.edu/documents/statement-the-president-the-death-dr-hugh-l-dryden"
           },
           {
+            "t": "The subject of assistance and return has been discussed at meetings of the U.N. Outer Space Committee since 1962. The agreement would implement rights and obligations of the Outer Space Treaty. The proposed new agreement would require that parties to the treaty shall\n\nI hope that this agreement will help to ensure that nations will assist astronauts in the event of accident or emergency. The agreement would carry forward the purpose of this administration to promote international cooperation in the peaceful uses of outer space. On the occasion of the entry into force of the Outer Space Treaty on October 10, I said:\n\nFor the President's remarks on the occasion of the entry into force of the Outer Space Treaty, see Item 425.",
+            "year": 1967,
+            "score": 0.3659,
+            "title": "Statement by the President on the United Nations Agreement for the Rescue and Return of Astronauts and Space Objects.",
+            "url": "https://www.presidency.ucsb.edu/documents/statement-the-president-the-united-nations-agreement-for-the-rescue-and-return-astronauts"
+          },
+          {
             "t": "The timing is perfect for me. I am grateful for my good fortune to be able to stand on this platform right after the successful landing on the moon of Apollo 12, which has so closely followed the historic feat of Apollo 11, and express my profound respect and heartfelt congratulations to you and to the American people.",
             "year": 1969,
             "score": 0.3636,
             "title": "Remarks of Welcome at the White House to Prime Minister Eisaku Sato of Japan",
             "url": "https://www.presidency.ucsb.edu/documents/remarks-welcome-the-white-house-prime-minister-eisaku-sato-japan"
-          },
-          {
-            "t": "In all of them, however, I found that one event had caught the imagination of the people and lifted their spirits almost beyond measure: the trip of Apollo 11 to the moon and back. On that historic day, when the astronauts set foot on the moon, the spirit of Apollo truly swept through this world. It was a spirit of peace and brotherhood and adventure, a spirit that thrilled to the knowledge that man had dreamed the impossible, dared the impossible, and done the impossible.\n\nThis administration has completed a thorough study of OEO. We have assigned it a leading role in the effort to develop and test new approaches to the solving of social problems. OEO is to be a laboratory agency where new ideas for helping people are tried on a pilot basis. When they prove successful, they can be spun off to operating departments or agencies--just as the space agency, for example, spun off the weather satellite and the communications satellite when these proved successful. Then OEO will be free to concentrate on breaking even newer ground.",
-            "year": 1969,
-            "score": 0.3403,
-            "title": "Address to the Nation on Domestic Programs.",
-            "url": "https://www.presidency.ucsb.edu/documents/address-the-nation-domestic-programs"
           }
         ],
         "1970": [
@@ -4193,6 +4246,13 @@
             "score": 0.3553,
             "title": "Statement Following the Successful Launch of Apollo 15.",
             "url": "https://www.presidency.ucsb.edu/documents/statement-following-the-successful-launch-apollo-15"
+          },
+          {
+            "t": "TODAY marks a very special first anniversary celebration--a celebration in which all mankind shares as part of the family of man to which we all belong. The occasion we celebrate is the Apollo 11 lunar landing on July 20, 1969, when for the first time men reached the surface of the moon.\n\nOn that day, while Michael Collins piloted the Apollo 11 command ship Columbia in lunar orbit, Neil Armstrong and Edwin Aldrin, in the lunar landing craft Eagle, made their descent to the surface of the moon, setting down in the Sea of Tranquility at 4:19 p.m., e.d.t., precisely as scheduled. And at 10:56 p.m., e.d.t., from a distance of a quarter of a million miles, we on earth watched as man set foot on the moon.",
+            "year": 1970,
+            "score": 0.3149,
+            "title": "Statement on the Anniversary of the First Manned Lunar Landing.",
+            "url": "https://www.presidency.ucsb.edu/documents/statement-the-anniversary-the-first-manned-lunar-landing"
           }
         ],
         "1980": [
@@ -4382,7 +4442,15 @@
         ]
       },
       "economic_financial": {
-        "1950": [],
+        "1950": [
+          {
+            "t": "As the space exploration studies went further, it began to be obvious that we needed big boosters for this particular thing. We started, I believe, three projects--three routes, you might say--towards their designing. I think the scientists have come pretty well to the conclusion that one of these shows more promise than any other. The team that has had more experience in this field than any other is that headed by Dr. von Braun, a very brilliant group of scientists which was brought together by the foresight and the wisdom of the Army, in the original sense. They have done largely the work that they want to do for the Army. The Pershing, one of those other small items on which they have been working, has been largely completed. They are the ones now that we are looking for to get and develop this big booster.\n\nBut this great booster is of no present interest to the Defense Department. Its interest is in NASA, and that's the reason that we have decided to take this very competent team of scientists and this facility--the ABMA--and put it into the space department so that it can get the kind of booster that it needs.\n(...)\nBut at the same time, Dr. von Braun and his group are going over to the NASA because, I say, the big booster has its primary place in space exploration and not in our missile program.",
+            "year": 1959,
+            "score": 0.3098,
+            "title": "The President's News Conference at Augusta, Georgia",
+            "url": "https://www.presidency.ucsb.edu/documents/the-presidents-news-conference-augusta-georgia-0"
+          }
+        ],
         "1960": [],
         "1970": [
           {
@@ -4488,14 +4556,22 @@
             "url": "https://www.presidency.ucsb.edu/documents/remarks-arrival-seattle"
           },
           {
-            "t": "\"The depth of experience that Arnold Holz has acquired in 34 years of complex accounting, auditing, and financial reporting activities is a welcomed addition to the Nation's space exploration program as it enters a new era of international cooperation to build a space station and prepares for sustained human exploration of the solar system,\" the President said.",
-            "year": 1993,
-            "score": 0.3221,
-            "title": "Nomination for Chief Financial Officer of the National Aeronautics and Space Administration",
-            "url": "https://www.presidency.ucsb.edu/documents/nomination-for-chief-financial-officer-the-national-aeronautics-and-space-administration"
+            "t": "I also had the chance to express to President Clinton our long-standing commitment to the cause of nonproliferation and peace. This commitment has a very concrete translation in our decision to ratify and fully implement the Tlatelolco Agreement and also in the creation of the Brazilian Space Agency, in our commitment by the executive branch to abide by the MTCR guidelines in the approval of the Quadripartite Nuclear Safeguards Agreement.\n(...)\nIt is important that everyone in Brazil understands you are rapidly becoming not only a very great economy but a very sophisticated one. A product manufactured by Brazil is now going to be part of the space shuttle. You need\u2014 if you're going to be a high-tech producer of sophisticated and diverse products, you must have a strong patent law. Yes, it will protect our intellectual property, but more importantly, it will enable you to continue to grow your economy.",
+            "year": 1995,
+            "score": 0.3706,
+            "title": "The President's News Conference With President Fernando Cardoso of Brazil",
+            "url": "https://www.presidency.ucsb.edu/documents/the-presidents-news-conference-with-president-fernando-cardoso-brazil"
           }
         ],
-        "2000": [],
+        "2000": [
+          {
+            "t": "Thus, FY 2000 was a very successful one for U.S. aeronautics and space programs. Efforts in these areas have contributed significantly to the Nation's scientific and technical knowledge, international cooperation, a healthier environment, and a more competitive economy.\n(...)\nA wide variety of aeronautics and space developments took place during FY 2000. The National Aeronautics and Space Administration (NASA) successfully completed four Space shuttle flights. In terms of robotic space flights, there were 24 U.S. expendable launch vehicle launches in FY 2000. Five of these launches were NASAmanaged missions, nine were Department of Defense (DoD)-managed missions, and eight were FAA-licensed commercial launches. In addition, NASA flew one payload as a secondary payload on one of the FAA-licensed commercial launches. This year, two new launch vehicles debuted: the Lockheed Martin Atlas IIIA and the Boeing Delta III, each serving as transition vehicles leading the way for the new generation of evolved expendable launch vehicles.",
+            "year": 2001,
+            "score": 0.3111,
+            "title": "Message to the Congress Transmitting a Report on Aeronautics and Space Activities",
+            "url": "https://www.presidency.ucsb.edu/documents/message-the-congress-transmitting-report-aeronautics-and-space-activities-2"
+          }
+        ],
         "2010": [
           {
             "t": "And you heard me the other day when I was talking about it: Let the rich guys do it. We have all these rich guys; they love rockets. [Laughter] They're all sending up\u2014Bezos and Elon Musk, and all of them. They're sending\u2014they love the rocket business. Let them\u2014just rent it to them for a lot of money, and let them play. You know, they need our land. It's good to be in the real estate business. They need our land. [Laughter] Let them send up their rockets. Let them be the first to Mars, and we'll take all the credit. Okay? [Laughter]",
@@ -4648,11 +4724,11 @@
             "url": "https://www.presidency.ucsb.edu/documents/statement-about-signing-bill-designating-the-manned-spacecraft-center-houston-texas-the"
           },
           {
-            "t": "TODAY marks a very special first anniversary celebration--a celebration in which all mankind shares as part of the family of man to which we all belong. The occasion we celebrate is the Apollo 11 lunar landing on July 20, 1969, when for the first time men reached the surface of the moon.\n\nOn that day, while Michael Collins piloted the Apollo 11 command ship Columbia in lunar orbit, Neil Armstrong and Edwin Aldrin, in the lunar landing craft Eagle, made their descent to the surface of the moon, setting down in the Sea of Tranquility at 4:19 p.m., e.d.t., precisely as scheduled. And at 10:56 p.m., e.d.t., from a distance of a quarter of a million miles, we on earth watched as man set foot on the moon.",
+            "t": "In my judgment, three general purpose should guide our space program.\n\nOne purpose is exploration. From time immemorial, man has insisted on venturing into the unknown despite his inability to predict precisely the value of any given exploration. He has been willing to take risks, willing to be surprised, willing to adapt to new experiences. Man has come. to feel that such quests are worthwhile in and of themselves--for they represent one way in which he expands his vision and expresses the human spirit. A great nation must always be an exploring nation if it wishes to remain great.\n\nA second purpose of our space program is scientific knowledge--a greater systematic understanding about ourselves and our universe. With each of our space ventures, man's total information about nature has been dramatically expanded; the human race was able to learn more about the Moon and Mars in a few hours last summer than had been learned in all the centuries that had gone before. The people who perform this important work are not only those who walk in space suits while millions watch or those who launch powerful rockets in a burst of flame. Much of our scientific progress comes in laboratories and offices, where dedicated, inquiring men and women decipher new facts and add them to old ones in ways which reveal new truths. The abilities of these scientists constitute one of our most valuable national resources. I believe that our space program should help these people in their work and should be attentive to their suggestions.\n\nA third purpose of the United States space effort is that of practical application-turning the lessons we learn in space to the early benefit of life on earth. Examples of such lessons are manifold; they range from new medical insights to new methods of communication, from better weather forecasts to new management techniques and new ways of providing energy. But these lessons will not apply themselves; we must make a concerted effort to see that the results of our space research are used to the maximum advantage of the human community.",
             "year": 1970,
-            "score": 0.3149,
-            "title": "Statement on the Anniversary of the First Manned Lunar Landing.",
-            "url": "https://www.presidency.ucsb.edu/documents/statement-the-anniversary-the-first-manned-lunar-landing"
+            "score": 0.3616,
+            "title": "Statement About the Future of the United States Space Program",
+            "url": "https://www.presidency.ucsb.edu/documents/statement-about-the-future-the-united-states-space-program"
           }
         ],
         "1980": [
@@ -4842,20 +4918,20 @@
   },
   "top_counts": {
     "nyt": {
-      "discovery_science": 266,
-      "applied_space_science": 3949,
-      "power_rivalry": 850,
-      "risk_hazard": 1073,
-      "economic_financial": 262,
-      "existential_reflection": 42
+      "discovery_science": 339,
+      "applied_space_science": 4345,
+      "power_rivalry": 1014,
+      "risk_hazard": 1361,
+      "economic_financial": 329,
+      "existential_reflection": 49
     },
     "politics": {
-      "discovery_science": 24,
-      "applied_space_science": 564,
-      "power_rivalry": 624,
-      "risk_hazard": 86,
-      "economic_financial": 71,
-      "existential_reflection": 40
+      "discovery_science": 31,
+      "applied_space_science": 651,
+      "power_rivalry": 707,
+      "risk_hazard": 107,
+      "economic_financial": 94,
+      "existential_reflection": 47
     }
   },
   "actor_counts": {
@@ -9068,5 +9144,153 @@
       "international_institutions",
       "private_sector"
     ]
+  },
+  "top_counts_by_decade": {
+    "nyt": {
+      "discovery_science": {
+        "1950": 11,
+        "1960": 45,
+        "1970": 28,
+        "1980": 29,
+        "1990": 59,
+        "2000": 70,
+        "2010": 59,
+        "2020": 38
+      },
+      "applied_space_science": {
+        "1950": 73,
+        "1960": 953,
+        "1970": 430,
+        "1980": 650,
+        "1990": 475,
+        "2000": 890,
+        "2010": 410,
+        "2020": 464
+      },
+      "power_rivalry": {
+        "1950": 149,
+        "1960": 263,
+        "1970": 101,
+        "1980": 140,
+        "1990": 97,
+        "2000": 90,
+        "2010": 90,
+        "2020": 84
+      },
+      "risk_hazard": {
+        "1950": 16,
+        "1960": 240,
+        "1970": 99,
+        "1980": 244,
+        "1990": 128,
+        "2000": 342,
+        "2010": 143,
+        "2020": 149
+      },
+      "economic_financial": {
+        "1950": 4,
+        "1960": 27,
+        "1970": 24,
+        "1980": 31,
+        "1990": 15,
+        "2000": 25,
+        "2010": 68,
+        "2020": 135
+      },
+      "existential_reflection": {
+        "1950": 5,
+        "1960": 14,
+        "1970": 1,
+        "1980": 4,
+        "1990": 4,
+        "2000": 2,
+        "2010": 13,
+        "2020": 6
+      }
+    },
+    "politics": {
+      "discovery_science": {
+        "1950": 2,
+        "1960": 3,
+        "1970": 7,
+        "1980": 3,
+        "1990": 3,
+        "2000": 4,
+        "2010": 5,
+        "2020": 4
+      },
+      "applied_space_science": {
+        "1950": 7,
+        "1960": 69,
+        "1970": 61,
+        "1980": 118,
+        "1990": 134,
+        "2000": 62,
+        "2010": 114,
+        "2020": 86
+      },
+      "power_rivalry": {
+        "1950": 3,
+        "1960": 122,
+        "1970": 33,
+        "1980": 105,
+        "1990": 119,
+        "2000": 74,
+        "2010": 126,
+        "2020": 125
+      },
+      "risk_hazard": {
+        "1950": 0,
+        "1960": 11,
+        "1970": 5,
+        "1980": 31,
+        "1990": 13,
+        "2000": 16,
+        "2010": 15,
+        "2020": 16
+      },
+      "economic_financial": {
+        "1950": 1,
+        "1960": 0,
+        "1970": 5,
+        "1980": 14,
+        "1990": 13,
+        "2000": 1,
+        "2010": 27,
+        "2020": 33
+      },
+      "existential_reflection": {
+        "1950": 1,
+        "1960": 13,
+        "1970": 6,
+        "1980": 7,
+        "1990": 3,
+        "2000": 4,
+        "2010": 6,
+        "2020": 7
+      }
+    }
+  },
+  "decade_doc_counts": {
+    "nyt": {
+      "1950": 229,
+      "1960": 1344,
+      "1970": 584,
+      "1980": 959,
+      "1990": 669,
+      "2000": 1242,
+      "2010": 658,
+      "2020": 757
+    },
+    "politics": {
+      "1950": 12,
+      "1960": 187,
+      "1970": 99,
+      "1980": 244,
+      "1990": 239,
+      "2000": 142,
+      "2010": 257,
+      "2020": 229
+    }
   }
 }

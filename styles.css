@@ -189,7 +189,7 @@ body.tts-body:not(:has(.landing-page)) .nav-logo { display: block; }
 /* `overflow-x: hidden` breaks `position: sticky` for descendants in Chromium; clip avoids horizontal scroll without that side effect. */
 body.tas-body {
   overflow-x: clip;
-
+}
 /* Shared page title; section charts have their own h2 + subtitle + controls */
 
 /* ── Unified chart title + subtitle — applies to both rank and bubble sections ── */
@@ -1752,7 +1752,7 @@ h1 {
 .filter-source-group {
   display: flex;
   align-items: center;
-
+}
 
 /* legend */
 #legend-circle-label {

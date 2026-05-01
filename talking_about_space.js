@@ -350,19 +350,19 @@ function updateSourceCounts() {
   
   function syncDrilldownBackLinks() {
     const drilling = !!activeTheme;
-    const back = document.getElementById('back-link');
-    const row = document.getElementById('bubble-drill-row');
-    const text = activeTheme ? '← all themes' : '';
-  
+    const back        = document.getElementById('back-link');
+    const ctaOverview  = document.getElementById('cta-overview');
+    const ctaDrilldown = document.getElementById('cta-drilldown');
+
+    // Back button: visible on left when drilling, hidden when overview
     if (back) {
-      back.textContent = text;
-      if (drilling) back.classList.add('visible');
-      else back.classList.remove('visible');
+      back.style.display  = drilling ? 'inline-flex' : 'none';
+      back.setAttribute('aria-hidden', drilling ? 'false' : 'true');
     }
-    if (row) {
-      if (drilling) row.removeAttribute('hidden');
-      else row.setAttribute('hidden', '');
-    }
+    // Overview CTA: left side in overview, hidden in drilldown (back button takes its place)
+    if (ctaOverview)  ctaOverview.style.display  = drilling ? 'none'  : 'block';
+    // Drilldown CTA: right side in drilldown only
+    if (ctaDrilldown) ctaDrilldown.style.display = drilling ? 'block' : 'none';
   }
   
   // ── SCROLLY INTRO (Scrollama) ─────────────────────────────────────────────
@@ -509,7 +509,6 @@ function updateSourceCounts() {
       }
     }
 
-    migrateLegacyDrilldownLayout();
   
     // ── UI WIRING ──────────────────────────────────────────────────────────
     // Filters drive view + source selection; caption and tooltip are derived UI.
@@ -529,7 +528,6 @@ function updateSourceCounts() {
     if (!IS_MOBILE()) {
       // Desktop-only UI affordances are inserted dynamically to keep HTML minimal.
       getOrCreateLegend();
-      getOrCreateDrilldownRow();
     }
   
     // ── RESPONSIVE / GLOBAL EVENT HOOKS ─────────────────────────────────────
@@ -537,8 +535,6 @@ function updateSourceCounts() {
     window.addEventListener('resize', () => {
       Object.keys(_stablePositions).forEach(k => delete _stablePositions[k]);
       drawTrendsChart._cachedH = null; // clear height cache so chart recomputes for new viewport
-      const imgCol = document.getElementById('header-img-col');
-      if (imgCol) imgCol.style.display = window.innerWidth <= 900 ? 'none' : 'flex';
       const mob = document.getElementById('mob-cluster');
       if (mob) mob.style.display = 'none';
       const bsvg = document.getElementById('bubble-svg');
@@ -603,7 +599,6 @@ function updateSourceCounts() {
         closeSamplesModal();
         // Only redraw bubble/drilldown — rank chart is fully independent
         renderBubbleOnly();
-        if (activeTheme) updateDescBlock(activeTheme, 'theme');
       });
     });
   }
@@ -613,9 +608,11 @@ function updateSourceCounts() {
     syncDrilldownBackLinks();
     updatePlanetsSubtitle();
     updateSectionTitles();
-    // Sync CTA text
-    const cta = document.getElementById('overview-cta');
-    if (cta) cta.textContent = activeTheme ? 'CLICK A DECADE TO SEE SAMPLES' : 'CLICK A THEME TO SEE DETAILS';
+    // Toggle CTA visibility based on view state
+    const ctaOverview = document.getElementById('cta-overview');
+    const ctaDrilldown = document.getElementById('cta-drilldown');
+    if (ctaOverview) ctaOverview.style.display = activeTheme ? 'none' : 'block';
+    if (ctaDrilldown) ctaDrilldown.style.display = activeTheme ? 'block' : 'none';
     if (IS_MOBILE()) {
       activeTheme ? drawMobileDrilldown(activeTheme, 'theme') : drawMobileCluster('theme');
       return;
@@ -636,9 +633,11 @@ function updateSourceCounts() {
     updateCaption();
     drawTrendsChart();
     
-    // Update CTA text — single element always visible, text changes by state
-    const cta = document.getElementById('overview-cta');
-    if (cta) cta.textContent = activeTheme ? 'CLICK A DECADE TO SEE SAMPLES' : 'CLICK A THEME TO SEE DETAILS';
+    // Toggle CTA visibility based on view state
+    const ctaOverview = document.getElementById('cta-overview');
+    const ctaDrilldown = document.getElementById('cta-drilldown');
+    if (ctaOverview) ctaOverview.style.display = activeTheme ? 'none' : 'block';
+    if (ctaDrilldown) ctaDrilldown.style.display = activeTheme ? 'block' : 'none';
     
     if (IS_MOBILE()) {
       activeTheme ? drawMobileDrilldown(activeTheme, 'theme') : drawMobileCluster('theme');
@@ -652,10 +651,10 @@ function updateSourceCounts() {
   
   const TAS_RANK_TITLE = 'The main characters';
   const TAS_RANK_SUBTITLE =
-    'How attention given to different actor types changed across 1950–2024';
+    'How attention given to different actors changed across 1950–2024';
   const TAS_TRENDS_ANNOTATIONS = {
-    nyt: 'Coverage opens with Soviet rivalry as the dominant frame, before <span style="color:#7aabcf;">national institutional</span> space activities take center stage, with the astronaut figure at the heart of the coverage for the following two decades. The landscape changes in the past decade, as the <span style="color:#8cbf7a;">private sector</span> overtakes all other actors, reframing space through the language of markets, resource extraction, and individual ambition.',
-    politics: 'Following the focus on Soviet rivalry during the peak of the space race in the 1960s, political rhetoric remains anchored in <span style="color:#7aabcf;">U.S. leadership</span> across subsequent decades. By the 2020s, <span style="color:#c9956a;">international partnerships</span> emerge as an increasingly prominent mode of action, reflected in initiatives such as the Artemis Accords and a broader emphasis on cooperation in space governance.',
+    nyt: 'Coverage opens with Soviet rivalry as the dominant frame, before <span style="color:#7aabcf;">national institutional</span> space activities take center stage. The landscape changes in the past decade, as the <span style="color:#8cbf7a;">private sector</span> overtakes all other actors, reframing space through the language of markets, resource extraction, and individual ambition.',
+    politics: 'Following the focus on geopolitical rivalry during the peak of the space race in the 1960s, political rhetoric remains anchored in <span style="color:#7aabcf;">U.S. leadership</span> across subsequent decades. In the 2020s, <span style="color:#c9956a;">international partnerships</span> emerge as an increasingly prominent mode of action, reflected in broader emphasis on cooperation in space governance.',
   };
   const TAS_SECTION_TITLE_PLANETS = 'The recurring themes';
   const TAS_PLANETS_OVERVIEW_SUBTITLE =
@@ -708,7 +707,6 @@ function updateSourceCounts() {
   function updatePlanetsSubtitle() {
     const captionEl = document.getElementById('page-subtitle-planets');
     if (!captionEl) return;
-    captionEl.classList.remove('page-subtitle--planets--empty');
     if (!activeTheme) {
       setCaptionText(captionEl, TAS_PLANETS_OVERVIEW_SUBTITLE, null);
     } else {
@@ -729,64 +727,9 @@ function updateSourceCounts() {
   
   // ── DESCRIPTION BLOCK ─────────────────────────────────────────────────────
   
-  function migrateLegacyDrilldownLayout() {
-    const wrap = document.getElementById('header-image-wrap');
-    const slot = document.getElementById('bubble-drill-slot');
-    if (!wrap || !slot) return;
-    const phr = wrap.querySelector('.page-header-row');
-    if (phr) wrap.parentNode.insertBefore(phr, wrap);
-    const imgCol = document.getElementById('header-img-col');
-    if (imgCol) slot.appendChild(imgCol);
-    wrap.remove();
-  }
   
-  function getOrCreateDrilldownRow() {
-    const slot = document.getElementById('bubble-drill-slot');
-    let imgCol = document.getElementById('header-img-col');
-    if (slot && !imgCol) {
-      imgCol = document.createElement('div');
-      imgCol.id = 'header-img-col';
-      imgCol.style.cssText = 'flex-shrink:0;width:min(300px,36vw);display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-start;';
-      if (window.innerWidth <= 900) imgCol.style.display = 'none';
-      slot.appendChild(imgCol);
-      const imgWrap = document.createElement('div');
-      imgWrap.id = 'drilldown-theme-img';
-      imgWrap.style.cssText = 'width:100%;';
-      imgCol.appendChild(imgWrap);
-      const countEl = document.createElement('div');
-      countEl.id = 'drilldown-count';
-      countEl.style.cssText = 'text-align:right;margin-top:8px;';
-      imgCol.appendChild(countEl);
-    } else if (imgCol && slot && imgCol.parentElement !== slot) {
-      slot.appendChild(imgCol);
-    }
-    return null;
-  }
   
-  function updateDescBlock(key, kind) {
-    getOrCreateDrilldownRow();
   
-    const topCount = kind === 'theme'
-      ? (DATA.top_counts?.[planetSrc]?.[key] || DATA.doc_counts?.[planetSrc]?.[key] || 0)
-      : (DATA.actor_counts?.[planetSrc]?.[key] || 0);
-  
-    const srcLabel = {
-      nyt:      { count: 'headlines',                source: 'New York Times'             },
-      politics: { count: 'political communications', source: 'American Presidency Project' },
-    }[planetSrc] || { count: planetSrc, source: '' };
-  
-    const countEl = document.getElementById('drilldown-count');
-    if (countEl) {
-      countEl.innerHTML = `
-        <div style="font-family:'Geist Mono',monospace;font-size:12px;color:rgba(240,240,240,0.62);margin-bottom:3px;white-space:nowrap;">${topCount.toLocaleString()} ${esc(srcLabel.count)} in this ${kind}</div>
-        <div style="font-family:'Geist Mono',monospace;font-size:11px;color:rgba(240,240,240,0.40);white-space:nowrap;">Source: ${esc(srcLabel.source)}</div>`;
-    }
-  }
-  
-  function hideDescBlock() {
-    const countEl = document.getElementById('drilldown-count');
-    if (countEl) countEl.innerHTML = '';
-  }
   
   // ── SVG HELPERS ───────────────────────────────────────────────────────────
   
@@ -1150,17 +1093,6 @@ function updateSourceCounts() {
         animation: tas-label-fade 0.3s ease forwards;
         animation-delay: var(--label-delay, 0s);
       }
-      /* Fixed height for editorial note: prevents chart from jumping when switching sources */
-      .rank-annotation {
-        min-height: 100px !important;
-        max-height: 100px !important;
-        overflow: hidden;
-      }
-      .rank-annotation:empty {
-        display: block !important;
-        min-height: 100px !important;
-        max-height: 100px !important;
-      }
     `;
     document.head.appendChild(s);
   })();
@@ -1376,7 +1308,7 @@ function updateSourceCounts() {
         const g = el('g', { class: 'rank-anno', 'pointer-events': 'none' }, annoG);
         const charW = 6.2;
         const maxLineW = Math.max(annoLine1.length, annoLine2 ? annoLine2.length : 0) * charW;
-        const padX = 6, padY = 3;
+        const padX = 10, padY = 6;
         const backdropH = totalAnnoH + (year ? lineH + 4 : 0) + padY * 2;
         el('rect', {
           x: textX - maxLineW / 2 - padX,
@@ -1925,7 +1857,7 @@ function getThemeProminenceShare(src, umb, dec) {
         y2: by - ny * (rb + edgePad),
         stroke: lineColor,
         'stroke-width': strokeW,
-        'stroke-dasharray': '8,9',
+        'stroke-dasharray': '4,5',
         'stroke-linecap': 'butt',
         opacity: 0.5,
         class: 'constellation-line',
@@ -2000,7 +1932,7 @@ function getThemeProminenceShare(src, umb, dec) {
       const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
       line.setAttribute('x1', '24'); line.setAttribute('y1', '4'); line.setAttribute('x2', '24'); line.setAttribute('y2', '44');
       line.setAttribute('stroke', 'rgba(232,232,232,0.55)'); line.setAttribute('stroke-width', '1.5');
-      line.setAttribute('stroke-dasharray', '8,5,8,5,8'); line.setAttribute('stroke-linecap', 'butt');
+      line.setAttribute('stroke-dasharray', '4,5,4,5,4'); line.setAttribute('stroke-linecap', 'butt');
       lSvg.appendChild(line);
       legend.appendChild(lSvg);
   
@@ -2055,8 +1987,9 @@ function getThemeProminenceShare(src, umb, dec) {
           bsvg.querySelectorAll('.constellation-line').forEach(l => {
             l.style.opacity = '1';
           });
-          bsvg.querySelectorAll('circle[fill*="url"]').forEach(c => {
-            c.style.opacity = '0.35';
+          // Dim entire bubble groups (circles + their text labels)
+          bsvg.querySelectorAll('.bubble-circle').forEach(g => {
+            g.style.opacity = '0.25';
           });
         }
       }
@@ -2067,8 +2000,8 @@ function getThemeProminenceShare(src, umb, dec) {
             const rawOp = parseFloat(l.getAttribute('opacity') || '0.5');
             l.style.opacity = rawOp.toString();
           });
-          bsvg.querySelectorAll('circle[fill*="url"]').forEach(c => {
-            c.style.opacity = '1';
+          bsvg.querySelectorAll('.bubble-circle').forEach(g => {
+            g.style.opacity = '';
           });
         }
       }
@@ -2362,17 +2295,6 @@ function getThemeProminenceShare(src, umb, dec) {
       });
     });
 
-    // Hover on constellation lines dims the planets
-    svg.querySelectorAll('.constellation-line').forEach(line => {
-      line.style.cursor = 'default';
-      line.addEventListener('mouseenter', () => {
-        allGroups.forEach(og => { og.style.opacity = '0.3'; });
-      });
-      line.addEventListener('mouseleave', () => {
-        allGroups.forEach(og => { og.style.opacity = ''; });
-      });
-    });
-
   }
   
   // ── THEME DRILLDOWN ───────────────────────────────────────────────────────
@@ -2409,7 +2331,7 @@ function getThemeProminenceShare(src, umb, dec) {
     // Row 0 sits near top. Row 1 a fixed gap below. SVG sized to fit both + axis.
     const TOP_MARGIN = 4;
     const BOT_MARGIN = 12;
-    const ROW_GAP    = DRILL_MAX_R * 2 + 40;   // gap between circle centers: diameter + 40px breathing room
+    const ROW_GAP    = DRILL_MAX_R * 2 + 80;   // gap between circle centers: diameter + 80px breathing room
     const cy0 = TOP_MARGIN + DRILL_MAX_R;
     const cy1 = cy0 + ROW_GAP;
     const svgH = Math.round(cy1 + DRILL_MAX_R + axisFootH + BOT_MARGIN);
@@ -2445,7 +2367,7 @@ function getThemeProminenceShare(src, umb, dec) {
       }, svg);
   
       tx(`in ${SRC_ABBR[src]}`, { x: 12, y: cy + 5, 'text-anchor': 'start',
-        style: `font-family:"Archivo Narrow",sans-serif;font-size:${isActive ? 22 : 17}px;font-weight:${isActive ? 500 : 400};fill:${isActive ? 'rgba(240,240,240,0.92)' : 'rgba(240,240,240,0.78)'};cursor:default;` }, svg);
+        style: `font-family:"Archivo Narrow",sans-serif;font-size:${isActive ? 22 : 17}px;font-weight:${isActive ? 500 : 400};fill:${isActive ? 'rgba(240,240,240,0.92)' : 'rgba(240,240,240,0.40)'};cursor:default;` }, svg);
   
       DECADES.forEach(dec => {
         if (dec === 1950 && src === 'politics') {
@@ -2540,7 +2462,7 @@ const countStr = count > 0 ? `<br>total count: ${count}` : '';
     // Row 0 sits near top. Row 1 a fixed gap below. SVG sized to fit both + axis.
     const TOP_MARGIN = 4;
     const BOT_MARGIN = 12;
-    const ROW_GAP    = DRILL_MAX_R * 2 + 40;
+    const ROW_GAP    = DRILL_MAX_R * 2 + 80;
     const cy0 = TOP_MARGIN + DRILL_MAX_R;
     const cy1 = cy0 + ROW_GAP;
     const svgH = Math.round(cy1 + DRILL_MAX_R + axisFootH + BOT_MARGIN);
@@ -2575,7 +2497,7 @@ const countStr = count > 0 ? `<br>total count: ${count}` : '';
       }, svg);
   
       tx(`in ${SRC_ABBR[src]}`, { x: 12, y: cy + 5, 'text-anchor': 'start',
-        style: `font-family:"Archivo Narrow",sans-serif;font-size:${isActive ? 22 : 17}px;font-weight:${isActive ? 500 : 400};fill:${isActive ? 'rgba(240,240,240,0.92)' : 'rgba(240,240,240,0.78)'};cursor:default;` }, svg);
+        style: `font-family:"Archivo Narrow",sans-serif;font-size:${isActive ? 22 : 17}px;font-weight:${isActive ? 500 : 400};fill:${isActive ? 'rgba(240,240,240,0.92)' : 'rgba(240,240,240,0.40)'};cursor:default;` }, svg);
   
       DECADES.forEach(dec => {
         if (dec === 1950 && src === 'politics') {
@@ -2653,34 +2575,17 @@ const decStr   = String(dec);
     if (h1) h1.textContent = text;
   }
   
-  function setDrilldownImage(src) {
-    getOrCreateDrilldownRow();
-    const wrap = document.getElementById('drilldown-theme-img');
-    if (!wrap) return;
-    if (!src) { wrap.innerHTML = ''; return; }
-    const img = document.createElement('img');
-    img.src   = src;
-    img.alt   = '';
-    img.style.cssText = 'width:100%;height:auto;max-height:220px;object-fit:contain;object-position:right top;display:block;opacity:0.55;filter:grayscale(0.15);';
-    img.onerror = () => { img.style.display = 'none'; };
-    wrap.innerHTML = '';
-    wrap.appendChild(img);
-  }
   
   function enterThemeDrilldown(umb) {
     activeTheme = umb;
     syncDrilldownBackLinks();
     _drillEnteredFromOverview = true;
     _drillRowOrder = [planetSrc, planetSrc === 'nyt' ? 'politics' : 'nyt'];
-    const cta = document.getElementById('overview-cta');
-    if (cta) cta.textContent = 'CLICK A DECADE TO SEE SAMPLES';
     if (IS_MOBILE()) {
       hideLegend();
       drawMobileDrilldown(umb, 'theme');
     } else {
       hideLegend();
-      updateDescBlock(umb, 'theme');
-      setDrilldownImage(`./data_themes/themes_images/${umb}.png`);
       drawThemeDrilldown(umb);
     }
     updateCaption();
@@ -2691,11 +2596,7 @@ const decStr   = String(dec);
     _setDrilldownActive(false);
     _drillEnteredFromOverview = false;
     _drillRowOrder = null;
-    const cta = document.getElementById('overview-cta');
-    if (cta) cta.textContent = 'CLICK A THEME TO SEE DETAILS';
     if (!IS_MOBILE()) {
-      hideDescBlock();
-      setDrilldownImage(null);
     }
     closeSamplesModal();
     activeTheme = null;

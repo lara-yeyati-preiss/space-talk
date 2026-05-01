@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Space Talk — Methodology</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="tts-body">
+
+<nav>
+  <span class="nav-logo"><a href="index.html">Space Talk</a></span>
+  <div class="nav-links">
+    <a href="talking_about_space.html"><span class="nav-words"><span class="nav-word">Talking</span><span class="nav-word">about</span><span class="nav-word">space</span></span></a>
+    <a href="talking_to_space.html"><span class="nav-words"><span class="nav-word">Talking</span><span class="nav-word">to</span><span class="nav-word">space</span></span></a>
+    <a href="methodology.html" class="nav-link--methodology active" aria-label="Methodology"><svg width="15" height="17" viewBox="0 0 15 17" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="1" width="12" height="15" rx="1.5"/><line x1="4.5" y1="5.5" x2="10.5" y2="5.5"/><line x1="4.5" y1="8.5" x2="10.5" y2="8.5"/><line x1="4.5" y1="11.5" x2="8" y2="11.5"/></svg></a>
+  </div>
+</nav>
+
+<main class="method-page">
+
+  <h1>Methodology</h1>
+
+  <section class="method-section">
+    <h2 class="method-section-title">Talking <span class="accent">about</span> space</h2>
+
+    <div class="method-subsection">
+      <h3 class="method-subsection-title">Data sources</p>
+      <p>Two corpora were assembled to analyze how outer space has been framed across different public arenas.</p>
+      <p>For news, headlines were collected from The New York Times via the NYT Article Search API, covering 1950–2024. A set of space-related search phrases was used to fetch articles spanning space exploration, policy, competition, science, and commercialization. Only articles where the phrase appeared in the headline were retained. The final corpus comprises 6,442 headlines.</p>
+      <p>For politics, space-relevant excerpts were drawn from the American Presidency Project at UC Santa Barbara, the most comprehensive freely accessible archive of U.S. presidential documents. The same search phrases were used to identify documents, and only the specific paragraphs where a phrase appeared were extracted. Where a single document matched multiple phrases in different paragraphs, all matching paragraphs were merged into one excerpt. The final corpus comprises 1,408 excerpts covering 1960–2024. The 1950s are excluded from the analysis due to insufficient data</p>
+    </div>
+
+    <div class="method-subsection">
+      <h3 class="method-subsection-title">Thematic & actor classification</h3>
+      <p>Each text was classified across a set of thematic frames and actor types using the semantic embedding model <a href="https://huggingface.co/nomic-ai/nomic-embed-text-v1.5" target="_blank">nomic-embed-text-v1.5</a>. The model converts both texts and thematic and anchor anchors into numerical vectors in a high-dimensional space, where meaning is encoded as geometric position and similarity is measured as the angle between vectors.</p>
+      <p>Each thematic frame and actor type is represented by a single dense anchor string made up of descriptive terms, capturing what that type looks like across different historical periods and vocabulary registers. The six thematic frames are: Space race &amp; rivalry, Space operations &amp; missions, Studying the cosmos, Risk &amp; hazards, Markets &amp; commerce, and Meaning &amp; identity.</p>
+      <p>The main actor sets differ between the two corpora, reflecting the different rhetorical logics of journalism and political speech. In news, five actor types are tracked: astronauts, the national state, geopolitical rivals, the private sector, and the scientific community. In political speech, four actor types are tracked: the national state, geopolitical rivals, international partnerships, and the private sector.</p>
+    </div>
+      <p>Because all texts in the corpus are already <em>about</em> space, raw similarity scores for both actors and themes tend to be close together by definition. Each document's scores are therefore z-score normalized relative to its own mean and standard deviation across all six themes — asking not which theme/actor this document is close to, but which theme it stands out in relative to all others. A softmax transformation then converts these relative scores into a probability distribution summing to 1.0.</p>
+    </div>
+
+  </section>
+
+  <hr class="method-rule">
+
+  <section class="method-section">
+    <h2 class="method-section-title">Talking <span class="accent">to</span> space</h2>
+    <p>The Talking to space section uses a different type of data: a catalogue of cultural objects and messages sent beyond Earth since the beginning of the space age.</p>
+    <p>This dataset is based directly on:</p>
+    <div class="method-cite">
+      <p>Paul E. Quast, "A Profile of Humanity: The Cultural Signature of Earth's Inhabitants Beyond the Atmosphere," in <em>Speaking Beyond Earth: Perspectives on Messaging Across Deep Space and Cosmic Time</em> (McFarland, 2024).</p>
+    </div>
+    <p>Each object is plotted by year and categorized by type: METI interstellar radio messages, send-your-name campaigns, time capsules, space race deposits, cultural and advertisement messages, and others. </p>
+  </section>
+
+</main>
+
+</body>
+</html>

@@ -1,4 +1,3 @@
-
 // Interactive radial “constellation” showing cultural objects/messages
 // sent toward space. The visualization has three interaction modes that share
 // the same underlying data:

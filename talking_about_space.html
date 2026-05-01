@@ -3,11 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
   <title>Space Talk</title>
-  <link rel="stylesheet" href="styles.css?v=2026-04-18a">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body class="tas-body">
 
@@ -136,7 +133,7 @@
             <section class="rank-section" aria-labelledby="rank-section-title">
               <header class="chart-header chart-header--rank">
                 <h2 class="chart-title" id="rank-section-title">The main characters</h2>
-                <p class="chart-subtitle" id="page-subtitle-trends">How attention given to different actor types changed across 1950–2024</p>
+                <p class="chart-subtitle" id="page-subtitle-trends">How attention given to different actors changed across 1950–2024</p>
                 <div class="filters filters--inline" id="rank-filters" aria-label="Source for rank chart">
                   <div class="filter-view-group filter-source-group" role="group">
                     <button type="button" class="filter-view filter-view--src filter-source--rank active" data-trends-src="nyt">NEWS</button>
@@ -147,13 +144,13 @@
                     <span class="filter-source-count" id="rank-source-count">Total headlines: X</span>
                   </div>
                 </div>
-                <p class="rank-annotation" id="rank-annotation" aria-live="polite"></p>
               </header>
               <div class="rank-stage" id="rank-stage" aria-label="Actor ranking over time">
                 <div class="rank-block" id="rank-block">
                   <svg id="rank-svg" class="rank-svg" aria-hidden="false"></svg>
                 </div>
               </div>
+              <p class="rank-annotation" id="rank-annotation" aria-live="polite"></p>
             </section>
           </div>
         </div>
@@ -167,22 +164,27 @@
         <div class="bubble-header-main">
           <h2 class="chart-title" id="bubble-section-title">The recurring themes</h2>
           <p class="chart-subtitle" id="page-subtitle-planets">Click any circle to see how attention given to a theme changed across 1950–2024</p>
-          <div class="filters filters--inline" id="bubble-filters" aria-label="Source for bubble chart">
-            <div class="filter-view-group filter-source-group" role="group">
-              <button type="button" class="filter-view filter-view--src filter-source--rank active" data-trends-src="nyt">NEWS</button>
-              <button type="button" class="filter-view filter-view--src filter-source--rank" data-trends-src="politics">POLITICS</button>
+          <div class="bubble-filters-cta-wrapper">
+            <div class="bubble-filters-row">
+              <div class="filters filters--inline" id="bubble-filters" aria-label="Source for bubble chart">
+                <div class="filter-view-group filter-source-group" role="group">
+                  <button type="button" class="filter-view filter-view--src filter-source--rank active" data-trends-src="nyt">NEWS</button>
+                  <button type="button" class="filter-view filter-view--src filter-source--rank" data-trends-src="politics">POLITICS</button>
+                </div>
+                <div class="filter-source-wrap">
+                  <div class="filter-source-note" id="planets-source-note">New York Times</div>
+                  <span class="filter-source-count" id="planets-source-count">Total headlines: X</span>
+                </div>
+              </div>
             </div>
-            <div class="filter-source-wrap">
-              <div class="filter-source-note" id="planets-source-note">New York Times</div>
-              <span class="filter-source-count" id="planets-source-count">Total headlines: X</span>
+            <div class="bubble-cta-row" id="bubble-cta-row">
+              <button type="button" class="back-link bubble-back" id="back-link" style="display:none;" aria-hidden="true">← all themes</button>
+              <div id="cta-overview" class="bubble-cta bubble-cta--overview">CLICK A THEME TO SEE DETAILS</div>
+              <div id="cta-drilldown" class="bubble-cta bubble-cta--drilldown" style="display: none;">CLICK A DECADE TO SEE SAMPLES</div>
             </div>
-          </div>
-          <div id="overview-cta" style="font-family:monospace;font-size:14px;color:rgba(232,232,232,0.80);margin-top:12px;">CLICK A THEME TO SEE DETAILS</div>
-          <div id="bubble-drill-row" class="bubble-drill-row" hidden>
-            <button type="button" class="back-link bubble-back" id="back-link">← all themes</button>
-          </div>
-        </div>
-      </div>
+          </div><!-- /.bubble-filters-cta-wrapper -->
+        </div><!-- /.bubble-header-main -->
+      </div><!-- /.bubble-header-grid -->
     </header>
     <div id="chart-wrap">
       <svg id="bubble-svg" style="display:block;width:100%;overflow:visible;"></svg>
@@ -244,6 +246,6 @@
 <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
 <!-- Scrollama: IntersectionObserver-based scrollytelling step detection -->
 <script src="https://cdn.jsdelivr.net/npm/scrollama@3.2.0/build/scrollama.min.js"></script>
-<script src="talking_about_space.js?v=2026-04-18a"></script>
+<script src="talking_about_space.js"></script>
 </body>
 </html>

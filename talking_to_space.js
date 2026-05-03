@@ -973,7 +973,7 @@ function render() {
   const SAFE_EDGE        = 18; // keep labels/hit targets inside SVG box
   const LABEL_PAD        = 10; // decade label radius offset (see labelR below)
   // Room above CY for the outer decade label arc (top of semicircle).
-  const TOP_PAD          = 40;
+  const TOP_PAD          = 28;
 
   const CX = W / 2;
   const CY = H - MARGIN_BOTTOM;

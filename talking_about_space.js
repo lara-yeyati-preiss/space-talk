@@ -95,29 +95,33 @@ function getActorsForSource(src) {
     national_state_us: {
       nyt: [
         { decade: 1950, label: 'NASA established (1958)', placeAbove: false },
-        { decade: 1960, label: 'Kennedy\'s Moon speech (1961)' },
-        { decade: 1960, label: 'Outer Space Treaty signed (1967)' },
+        { decade: 1960, label: 'Kennedy\'s Moon speech (1962)' },
+        { decade: 1970, label: 'Space Shuttle program announced (1972)', xOffset: 52 },
         { decade: 2010, label: 'Space Shuttle program ends (2011)' },
       ],
       politics: [
         { decade: 1950, label: 'NASA established (1958)' },
-        { decade: 1960, label: 'Kennedy\'s Moon speech (1961)' },
-        { decade: 1960, label: 'Outer Space Treaty signed (1967)' },
+        { decade: 1960, label: 'Kennedy\'s Moon speech (1962)', placeAbove: false },
+        { decade: 1970, label: 'Space Shuttle program announced (1972)' },
         { decade: 2010, label: 'Space Shuttle program ends (2011)' },
       ],
     },
     rival_space_powers: {
       nyt: [
         { decade: 1950, label: 'Sputnik 1 launched (1957)' },
-        { decade: 1960, label: 'Yuri Gagarin flight (1961)' },
-        { decade: 1970, label: 'Apollo 11 Moon landing (1969)' },
+        { decade: 1960, label: 'Gagarin: Soviet cosmonaut orbits Earth (1961)' },
+        { decade: 1960, label: 'Glenn: American orbits Earth (1962)', placeAbove: false },
+        { decade: 1970, label: 'Apollo–Soyuz mission (1975)', xOffset: 52 },
         { decade: 2000, label: 'China\'s first crewed flight (2003)' },
+        { decade: 2010, label: 'China lands on the far side of the Moon (2019)' },
       ],
       politics: [
         { decade: 1950, label: 'Sputnik 1 launched (1957)' },
-        { decade: 1960, label: 'Yuri Gagarin flight (1961)' },
-        { decade: 1970, label: 'Apollo 11 Moon landing (1969)' },
+        { decade: 1960, label: 'Gagarin: Soviet cosmonaut orbits Earth (1961)' },
+        { decade: 1960, label: 'Glenn: American orbits Earth (1962)', placeAbove: false },
+        { decade: 1970, label: 'Apollo 11 Moon landing (1969)', placeAbove: false },
         { decade: 2000, label: 'China\'s first crewed flight (2003)' },
+        { decade: 2010, label: 'China lands on the far side of the Moon (2019)', placeAbove: false },
       ],
     },
     international_institutions: {
@@ -127,7 +131,7 @@ function getActorsForSource(src) {
         { decade: 2020, label: 'Artemis Accords signed (2020)' },
       ],
       politics: [
-        { decade: 1960, label: 'Outer Space Treaty signed (1967)' },
+        { decade: 1960, label: 'Outer Space Treaty signed (1967)', placeAbove: false },
         { decade: 1990, label: 'ISS assembly begins (1998)', placeAbove: false },
         { decade: 2020, label: 'Artemis Accords signed (2020)', placeAbove: true },
       ],
@@ -137,29 +141,30 @@ function getActorsForSource(src) {
         { decade: 2000, label: 'SpaceX founded (2002)' },
         { decade: 2000, label: 'Falcon 1 reaches orbit (2008)', placeAbove: false },
         { decade: 2010, label: 'Falcon 9 first landing (2015)' },
-        { decade: 2020, label: 'Commercial Crew program begins (2020)', placeAbove: true },
+        { decade: 2020, label: 'First commercial crew mission to ISS (2020)', placeAbove: true },      
       ],
       politics: [
         { decade: 2000, label: 'SpaceX founded (2002)' },
         { decade: 2000, label: 'Falcon 1 reaches orbit (2008)', placeAbove: false },
-        { decade: 2010, label: 'Falcon 9 first landing (2015)', placeAbove: false },
-        { decade: 2020, label: 'Commercial Crew program begins (2020)', placeAbove: true },
+        { decade: 2010, label: 'Falcon 9 first landing (2015)', placeAbove: false, xOffset: 42 },
+        { decade: 2020, label: 'First commercial crew mission to ISS (2020)', placeAbove: true },      
       ],
     },
     astronauts_cosmonauts: {
       nyt: [
         { decade: 1960, label: 'Yuri Gagarin orbits Earth (1961)' },
-        { decade: 1960, label: 'John Glenn orbits Earth (1962)' },
-        { decade: 1970, label: 'Apollo 11 Moon landing (1969)' },
+        { decade: 1960, label: 'John Glenn orbits Earth (1962)', placeAbove: false, xOffset: -30 },
+        { decade: 1970, label: 'Apollo 11 Moon landing (1969)', xOffset: 10 },
         { decade: 2020, label: 'Crew Dragon Demo-2 mission (2020)' },
       ],
       politics: [],
     },
     scientific_community: {
       nyt: [
-        { decade: 1990, label: 'First exoplanet discovered (1995)' },
+        { decade: 1990, label: 'Hubble Space Telescope images released (1990)' },
+        { decade: 1990, label: 'First exoplanet around a Sun-like star discovered (1995)' },
         { decade: 2010, label: 'Gravitational waves detected (2015)' },
-        { decade: 2020, label: 'James Webb images released (2022)' },
+        { decade: 2010, label: 'Black hole image released (2019)' },
       ],
       politics: [],
     },
@@ -1263,7 +1268,7 @@ function updateSourceCounts() {
         const nearTop = y < plotTop + 50;
         // Respect explicit placeAbove hint from callout data; otherwise prefer above unless near top
         const preferAbove = it.placeAbove != null ? it.placeAbove : !nearTop;
-        return { x, y, main, year, preferAbove, placeAbove: preferAbove, i, hasHint: it.placeAbove != null };
+        return { x, y, main, year, preferAbove, placeAbove: preferAbove, i, hasHint: it.placeAbove != null, xOffset: it.xOffset || 0 };
       }).filter(Boolean);
 
       // Collision pass: for pairs of annotations that are x-close, ensure they go opposite sides
@@ -1291,7 +1296,7 @@ function updateSourceCounts() {
         return { line1: s.slice(0, breakAt).trim(), line2: s.slice(breakAt).trim() };
       }
 
-      resolved.forEach(({ x, y, main: mainRaw, year, placeAbove }) => {
+      resolved.forEach(({ x, y, main: mainRaw, year, placeAbove, xOffset }) => {
         const { line1: annoLine1, line2: annoLine2 } = wrapAnno(mainRaw);
         const annoLineH = 14;
         const totalAnnoH = annoLine2 ? annoLineH * 2 : annoLineH;
@@ -1304,11 +1309,11 @@ function updateSourceCounts() {
         const yearY  = (annoLine2 ? anno2Y : labelY) + lineH + 2;
         const longestLine = annoLine2 && annoLine2.length > annoLine1.length ? annoLine2 : annoLine1;
         const approxHalfW = Math.min(100, Math.max(40, Math.round(longestLine.length * 2.8)));
-        const textX = Math.max(xPlotLeft + approxHalfW + 4, Math.min(xPlotRight - approxHalfW - 4, x));
+        const textX = Math.max(xPlotLeft + approxHalfW + 4, Math.min(xPlotRight - approxHalfW - 4, x + (xOffset || 0)));
         const g = el('g', { class: 'rank-anno', 'pointer-events': 'none' }, annoG);
         const charW = 6.2;
         const maxLineW = Math.max(annoLine1.length, annoLine2 ? annoLine2.length : 0) * charW;
-        const padX = 10, padY = 6;
+        const padX = 14, padY = 9;
         const backdropH = totalAnnoH + (year ? lineH + 4 : 0) + padY * 2;
         el('rect', {
           x: textX - maxLineW / 2 - padX,

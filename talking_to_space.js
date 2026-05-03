@@ -973,7 +973,7 @@ function render() {
   const SAFE_EDGE        = 18; // keep labels/hit targets inside SVG box
   const LABEL_PAD        = 10; // decade label radius offset (see labelR below)
   // Room above CY for the outer decade label arc (top of semicircle).
-  const TOP_PAD          = 20;
+  const TOP_PAD          = 40;
 
   const CX = W / 2;
   const CY = H - MARGIN_BOTTOM;
@@ -1079,8 +1079,8 @@ function render() {
     yearLbl.textContent = DECADES[dec];
 
     const arrLbl = svgEl('text', {
-      x: dlx + 22, y: dly,
-      'text-anchor': 'start', 'dominant-baseline': 'middle',
+      x: dlx, y: dly - 16,
+      'text-anchor': 'middle', 'dominant-baseline': 'middle',
       'font-family': "'Hanken Grotesk', system-ui, sans-serif",
       'font-size': '20', 'font-weight': '700',
       fill: 'rgba(215,190,140,0)',

@@ -2106,6 +2106,7 @@ body.tas-body .page-footer-nav {
   opacity: 0.80;
   color: rgba(238, 240, 245, 0.80);
   max-width: 108ch;
+  margin-top: 30px;
 }
 .landing-intro-line {
   margin: 0;

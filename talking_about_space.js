@@ -2774,7 +2774,7 @@ const decStr   = String(dec);
       <div class="sm-dialog">
         <div class="sm-topbar">
           <span class="sm-theme-tag">SAMPLES: ${esc(srcTag)}<span style="opacity:0.8;margin:0 8px;">|</span>Source: ${esc(srcDb)}</span>
-          <button class="sm-close" aria-label="Close">✕ CLOSE</button>
+          <button class="sm-close" aria-label="Close">×</button>
         </div>
         <div class="sm-src-line">${esc(label)} in the ${dec}s</div>
         ${hintText ? `<div class="sm-hint">${hintText}</div>` : ''}

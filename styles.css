@@ -2052,9 +2052,12 @@ body.tas-body .page-footer-nav {
 }
 .sm-close {
   background: none; border: none; cursor: pointer;
-  font-family: var(--font-mono); font-size: 10px;
-  letter-spacing: 0.12em; color: rgba(20,20,20,0.85);
+  font-family: var(--font-mono); font-size: 18px;
+  color: rgba(20,20,20,0.85);
   padding: 0; transition: color 0.15s;
+  flex-shrink: 0; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  width: 20px; height: 20px;
 }
 .sm-close:hover { color: #111; }
 
@@ -2325,7 +2328,7 @@ body.tas-body .page-footer-nav {
   font-family: var(--font-mono);
   font-size: 7.5px;
   letter-spacing: 0.16em;
-  color: rgba(20,20,20,0.75);
+  color: rgba(20,20,20,0.80);
   text-transform: uppercase;
   flex: 1;
   line-height: 1.2;
@@ -2337,8 +2340,8 @@ body.tas-body .page-footer-nav {
   border: none;
   cursor: pointer;
   font-family: var(--font-mono);
-  font-size: 14px;
-  color: rgba(200,210,220,0.40);
+  font-size: 16px;
+  color: rgba(200,210,220,0.80);
   padding: 0;
   flex-shrink: 0;
   transition: color 0.12s;
@@ -2353,7 +2356,7 @@ body.tas-body .page-footer-nav {
 
 /* Close button — light variant (inside expanded panel) */
 .inline-card-expanded .oc-close {
-  color: rgba(20,20,20,0.60);
+  color: rgba(20,20,20,0.80);
 }
 .inline-card-expanded .oc-close:hover { color: rgba(20,20,20,0.88); }
 

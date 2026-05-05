@@ -32,17 +32,6 @@ body.tts-body {
 }
 
 /* ══════════════════════════════════════════════════════
-   GLOBAL GRAIN TEXTURE — talking about / talking to space
-   Mirrors the landing-hero::before approach exactly:
-   filter applied to a solid bg-coloured layer at fixed opacity.
-   The SVG filter is defined inline in each HTML file as #page-grain.
-   ══════════════════════════════════════════════════════ */
-body.tas-body::after,
-body.tts-body::after {
-  display: none;
-}
-
-/* ══════════════════════════════════════════════════════
    NAV
    ══════════════════════════════════════════════════════ */
 nav {
@@ -145,53 +134,18 @@ body.tts-body:not(:has(.landing-page)) .nav-logo { display: block; }
     right: 8px;
   }
 }
-.nav-dropdown {
-  position: relative;
-}
-.nav-dropdown-trigger {
-  font-family: var(--font-main); font-size: 18px; font-weight: 500;
-  color: var(--c65); background: transparent; border: none;
-  cursor: pointer; padding: 0; transition: color 0.15s;
-  display: flex; align-items: center; gap: 5px; line-height: 1;
-  text-decoration: none; user-select: none;
-}
-.nav-dropdown-trigger:hover { color: var(--c0); }
-.nav-dropdown-trigger svg { opacity: 0.5; transition: opacity 0.15s, transform 0.15s; flex-shrink: 0; }
-.nav-dropdown:hover .nav-dropdown-trigger svg { opacity: 1; transform: rotate(180deg); }
-/* invisible bridge so the menu doesn't close when moving from trigger to menu */
-.nav-dropdown::after {
-  content: ''; position: absolute; top: 100%; left: -20px; right: -20px;
-  height: 16px;
-}
-.nav-dropdown-menu {
-  display: none; flex-direction: column;
-  position: absolute; top: calc(100% + 14px); right: 0;
-  background: #1e1e1e; border: 0.5px solid rgba(240,240,240,0.15);
-  min-width: 100px; z-index: 400;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.50);
-}
-.nav-dropdown:hover .nav-dropdown-menu { display: flex; }
-.nav-dropdown-item {
-  font-family: var(--font-main); font-size: 15px; font-weight: 400;
-  color: var(--c65); text-decoration: none; padding: 9px 20px;
-  transition: color 0.12s, background 0.12s; white-space: nowrap;
-  display: block; text-align: center;
-}
-.nav-dropdown-item:hover { color: var(--c0); background: rgba(240,240,240,0.06); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
-.nav-dropdown-item.active { color: var(--c0); font-weight: 600; }
 
 /* ══════════════════════════════════════════════════════
    PAGE WRAPPERS
    ══════════════════════════════════════════════════════ */
 .page     { padding: 36px 100px 80px; padding-top: calc(36px + var(--nav-h)); }
+body.tas-body .page.tas-page { padding-top: var(--nav-h); }
 
 /* Talking about space — column layout so the trends stage can grow with the viewport */
 /* `overflow-x: hidden` breaks `position: sticky` for descendants in Chromium; clip avoids horizontal scroll without that side effect. */
 body.tas-body {
   overflow-x: clip;
 }
-/* Shared page title; section charts have their own h2 + subtitle + controls */
-
 /* ── Unified chart title + subtitle — applies to both rank and bubble sections ── */
 .chart-title {
   font-family: var(--font-main);
@@ -212,8 +166,6 @@ body.tas-body {
   margin-bottom: 14px;
   min-height: 0;
 }
-/* Legacy aliases — keep old class names working */
-
 .rank-section {
   flex: 1 1 auto;
   min-height: 0;
@@ -258,14 +210,6 @@ body.tas-body {
     margin-bottom: 14px;
   }
 }
-/* Planets: pull bubble chart a touch closer to source selects (trends section unchanged) */
-
-/* (transition panel now uses .scrolly-pull directly — no wrapper needed) */
-
-/* Animate chart lines from left to right on initial load */
-/* (Animation is injected via injectTrendsAnimationCSS() in JS) */
-/* Do not redefine here - let the JS-injected animation take priority */
-
 /* Vertical decade grid lines: dashed style */
 .rank-svg line[class*="decade"],
 .rank-svg line[stroke-dasharray] {
@@ -302,19 +246,6 @@ body.tas-body {
   flex-direction: column;
   position: relative;
 }
-
-.bubble-filters-row {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  margin-bottom: 10px;
-}
-@media (min-width: 769px) {
-  .bubble-filters-row {
-    margin-bottom: 14px;
-  }
-}
-
 
 /* CTA row: single row that shows either overview CTA or back-button + drilldown CTA */
 .bubble-cta-row {
@@ -367,7 +298,6 @@ button.bubble-back.back-link {
   color: inherit;
 }
 
-
 body.tas-body .bubble-section.drilldown-active .bubble-filters-cta-wrapper {
   position: relative;
 }
@@ -380,7 +310,6 @@ body.tas-body .bubble-section.drilldown-active .bubble-filters-cta-wrapper {
   flex-direction: column;
   margin-top: clamp(16px, 2vh, 40px); /* tighter top margin inside the sticky frame */
 }
-
 
 /* Standalone planets section when outside scrolly structure (after transition section) */
 .tas-page > .bubble-section {
@@ -425,7 +354,6 @@ body.tas-body .bubble-section.drilldown-active #chart-wrap {
 /* In overview mode (hidden), collapse completely to allow bubbles to move up */
 /* Theme/actor title: sized up; color set inline to match rank-chart stroke (lightenHex + TREND_CHART_LIGHTEN) */
 
-
 /* TTS: hero (full viewport) + viz screen (full viewport) + detail */
 .tts-page {
   padding: 28px 100px 18px;
@@ -442,6 +370,8 @@ body.tas-body .bubble-section.drilldown-active #chart-wrap {
 body.tts-body .tts-page {
   padding-left: clamp(20px, 4vw, 72px);
   padding-right: clamp(20px, 4vw, 72px);
+  /* Remove the 22px extra offset so the scrolly starts flush against the nav */
+  padding-top: var(--nav-h);
   min-height: auto;
   width: 100%;
   min-width: 0;
@@ -455,10 +385,6 @@ body.tts-body .tts-page.landing-page {
   flex-direction: column;
 }
 
-.tts-page #chart-wrap::after {
-  display: none;
-}
-
 /* Talking to space — first screen: title + intro
    Height matches viewport below fixed nav + page top offset (22px), so the viz block
    does not peek above the fold. */
@@ -469,7 +395,7 @@ body.tts-body .tts-page.landing-page {
   margin-right: calc(-1 * clamp(20px, 4vw, 72px));
   min-width: 0;
   max-width: none;
-  min-height: calc(100svh - var(--nav-h) - 22px);
+  min-height: calc(100svh - var(--nav-h));
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -569,6 +495,12 @@ body.tts-body .tts-page.landing-page {
   }
 }
 
+/* Mobile-only line break in scrolly pull text */
+.mob-br { display: none; }
+@media (max-width: 900px) {
+  .mob-br { display: block; }
+}
+
 /* ══════════════════════════════════════════════════════
    PAGE-HERO / SCROLLY GRAIN TEXTURE
    On mobile: the .page-hero is shown directly.
@@ -660,7 +592,6 @@ body.tas-body #scrolly {
   margin-left: -100px;
   margin-right: -100px;
 }
-
 
 .scrolly-stack {
   display: grid;
@@ -783,24 +714,18 @@ body.tas-body #scrolly {
 .scrolly-sticky-inner[data-phase="voyager"] .scrolly-panel[data-panel="voyager"],
 .scrolly-sticky-inner[data-phase="arecibo"] .scrolly-panel[data-panel="arecibo"],
 .scrolly-sticky-inner[data-phase="abundance"] .scrolly-panel[data-panel="abundance"],
-.scrolly-sticky-inner[data-phase="projection"] .scrolly-panel[data-panel="projection"],
 .scrolly-sticky-inner[data-phase="frontier"] .scrolly-panel[data-panel="frontier"],
 .scrolly-sticky-inner[data-phase="race"] .scrolly-panel[data-panel="race"],
 .scrolly-sticky-inner[data-phase="risk"] .scrolly-panel[data-panel="risk"],
 .scrolly-sticky-inner[data-phase="market"] .scrolly-panel[data-panel="market"],
 .scrolly-sticky-inner[data-phase="protagonists"] .scrolly-panel[data-panel="protagonists"],
-.scrolly-sticky-inner[data-phase="discovery"] .scrolly-panel[data-panel="discovery"],
-.scrolly-sticky-inner[data-phase="rivalry"] .scrolly-panel[data-panel="rivalry"],
-.scrolly-sticky-inner[data-phase="summary"] .scrolly-panel[data-panel="summary"],
-.scrolly-sticky-inner[data-phase="trends"] .scrolly-panel[data-panel="trends"],
-.scrolly-sticky-inner[data-phase="planets"] .scrolly-panel[data-panel="planets"] {
+.scrolly-sticky-inner[data-phase="trends"] .scrolly-panel[data-panel="trends"] {
   opacity: 1;
   visibility: visible;
 }
 
 /* Chart panels must fill the sticky frame as a flex column so charts can size to available height */
-.scrolly-panel[data-panel="trends"],
-.scrolly-panel[data-panel="planets"] {
+.scrolly-panel[data-panel="trends"] {
   align-items: stretch;
   justify-content: flex-start;
   display: flex;
@@ -821,13 +746,8 @@ body.tas-body #scrolly {
   visibility: visible;
 }
 
-/* "done" and "blank" phases: no panel visible.
-   "done" = zone 1 fade-out after protagonists.
-   "blank" = zone 2 intro before rank chart appears — keeps the sticky frame
-   invisible while the section first enters the viewport so the rank chart
-   switches in-place on scroll rather than rising from below. */
-.scrolly-sticky-inner[data-phase="done"] .scrolly-panel,
-.scrolly-sticky-inner[data-phase="blank"] .scrolly-panel {
+/* "done" phase: no panel visible */
+.scrolly-sticky-inner[data-phase="done"] .scrolly-panel {
   opacity: 0;
   visibility: hidden;
 }
@@ -923,17 +843,11 @@ body.tas-body #scrolly {
   max-width: 100%;
 }
 
-.scrolly-split--img-right {
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-}
-
-
 .scrolly-col--img {
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
 
 .scrolly-photo {
   max-width: min(320px, 100%);
@@ -943,14 +857,6 @@ body.tas-body #scrolly {
   border-radius: 4px;
   filter: saturate(0.4) brightness(0.92);
 }
-
-.scrolly-bitmap {
-  width: 100%;
-  max-width: min(480px, 100%);
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
-}
-
 
 .scrolly-object-label {
   margin: 12px 0 0;
@@ -962,7 +868,6 @@ body.tas-body #scrolly {
   text-align: left;
   opacity: 0.8;
 }
-
 
 .scrolly-body {
   margin: 0;
@@ -1013,9 +918,6 @@ body.tas-body #scrolly {
   line-height: 1.3;
 }
 
-/* Standalone transition section: scrolls naturally from bottom up */
-
-
 .scrolly-progressive {
   text-align: left;
   display: flex;
@@ -1041,9 +943,6 @@ body.tas-body #scrolly {
   pointer-events: none;
   z-index: 100;
 }
-
-
-/* Invisible prefix that mirrors the width of "Across time, space has been a " */
 
 .scrolly-progressive .scrolly-pull {
   margin: 0;
@@ -1112,7 +1011,7 @@ body.tas-body #scrolly {
   width: 100%;
   min-width: 0;
   max-width: 100%;
-  min-height: calc(100svh - var(--nav-h) - 22px);
+  min-height: calc(100svh - var(--nav-h));
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -1306,8 +1205,6 @@ body.tas-body #scrolly {
   transition: opacity 150ms ease;
 }
 
-/* Chart wrap no longer has reserved space — removed ::after pseudo-element */
-
 /* ══════════════════════════════════════════════════════
    TYPOGRAPHY — shared across pages
    ══════════════════════════════════════════════════════ */
@@ -1315,27 +1212,6 @@ h1 {
   font-family: var(--font-main); font-size: clamp(36px, 4.6vw, 46px); font-weight: 300;
   line-height: 1; color: var(--c0); margin-bottom: 16px;
 }
-
-/* Subtitle — main descriptive line below h1, used on both pages */
-.page-subtitle {
-  font-family: var(--font-main);
-  font-size: 18px; font-weight: 400;
-  color: rgba(240,240,240,0.82);
-  line-height: 1.5;
-  min-height: 3em; /* prevents reflow when text changes length between views */
-}
-
-/* Caption — smaller, dimmer secondary line */
-.caption {
-  font-family: var(--font-main);
-  font-size: 15px; font-weight: 400;
-  color: rgba(240,240,240,0.55);
-  line-height: 1.5;
-  max-width: 80ch;
-  margin-bottom: 20px;
-}
-
-/* Helper text — subtle interaction prompt below subtitle */
 
 /* ══════════════════════════════════════════════════════
    TAS — sticky chrome band (title + controls)
@@ -1355,13 +1231,6 @@ h1 {
   width: max-content;
   max-width: 100%;
   margin-bottom: 0;
-}
-
-#header-image-wrap { margin-bottom: 20px; }
-#header-img-col img {
-  width: 100%; height: auto;
-  object-fit: contain; object-position: right top;
-  display: block; opacity: 0.50;
 }
 
 /* ══════════════════════════════════════════════════════
@@ -1540,7 +1409,6 @@ h1 {
   background: rgba(0, 0, 0, 0.28);
 }
 
-
 /* Inactive half: visible but clearly unavailable (WCAG: not relying on color alone — reduced contrast + no pointer + cursor + aria-disabled) */
 
 .filter-view.active             { color: #1a1a1a; background: #d4d4d4; border-color: #d4d4d4; font-weight: 600; }
@@ -1632,12 +1500,6 @@ h1 {
   padding: 2px 0 6px 0;
 }
 
-/* Inside the scrolly sticky frame: planets section should not demand full viewport height */
-.scrolly-panel[data-panel="planets"] .bubble-section {
-  min-height: 0;
-  margin-top: clamp(8px, 1.5vh, 24px);
-}
-
 .rank-block {
   flex: 1 1 auto;
   min-height: 0;
@@ -1680,20 +1542,6 @@ h1 {
   min-height: 2.75em;
 }
 
-/* Talking about space — keep both chart subtitles identical */
-.page-subtitle--rank,
-.page-subtitle--planets {
-  font-family: var(--font-main);
-  font-size: 20px;
-  line-height: 1.5;
-  color: rgba(240, 240, 240, 0.82);
-}
-.page-subtitle--planets.page-subtitle--planets--empty {
-  display: none;
-  min-height: 0;
-  margin: 0;
-}
-
 .page .bubble-header + #chart-wrap {
   margin-top: 12px;
 }
@@ -1702,7 +1550,6 @@ h1 {
     margin-top: 18px;
   }
 }
-
 
 /* ══════════════════════════════════════════════════════
    TOOLTIP
@@ -1718,51 +1565,8 @@ h1 {
 #tooltip .tt-body     { color: var(--c65); }
 
 /* ══════════════════════════════════════════════════════
-   SOURCE TEXT
-   ══════════════════════════════════════════════════════ */
-.source-text {
-  display: block; font-family: var(--font-main); font-size: 14px;
-  font-style: italic; color: var(--c50); line-height: 1.6; margin-top: 48px;
-}
-
-
-/* ══════════════════════════════════════════════════════
-   DETAIL PANEL (talking to space sidebar)
-   ══════════════════════════════════════════════════════ */
-#detail-panel {
-  display: block; position: fixed;
-  top: 0; right: 0; width: 360px; height: 100vh; max-height: 100vh;
-  background: transparent; border-left: none;
-  overflow-y: auto; z-index: 250;
-  /* When empty/transparent, don't block SVG interactions behind it */
-  pointer-events: none;
-}
-#detail-panel.visible {
-  background: #f4f2ee;
-  border-left: 1px solid rgba(0,0,0,0.12);
-  box-shadow: -6px 0 32px rgba(0,0,0,0.22);
-  pointer-events: auto;
-}
-
-.dp-close {
-  font-family: var(--font-mono); 
-  font-size: 11px; 
-  letter-spacing: 0.12em;
-  color: rgba(20,18,14,0.72); 
-  text-decoration: none; 
-  cursor: pointer; 
-  transition: color 0.15s;
-  white-space: nowrap;
-  flex: 0 0 auto;
-  padding: 0;
-  margin: 0;
-}
-
-
-/* ══════════════════════════════════════════════════════
    TALKING TO SPACE — legend + layout
    ══════════════════════════════════════════════════════ */
-/* .legend-chart-wrap legacy removed */
 
 .leg-title {
   font-family: var(--font-mono);
@@ -1843,7 +1647,6 @@ h1 {
   stroke: var(--c80) !important;
 }
 
-
 /* ══════════════════════════════════════════════════════
    TALKING TO SPACE — radial viz
    ══════════════════════════════════════════════════════ */
@@ -1855,23 +1658,6 @@ h1 {
 /* ══════════════════════════════════════════════════════
    LANDING PAGE
    ══════════════════════════════════════════════════════ */
-.landing {
-  background: var(--bg);
-  position: relative;
-}
-.landing::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='8' seed='1'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' fill='%23000' filter='url(%23grain)' opacity='0.03'/%3E%3C/svg%3E");
-  background-size: 200px 200px;
-  background-repeat: repeat;
-  pointer-events: none;
-  z-index: 1;
-}
 .landing-hero {
   position: relative;
   height: 100vh;
@@ -1899,6 +1685,8 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  /* Shift entire component down slightly so it feels more centered in the below-nav space */
+  padding-top: clamp(24px, 4vh, 56px);
 }
 .landing-hero-content {
   position: relative;
@@ -1929,7 +1717,8 @@ h1 {
 }
 .landing-hero-diagram {
   position: absolute;
-  top: 50%;
+  /* Shifted ~8% below center so diagram feels grounded rather than floating at exact midpoint */
+  top: calc(50% + clamp(20px, 4vh, 56px));
   right: 0;
   transform: translateY(-50%);
   width: clamp(380px, 36vw, 620px);
@@ -1941,7 +1730,7 @@ h1 {
 }
 .landing-hero-circle {
   position: absolute;
-  top: 50%;
+  top: calc(50% + clamp(20px, 4vh, 56px));
   right: 0;
   transform: translateY(-50%);
   width: clamp(380px, 36vw, 620px);
@@ -1951,62 +1740,9 @@ h1 {
   opacity: 0.4;
   pointer-events: none;
 }
-.landing-hero-planet {
-  position: absolute;
-  right: 10%;
-  top: 50%;
-  transform: translateY(-50%);
-  width: clamp(200px, 28vw, 420px);
-  height: clamp(200px, 28vw, 420px);
-  border-radius: 50%;
-  background-color: #cecea7;
-  z-index: 5;
-  box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.3);
-  filter: url(#landing-grain);
-}
-.hero {
-  height: 100vh; display: flex; align-items: center;
-  justify-content: center; text-align: center; padding: 40px;
-  padding-top: calc(40px + var(--nav-h));
-}
-.hero h1 {
-  font-size: 100px; font-weight: 400; letter-spacing: -2px;
-  line-height: 1; margin: 0;
-}
-.across-line {
-  display: grid; grid-template-columns: subgrid; grid-column: 1 / -1;
-  font-family: var(--font-main); font-size: clamp(28px, 3.5vw, 44px);
-  font-weight: 300; line-height: 1.55; color: var(--c0);
-}
-.across-prefix, .across-word {
-  font-family: inherit; font-size: inherit; font-weight: inherit;
-  line-height: inherit; color: inherit; opacity: 0; transition: opacity 0.7s ease;
-}
-.across-line.visible .across-prefix,
-.across-line.visible .across-word { opacity: 1; }
-.cta-button {
-  display: flex; flex-direction: column; align-items: center;
-  background: transparent; border: none; color: var(--c0);
-  font-family: var(--font-main); font-size: 24px; font-weight: 500;
-  text-decoration: none; cursor: pointer; transition: opacity 0.3s; padding: 0;
-}
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(40px); }
   to   { opacity: 1; transform: translateY(0); }
-}
-
-
-/* ══════════════════════════════════════════════════════
-   PAGE FOOTER — circular navigation link
-   ══════════════════════════════════════════════════════ */
-.tas-page-footer-link:hover {
-  color: var(--c0);
-}
-.tas-page-footer-link:hover .tas-page-footer-label em {
-  color: var(--accent-yellow);
-}
-.tas-page-footer-link:hover .tas-page-footer-arrow {
-  transform: translateX(6px);
 }
 
 /* ══════════════════════════════════════════════════════
@@ -2117,7 +1853,6 @@ body.tas-body .page-footer-nav {
   color: rgba(238, 240, 245, 0.95);
   letter-spacing: -0.01em;
 }
-
 
 .landing-intro-line--echo {
   font-style: normal;
@@ -2243,9 +1978,9 @@ body.tas-body .page-footer-nav {
     gap: 16px;
   }
   .landing-entry-card {
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
-    text-align: left;
+    text-align: center;
     padding: 20px;
   }
   .landing-entry-card-icon {
@@ -2254,14 +1989,13 @@ body.tas-body .page-footer-nav {
     flex-shrink: 0;
   }
   .landing-entry-card-body {
-    align-items: flex-start;
-    text-align: left;
+    align-items: center;
+    text-align: center;
   }
   .landing-entry-card-desc {
     max-width: 100%;
   }
 }
-
 
 /* ══════════════════════════════════════════════════════
    SAMPLE LIST ITEMS
@@ -2409,150 +2143,10 @@ body.tas-body .page-footer-nav {
   border-top: 0.5px solid rgba(200,210,220,0.08);
 }
 
-
 /* ══════════════════════════════════════════════════════
    TALKING TO SPACE — legend + layout
    ══════════════════════════════════════════════════════ */
-/* .tts-legend-chart-wrap legacy removed */
-
-.tts-leg-title {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  color: rgba(210,185,145,0.8);
-  text-transform: uppercase;
-  margin-bottom: 4px;
-  user-select: none;
-  white-space: nowrap;
-}
-
-.tts-leg-note {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.04em;
-  color: var(--c35);
-  text-transform: none;
-  margin-top: 12px;
-  user-select: none;
-  line-height: 1.45;
-  font-style: italic;
-}
-
-.tts-leg-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 2px 0;
-  transition: opacity 0.12s;
-  white-space: nowrap;
-}
-
-.tts-leg-arc {
-  flex-shrink: 0;
-  display: block;
-  width: 18px;
-  height: 12px;
-}
-
-.tts-leg-label {
-  font-family: var(--font-mono);
-  font-size: 15px;
-  letter-spacing: 0.02em;
-  color: var(--c65);
-  text-transform: none;
-  line-height: 1.15;
-  transition: color 0.12s;
-  user-select: none;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.tts-leg-row.tts-leg-hover .tts-leg-label {
-  color: var(--c80);
-}
-
-.tts-leg-row.tts-leg-active .tts-leg-label {
-  color: rgba(232,232,232,0.96);
-}
-.tts-leg-row.tts-leg-active .tts-leg-arc path {
-  stroke: rgba(220,192,140,0.85) !important;
-}
-
-.tts-leg-row.tts-leg-dimmed .tts-leg-label {
-  color: rgba(232,232,232,0.18);
-}
-.tts-leg-row.tts-leg-dimmed .tts-leg-arc path {
-  stroke: rgba(200,215,228,0.10) !important;
-}
-
-/* Arc icon: match label color and thinner */
-.tts-leg-arc path {
-  stroke: rgba(210,185,145,0.8) !important;
-  stroke-width: 0.65 !important;
-}
-.tts-leg-row.tts-leg-hover .tts-leg-arc path {
-  stroke: var(--c80) !important;
-}
-
-/* ══════════════════════════════════════════════════════
-   DECADE PAGES
-   ══════════════════════════════════════════════════════ */
-
-.back-link-decade { font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.06em; margin-bottom: 8px; }
-.back-link-decade a { color: var(--c50); text-decoration: none; transition: color 0.15s; }
-.back-link-decade a:hover { color: var(--c0); }
-
-.headline-source {
-  font-family: var(--font-mono); font-size: 10px; color: var(--c35);
-  margin-top: 8px; font-weight: normal; letter-spacing: 0.08em; text-transform: uppercase;
-}
-
-/* ── Words + docs section ── */
-
-
-/* Format tabs — same style as filter-source (NEWS · POLITICS) */
-.format-selector {
-  display: flex; align-items: center; gap: 0; margin-bottom: 22px;
-}
-.format-selector-in {
-  font-family: var(--font-mono); font-size: 15px; font-weight: 500;
-  color: var(--c50); letter-spacing: 0.06em; margin-right: 14px;
-  user-select: none; padding: 0 0 2px;
-}
-.format-btn {
-  font-family: var(--font-mono); font-size: 16px; font-weight: 500;
-  letter-spacing: 0.09em; color: var(--c50);
-  cursor: pointer; padding: 0 0 2px;
-  border: none; border-bottom: 1.5px solid transparent;
-  background: transparent; transition: all 0.15s;
-}
-.format-sep-dot {
-  font-size: 16px; font-weight: 500; color: var(--c35);
-  margin: 0 8px; line-height: 1; display: inline-flex; align-items: center;
-  padding-bottom: 2px; user-select: none;
-}
-.format-btn.active            { color: var(--c0); border-bottom-color: var(--c0); font-weight: 600; }
-.format-btn:hover:not(.active){ color: var(--c80); }
-
-/* Term ranking list */
-.word-row-rank {
-  font-family: var(--font-mono); font-size: 11px; color: var(--c35);
-  letter-spacing: 0.06em; line-height: 1;
-}
-.word-row-term {
-  font-family: var(--font-mono); font-size: 13px; color: var(--c65);
-  line-height: 1; transition: color 0.15s;
-}
-.word-row-bar-wrap {
-  height: 4px; background: rgba(240,240,240,0.10); border-radius: 2px; overflow: hidden;
-}
-.word-row-bar-fill {
-  height: 100%; background: rgba(240,240,240,0.55); border-radius: 2px;
-  transition: width 0.3s ease;
-}
-
-/* Docs panel — inline, full sm-dialog structure but not a modal */
-
+/* ── highlight in samples modal ── */
 /* highlight in docs */
 .highlight { background: rgba(184,150,46,0.28); color: var(--c0); font-weight: 600; padding: 0 1px; }
 
@@ -2579,7 +2173,6 @@ body.tas-body .page-footer-nav {
 .objects-header  { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; }
 .objects-title   { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--c35); }
 .objects-count   { font-family: var(--font-mono); font-size: 12px; color: var(--c50); }
-
 
 /* ── Object cards — light panel, same palette as detail-panel ── */
 .object-card {
@@ -2920,67 +2513,6 @@ body.tas-body .page-footer-nav {
   border-top: 0.5px solid rgba(200,210,220,0.2);
 }
 
-
-/* ══════════════════════════════════════════════════════
-   PAGE FOOTER — circular navigation link
-   ══════════════════════════════════════════════════════ */
-.tas-page-footer {
-  padding: clamp(40px, 8vh, 80px) clamp(20px, 4vw, 100px) clamp(48px, 7vh, 80px);
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-end;
-}
-.tas-page-footer-link {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 12px;
-  text-decoration: none;
-  color: var(--c65);
-  transition: color 0.18s ease;
-}
-.tas-page-footer-link:hover {
-  color: var(--c0);
-}
-.tas-page-footer-label {
-  font-family: var(--font-main);
-  font-size: clamp(16px, 1.6vw, 22px);
-  font-weight: 300;
-  letter-spacing: -0.01em;
-  line-height: 1.1;
-}
-.tas-page-footer-label em {
-  font-style: italic;
-  color: var(--accent-yellow);
-}
-.tas-page-footer-link:hover .tas-page-footer-label em {
-  color: var(--accent-yellow);
-}
-.tas-page-footer-arrow {
-  font-family: var(--font-main);
-  font-size: clamp(16px, 1.6vw, 22px);
-  font-weight: 300;
-  line-height: 1.1;
-  transition: transform 0.18s ease;
-}
-.tas-page-footer-link:hover .tas-page-footer-arrow {
-  transform: translateX(6px);
-}
-
-
-/* ══════════════════════════════════════════════════════
-   MOBILE RESPONSIVE: INLINE CARD / TTS
-   ══════════════════════════════════════════════════════ */
-
-
-/* ══════════════════════════════════════════════════════
-   MOBILE ≤ 768px
-   ══════════════════════════════════════════════════════ */
-
-
-/* ══════════════════════════════════════════════════════
-   SCROLL INDICATOR — animated down chevron on hero lede
-   ══════════════════════════════════════════════════════ */
-
 /* ── METHODOLOGY PAGE ────────────────────────────────────────────────────── */
 
 .method-page {
@@ -3091,19 +2623,19 @@ body.tas-body .page-footer-nav {
   .landing-hero-content { position: relative; z-index: 2; max-width: 100%; }
   .landing-hero h1 { font-size: clamp(44px, 13vw, 72px); letter-spacing: -1px; padding-left: 0; margin-bottom: 0.2em; }
   .landing-subtitle { font-size: clamp(16px, 4.5vw, 22px); padding-left: 0; max-width: 90%; margin-bottom: 0; }
-  /* Diagram flows below title in document flow instead of being an absolute background */
+  /* Diagram overlays circle in same position as desktop */
   .landing-hero-diagram,
-  .landing-hero-circle { position: relative; top: auto; right: auto; transform: none; width: min(300px, 80vw); height: min(300px, 80vw); margin: 16px auto 0; opacity: 0.65; }
+  .landing-hero-circle { position: absolute; top: 50%; right: 50%; transform: translate(50%, -50%); width: min(300px, 80vw); height: min(300px, 80vw); margin: 0; opacity: 0.65; }
 
   /* ── PAGE HEROES (TAS + TTS) ──────────────────────────────────────────── */
-  .page-hero { min-height: 0; width: 100%; margin-left: 0; margin-right: 0; padding: 0; }
-  .tts-page .page-hero { min-height: 0; height: auto; }
-  .hero-container { grid-template-columns: 1fr; gap: clamp(12px, 3vw, 20px); padding: clamp(20px, 4vh, 36px) clamp(20px, 5vw, 36px); }
+  .page-hero { min-height: 0; width: calc(100% + 2 * 20px); margin-left: -20px; margin-right: -20px; padding: 0; height: 100svh; }
+  .tts-page .page-hero { min-height: 0; height: 100svh; width: calc(100% + 2 * 20px); margin-left: -20px; margin-right: -20px; }
+  .hero-container { grid-template-columns: 1fr; gap: clamp(12px, 3vw, 20px); padding: clamp(20px, 4vh, 36px) clamp(20px, 5vw, 36px); height: 100%; }
   .hero-inner h1 { font-size: clamp(32px, 9vw, 52px); margin-bottom: 0.4em; }
   .page-intro { font-size: clamp(15px, 4vw, 18px); max-width: 100%; }
   /* Hero image: visible on mobile, small, positioned below text */
   .hero-image-wrap { justify-content: center; order: 2; }
-  .hero-image { opacity: 1; height: auto; max-height: min(36vw, 160px); width: auto; max-width: 100%; }
+  .hero-image { opacity: 1; height: auto; max-height: min(48vw, 240px); width: auto; max-width: 100%; }
 
   /* ── SCROLLY: convert sticky to normal vertical flow ──────────────────── */
   #scrolly, #tas-charts-scrolly { display: block; }
@@ -3129,7 +2661,7 @@ body.tas-body .page-footer-nav {
   #scrolly .scrolly-panel[data-panel="market"]   { margin-bottom: clamp(16px, 3vh, 28px); }
   .scrolly-progressive { padding: 0; }
   .scrolly-progressive .scrolly-pull { font-size: clamp(17px, 4.5vw, 22px); line-height: 1.4; }
-  .scrolly-headlines-image { display: none; }
+  body.tts-body .scrolly-headlines-image { display: none; }
 
   /* Protagonists panel */
   #scrolly .scrolly-panel[data-panel="protagonists"] { padding: clamp(16px, 3vh, 32px) 0; }
@@ -3141,7 +2673,6 @@ body.tas-body .page-footer-nav {
 
   /* ── TTS SCROLLY PANELS ───────────────────────────────────────────────── */
   .scrolly-split { grid-template-columns: 1fr; gap: clamp(16px, 3vh, 24px); }
-  .scrolly-split--img-right { grid-template-columns: 1fr; }
   .scrolly-col--img { order: -1; }
   .scrolly-photo { max-width: min(280px, 75vw); max-height: min(45vh, 320px); }
 
@@ -3196,10 +2727,25 @@ body.tas-body .page-footer-nav {
   /* ── TTS MOBILE ACCORDION ─────────────────────────────────────────────── */
   .mob-root { width: 100%; padding: 0 0 28px; }
   .mob-mode { display: flex; align-items: center; gap: 0; margin-bottom: 26px; width: fit-content; }
-  .mob-mode-btn { flex: 0 1 auto; font-family: var(--font-mono); font-size: 13px; font-weight: 500; letter-spacing: 0.06em; color: rgba(240,240,240,0.80); padding: 6px 13px; border: 1px solid rgba(240,240,240,0.42); background: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: color 0.15s, background 0.15s; }
-  .mob-mode-btn:first-child { border-radius: 20px 0 0 20px; }
-  .mob-mode-btn + .mob-mode-btn { border-left: none; margin-left: -1px; border-radius: 0 20px 20px 0; }
-  .mob-mode-btn.active { color: #1a1a1a; background: #d4d4d4; border-color: #d4d4d4; font-weight: 600; }
+  .mob-mode-btn {
+    flex: 0 0 auto; appearance: none; -webkit-appearance: none;
+    font-family: var(--font-mono); font-size: 13px; font-weight: 500;
+    letter-spacing: 0.06em; color: rgba(240,240,240,0.92);
+    padding: 8px 14px; margin: 0;
+    border: 1px solid rgba(255,255,255,0.58); background: transparent;
+    cursor: pointer; -webkit-tap-highlight-color: transparent;
+    white-space: nowrap; box-sizing: border-box; position: relative;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mob-mode-btn:first-child { border-radius: 13px 0 0 13px; border-right: none; }
+  .mob-mode-btn + .mob-mode-btn { border-radius: 0 13px 13px 0; border-left: none; margin-left: -1px; }
+  .mob-mode-btn + .mob-mode-btn::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+    width: 1px; background: rgba(255,255,255,0.72); pointer-events: none; z-index: 2;
+  }
+  .mob-mode-btn.active { background: #d1d1d1; border-color: #d1d1d1; color: #0a0a0a; font-weight: 600; }
+  .mob-mode-btn.active + .mob-mode-btn::before { background: rgba(0,0,0,0.28); }
+  .mob-mode-btn:not(.active):hover { color: #f2f2f2; border-color: rgba(255,255,255,0.72); }
   .mob-accordions { display: flex; flex-direction: column; gap: 0; }
   .mob-group { border-bottom: 0.5px solid rgba(240,240,240,0.08); }
   .mob-group summary { list-style: none; cursor: pointer; padding: 14px 0 12px; -webkit-tap-highlight-color: transparent; }
@@ -3245,3 +2791,320 @@ body.tas-body .page-footer-nav {
   .back-link { font-size: 13px; }
 
 } /* end @media (max-width: 900px) */
+
+/* ══════════════════════════════════════════════════════════════════════════
+   MOBILE SUPPLEMENT — single definitive block.
+   ══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+
+  /* ══ LANDING ══ */
+  .landing-hero {
+    height: 100svh; min-height: 100svh; box-sizing: border-box;
+    padding: calc(var(--nav-h) + 56px) 34px 0;
+    display: flex; flex-direction: column; align-items: stretch; overflow: hidden;
+  }
+  .landing-hero-component {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: flex-start; width: 100%; flex: 1; position: relative;
+    padding-top: 0;
+  }
+  .landing-hero-content {
+    width: 100%; flex: 0 0 auto; text-align: left; position: relative; z-index: 2;
+    padding-bottom: clamp(20px, 4vh, 36px);
+  }
+  .landing-hero h1 {
+    font-size: 50px; letter-spacing: -1.5px;
+    padding-left: 0; margin-bottom: 0.4em; line-height: 1;
+  }
+  .landing-subtitle {
+    font-size: 20px; padding-left: 0;
+    max-width: 100%; margin-bottom: 10px; line-height: 1.35;
+  }
+  .landing-hero-diagram {
+    position: relative !important; top: auto !important; right: auto !important;
+    transform: none !important; width: min(72vw, 290px); height: min(72vw, 290px);
+    margin: 0 auto; display: block; flex-shrink: 0; opacity: 0.80;
+  }
+  .landing-hero-circle {
+    position: relative !important; top: auto !important; right: auto !important;
+    transform: none !important; width: min(72vw, 290px); height: min(72vw, 290px);
+    margin-top: calc(-1 * min(72vw, 290px)); margin-left: auto; margin-right: auto;
+    display: block; flex-shrink: 0; opacity: 0.45;
+  }
+  .landing-intro { padding-left: 24px !important; padding-right: 24px !important; }
+
+  /* Both page heroes hidden on mobile — scrolly intro panels are the heroes */
+  body.tts-body .tts-page .page-hero { display: none !important; }
+
+  /* ══ TAS NAV OVERFLOW FIX ══ */
+  body.tas-body #scrolly {
+    width: calc(100% + 40px) !important;
+    margin-left: -20px !important; margin-right: -20px !important;
+  }
+
+  /* ══ TAS SCROLLY ZONE 1 ══ */
+  body.tas-body #scrolly .scrolly-rail { display: flex !important; }
+  body.tas-body #scrolly .scrolly-stack {
+    display: grid !important; grid-template-columns: 1fr; grid-template-rows: 1fr;
+  }
+  body.tas-body #scrolly .scrolly-sticky {
+    position: sticky !important; top: var(--nav-h) !important;
+    height: calc(100svh - var(--nav-h)) !important;
+    min-height: calc(100svh - var(--nav-h)) !important;
+    max-height: calc(100svh - var(--nav-h)) !important;
+    width: 100% !important; display: flex !important; align-items: stretch;
+  }
+  body.tas-body #scrolly .scrolly-sticky-inner {
+    position: relative !important; width: 100% !important;
+    max-width: 100% !important; padding: 0 !important;
+    box-sizing: border-box; flex: 1; min-height: 0; overflow: hidden; height: auto !important;
+  }
+  body.tas-body #scrolly .scrolly-panel {
+    position: absolute !important; inset: 0;
+    opacity: 0 !important; visibility: hidden !important;
+    transition: opacity 0.22s ease, visibility 0.22s ease !important;
+    padding-left: 28px !important; padding-right: 28px !important;
+    display: flex !important; height: auto; max-height: 100%; margin-bottom: 0 !important;
+  }
+  body.tas-body #scrolly .scrolly-sticky-inner[data-phase="intro"]        .scrolly-panel[data-panel="intro"],
+  body.tas-body #scrolly .scrolly-sticky-inner[data-phase="frontier"]     .scrolly-panel[data-panel="frontier"],
+  body.tas-body #scrolly .scrolly-sticky-inner[data-phase="race"]         .scrolly-panel[data-panel="race"],
+  body.tas-body #scrolly .scrolly-sticky-inner[data-phase="risk"]         .scrolly-panel[data-panel="risk"],
+  body.tas-body #scrolly .scrolly-sticky-inner[data-phase="market"]       .scrolly-panel[data-panel="market"],
+  body.tas-body #scrolly .scrolly-sticky-inner[data-phase="protagonists"] .scrolly-panel[data-panel="protagonists"] {
+    opacity: 1 !important; visibility: visible !important;
+  }
+  body.tas-body #scrolly .scrolly-sticky-inner[data-phase="curtain"] .scrolly-panel[data-panel="protagonists"] {
+    opacity: 0.22 !important; visibility: visible !important;
+  }
+  body.tas-body #scrolly .scrolly-sticky-inner[data-phase="done"] .scrolly-panel {
+    opacity: 0 !important; visibility: hidden !important;
+  }
+  /* TAS mobile hero: hide the static page-hero, use scrolly intro panel instead (same as TTS) */
+  body.tas-body .page.tas-page > .page-hero { display: none !important; }
+  /* Restore display on scrolly intro panel (overrides the block inherited from desktop rule) */
+  body.tas-body #scrolly .scrolly-panel[data-panel="intro"] { display: flex !important; }
+  body.tas-body #scrolly .scrolly-track[data-scrolly-phase="intro"] { min-height: 100svh !important; }
+
+  /* Theme panels: column, sentence then image */
+  body.tas-body #scrolly .scrolly-panel[data-panel="frontier"],
+  body.tas-body #scrolly .scrolly-panel[data-panel="race"],
+  body.tas-body #scrolly .scrolly-panel[data-panel="risk"],
+  body.tas-body #scrolly .scrolly-panel[data-panel="market"] {
+    flex-direction: column !important; align-items: flex-start !important;
+    justify-content: flex-start !important;
+    /* generous top padding — pushes "Across time" down the screen */
+    padding-top: clamp(48px, 11vh, 80px) !important;
+    padding-bottom: 0 !important; gap: 0; overflow: hidden;
+    /* Neutralize any generic mobile margin overrides so all panels sit at the same position */
+    margin-top: 0 !important; margin-bottom: 0 !important;
+  }
+
+  /* "Across time, [line break] space has been a [yellow word]"
+     We want exactly 2 lines: "Across time," on line 1, "space has been a [word]" on line 2.
+     The text is: "Across time, space has been a " + <span>frontier</span>
+     max-width of ~6em forces "Across time," to wrap but "space has been a" fits on next line.
+     At 26px: 6em ≈ 156px. "Across time," ≈ 7 chars × ~13px = ~91px. So it wraps after comma. */
+  body.tas-body #scrolly .scrolly-progressive { width: 100%; flex-shrink: 0; }
+  body.tas-body #scrolly .scrolly-progressive .scrolly-pull {
+    font-size: clamp(22px, 6vw, 30px) !important; font-weight: 300;
+    line-height: 1.3; padding: 0 !important; white-space: normal; display: block; margin-bottom: 0;}
+  /* Yellow word: inline (NOT block) so it stays on the same line as "space has been a" */
+  body.tas-body #scrolly .scrolly-progressive .scrolly-pull .accent {
+    display: inline !important;
+  }
+
+  body.tas-body #scrolly .scrolly-headlines-image {
+    display: block !important; position: static !important;
+    top: auto !important; right: auto !important; transform: none !important;
+    width: 100%; max-width: 100%; flex: 1 1 auto; min-height: clamp(180px, 38vh, 340px); max-height: none;
+    object-fit: contain; object-position: center center;
+    opacity: 0.38; pointer-events: none;
+    margin-top: clamp(16px, 3vh, 28px);
+  }
+
+  /* Protagonists/scrolly-lines: center vertically */
+  body.tas-body #scrolly .scrolly-panel[data-panel="protagonists"] {
+    align-items: flex-start !important; justify-content: flex-start !important;
+    padding-top: 0 !important;
+  }
+  body.tas-body #scrolly .scrolly-panel[data-panel="protagonists"] .scrolly-lines {
+    margin-top: auto !important; margin-bottom: auto !important;
+  }
+  body.tas-body #scrolly .scrolly-panel[data-panel="protagonists"] .scrolly-pull {
+    font-size: clamp(20px, 5.5vw, 28px) !important; line-height: 1.3; padding: 0 !important;
+  }
+  body.tas-body #scrolly .scrolly-line--protagonists { opacity: 1 !important; transform: none !important; }
+
+  /* ══ TTS SCROLLY ══ */
+  body.tts-body #scrolly {
+    display: block !important;
+    width: calc(100% + 40px) !important;
+    margin-left: -20px !important; margin-right: -20px !important;
+    overflow-x: clip !important;
+  }
+  body.tts-body #scrolly .scrolly-rail { display: flex !important; }
+  body.tts-body #scrolly .scrolly-stack {
+    display: grid !important; grid-template-columns: 1fr; grid-template-rows: 1fr;
+  }
+  body.tts-body #scrolly .scrolly-sticky {
+    position: sticky !important; top: var(--nav-h) !important;
+    height: calc(100svh - var(--nav-h)) !important;
+    min-height: calc(100svh - var(--nav-h)) !important;
+    max-height: calc(100svh - var(--nav-h)) !important;
+    width: 100% !important; display: flex !important; align-items: stretch;
+  }
+  body.tts-body #scrolly .scrolly-sticky-inner {
+    position: relative !important; width: 100% !important; max-width: 100% !important;
+    padding: 0 !important;
+    box-sizing: border-box; flex: 1; min-height: 0; overflow: visible; height: auto !important;
+  }
+  body.tts-body #scrolly .scrolly-panel {
+    position: absolute !important; inset: 0;
+    opacity: 0 !important; visibility: hidden !important;
+    transition: opacity 0.22s ease, visibility 0.22s ease !important;
+    padding-left: 28px !important; padding-right: 28px !important;
+    display: flex !important; height: auto; max-height: 100%; margin-bottom: 0 !important;
+  }
+  body.tts-body #scrolly .scrolly-sticky-inner[data-phase="intro"]     .scrolly-panel[data-panel="intro"],
+  body.tts-body #scrolly .scrolly-sticky-inner[data-phase="pioneer"]   .scrolly-panel[data-panel="pioneer"],
+  body.tts-body #scrolly .scrolly-sticky-inner[data-phase="arecibo"]   .scrolly-panel[data-panel="arecibo"],
+  body.tts-body #scrolly .scrolly-sticky-inner[data-phase="voyager"]   .scrolly-panel[data-panel="voyager"],
+  body.tts-body #scrolly .scrolly-sticky-inner[data-phase="abundance"] .scrolly-panel[data-panel="abundance"] {
+    opacity: 1 !important; visibility: visible !important;
+  }
+  body.tts-body #scrolly .scrolly-sticky-inner[data-phase="curtain"] .scrolly-panel[data-panel="abundance"] {
+    opacity: 0.22 !important; visibility: visible !important;
+  }
+  body.tts-body #scrolly .scrolly-sticky-inner[data-phase="done"] .scrolly-panel {
+    opacity: 0 !important; visibility: hidden !important;
+  }
+  /* TTS intro panel = hero: title top, image bottom-right, same as TAS page-hero */
+  body.tts-body #scrolly .scrolly-panel[data-panel="intro"] {
+    flex-direction: column !important;
+    align-items: flex-start !important; justify-content: flex-start !important;
+    padding-top: 56px !important;
+    overflow: hidden; position: relative;
+  }
+  body.tts-body #scrolly .scrolly-intro-block {
+    flex: 0 0 auto; display: flex; flex-direction: column;
+    gap: clamp(14px, 2.5vh, 22px); width: 100%; min-height: 0; position: relative; z-index: 1;
+  }
+  body.tts-body #scrolly .scrolly-display-title {
+    font-size: clamp(32px, 9vw, 52px); white-space: nowrap;
+  }
+  body.tts-body #scrolly .scrolly-lede { font-size: clamp(16px, 4.3vw, 19px); line-height: 1.5; max-width: 100%; }
+  body.tts-body #scrolly .scrolly-intro-image {
+    display: block !important; position: absolute !important;
+    top: 32% !important; bottom: 0; right: -4vw; transform: none !important;
+    pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  body.tts-body #scrolly .scrolly-intro-image img {
+    height: min(110vw, 600px); width: auto; opacity: 0.09;
+    mix-blend-mode: screen; object-fit: contain; object-position: top right;
+  }
+  /* TAS intro panel = hero: identical layout to TTS intro panel */
+  body.tas-body #scrolly .scrolly-panel[data-panel="intro"] {
+    flex-direction: column !important;
+    align-items: flex-start !important; justify-content: flex-start !important;
+    padding-top: 56px !important;
+    overflow: hidden; position: relative;
+  }
+  body.tas-body #scrolly .scrolly-intro-block {
+    flex: 0 0 auto; display: flex; flex-direction: column;
+    gap: clamp(14px, 2.5vh, 22px); width: 100%; min-height: 0; position: relative; z-index: 1;
+  }
+  body.tas-body #scrolly .scrolly-display-title {
+    font-size: clamp(32px, 9vw, 52px); white-space: nowrap;
+  }
+  body.tas-body #scrolly .scrolly-lede { font-size: clamp(16px, 4.3vw, 19px); line-height: 1.5; max-width: 100%; }
+  body.tas-body #scrolly .scrolly-intro-image {
+    display: block !important; position: absolute !important;
+    top: 32% !important; bottom: 0; right: -4vw; transform: none !important;
+    pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  body.tas-body #scrolly .scrolly-intro-image img {
+    height: min(110vw, 600px); width: auto; opacity: 0.09;
+    mix-blend-mode: screen; object-fit: contain; object-position: top right;
+  }
+
+  /* Pioneer/arecibo/voyager */
+  body.tts-body #scrolly .scrolly-panel[data-panel="pioneer"],
+  body.tts-body #scrolly .scrolly-panel[data-panel="arecibo"],
+  body.tts-body #scrolly .scrolly-panel[data-panel="voyager"] { align-items: center !important; }
+  body.tts-body #scrolly .scrolly-split { grid-template-columns: 1fr !important; gap: clamp(12px, 2.5vh, 22px); align-items: center; width: 100%; }
+  body.tts-body #scrolly .scrolly-col--img { order: -1; display: flex; justify-content: center; }
+  body.tts-body #scrolly .scrolly-photo { max-width: min(200px, 55vw); max-height: min(34vh, 230px); object-fit: contain; }
+  body.tts-body #scrolly .scrolly-body { font-size: clamp(14px, 3.8vw, 17px); line-height: 1.6; }
+  /* Abundance: vertically centered */
+  body.tts-body #scrolly .scrolly-panel[data-panel="abundance"] {
+    align-items: flex-start !important; justify-content: flex-start !important; padding-top: 0 !important;
+  }
+  body.tts-body #scrolly .scrolly-panel[data-panel="abundance"] .scrolly-lines {
+    margin-top: auto !important; margin-bottom: auto !important;
+  }
+  body.tts-body #scrolly .scrolly-line--intro {
+    opacity: 1 !important; white-space: normal !important; transition: none !important;
+    font-size: clamp(16px, 4.2vw, 20px) !important; line-height: 1.45;
+  }
+  body.tts-body #scrolly .scrolly-line {
+    opacity: 1 !important; transform: none !important; transition: none !important;
+    font-size: clamp(13px, 3.5vw, 15px);
+  }
+  body.tts-body #scrolly .scrolly-track--abundance { min-height: 55vh; }
+
+  /* ══ VIZ-HINT ══ */
+  .viz-hint {
+    font-size: clamp(20px, 5.5vw, 26px) !important; font-weight: 400;
+    line-height: 1.2; padding: 0; margin-bottom: 0;
+  }
+  body.tts-body .viz-screen {
+    padding-top: clamp(16px, 3vh, 28px) !important; gap: clamp(4px, 1vh, 8px) !important;
+  }
+
+  /* ══ RANK CHART ══ */
+  body.tas-body .rank-section { padding-left: 20px !important; padding-right: 20px !important; }
+  body.tas-body .chart-header--rank { padding-left: 0 !important; padding-right: 0 !important; }
+  body.tas-body .chart-title { padding-left: 0 !important; font-size: clamp(22px, 6vw, 32px); }
+  body.tas-body .chart-subtitle { padding-left: 0 !important; font-size: clamp(13px, 3.5vw, 16px); }
+  body.tas-body .rank-annotation { padding-left: 10px !important; padding-right: 0 !important; font-size: 13px; }
+  body.tas-body .rank-stage {
+    width: 100% !important; max-width: 100% !important; margin-left: 0 !important;
+    padding: 0 !important; min-height: min(44vh, calc(100dvh - 280px)) !important;
+    max-height: min(52vh, calc(100dvh - 220px)) !important;
+  }
+  body.tas-body .rank-block { width: 100%; }
+  #tas-charts-scrolly .scrolly-sticky-inner { padding-left: 0 !important; padding-right: 0 !important; }
+
+  /* Color legend for rank chart (injected by JS) */
+  #mob-rank-legend {
+    display: flex; flex-wrap: wrap; gap: 5px 10px;
+    padding: 6px 0 4px; margin-bottom: 2px;
+  }
+  .mob-rank-legend-item {
+    display: flex; align-items: center; gap: 5px;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.03em;
+    color: rgba(240,240,240,0.78); white-space: nowrap;
+  }
+  .mob-rank-legend-swatch {
+    width: 14px; height: 2px; flex-shrink: 0; border-radius: 1px;
+  }
+
+  /* ══ BUBBLE SECTION ══ */
+  body.tas-body .bubble-section { padding-left: 20px !important; padding-right: 20px !important; }
+  body.tas-body .bubble-header { padding-left: 0 !important; margin-left: 0 !important; }
+  body.tas-body .bubble-header .chart-title,
+  body.tas-body .bubble-header .chart-subtitle { padding-left: 0 !important; }
+
+  /* ══ BUBBLE DRILLDOWN ══ */
+  #mob-cluster { width: 100%; box-sizing: border-box; padding: 0; }
+  .mob-drill-list { width: 100%; display: flex; flex-direction: column; }
+  .bubble-section.drilldown-active .bubble-filters-row { display: none; }
+  .bubble-cta--drilldown { display: none !important; }
+  .mob-drill-note {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--c35);
+    text-align: left; margin-top: 16px; font-style: normal;
+  }
+
+} /* end mobile supplement */

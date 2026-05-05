@@ -1,3 +1,30 @@
+// Set the correct scrolly phase before first paint to prevent a flash on mid-page reload.
+(function () {
+  if (window.innerWidth <= 900) return;
+  function run() {
+    var scrolly = document.getElementById("scrolly");
+    if (!scrolly) return;
+    var inner = scrolly.querySelector(".scrolly-sticky-inner");
+    if (!inner) return;
+    var tracks = scrolly.querySelectorAll(".scrolly-track");
+    if (!tracks.length) return;
+    var sectionTop = scrolly.getBoundingClientRect().top + window.scrollY;
+    var relScroll = window.scrollY - sectionTop;
+    var vh = window.innerHeight;
+    var current = tracks[0];
+    for (var i = 0; i < tracks.length; i++) {
+      if (relScroll >= tracks[i].offsetTop - vh * 0.5) current = tracks[i];
+    }
+    var phase = current.getAttribute("data-scrolly-phase");
+    if (phase) inner.setAttribute("data-phase", phase);
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", run);
+  } else {
+    run();
+  }
+}());
+
 // Interactive radial “constellation” showing cultural objects/messages
 // sent toward space. The visualization has three interaction modes that share
 // the same underlying data:
@@ -1400,7 +1427,9 @@ function renderMobile() {
       mobileOpenGroupKey = null;
       closeInlineCard();
       selectedId = null;
+      const _savedY = window.scrollY;
       render();
+      requestAnimationFrame(() => window.scrollTo(0, _savedY));
     });
     return b;
   }
@@ -1493,7 +1522,7 @@ function selectObject(obj) {
     else if (mobileBrowseBy === 'decade' && obj._decIdx != null)
       mobileOpenGroupKey = `d-${obj._decIdx}`;
   }
-  selectedId = obj.id;
+selectedId = obj.id;
   render();
   if (IS_MOBILE()) showMobileObjectDetail(obj);
   else showInlineCard(obj);
@@ -1928,7 +1957,7 @@ function ensureTtsBackInSlot() {
  *  they are triggered by sub-track divs, not whole track steps.
  */
 function initTtsScrolly() {
-  if (IS_MOBILE()) return;
+  // Scrolly runs on all sizes; CSS handles sticky vs static per breakpoint.
   const root  = document.getElementById('scrolly');
   const inner = root?.querySelector('.scrolly-sticky-inner');
   if (!root || !inner) return;

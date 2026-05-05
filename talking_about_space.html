@@ -43,11 +43,6 @@
       <div class="hero-inner">
         <h1 id="page-title">Talking <span class="accent">about</span> space</h1>
         <p id="page-intro" class="page-intro">From the Cold War space race to the rise of commercial spaceflight, a parallel history unfolds—one shaped through headlines, speeches, and stories.</p>
-        <a class="scroll-indicator" href="#scrolly" aria-label="Scroll to begin" title="Scroll to begin">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9" stroke="currentColor"/>
-          </svg>
-        </a>
       </div>
       <div class="hero-image-wrap">
         <img class="hero-image" src="images/talking_about_space.png" alt="" decoding="async">
@@ -87,25 +82,25 @@
           </div>
           <div class="scrolly-panel" data-panel="frontier">
             <div class="scrolly-progressive">
-              <p class="scrolly-pull">Across time, space has been a <span class="accent">frontier</span></p>
+              <p class="scrolly-pull">Across time,<br class="mob-br"> space has been a <span class="accent">frontier</span></p>
             </div>
             <img class="scrolly-headlines-image" src="images/frontier_headlines.png" alt="" decoding="async">
           </div>
           <div class="scrolly-panel" data-panel="risk">
             <div class="scrolly-progressive">
-              <p class="scrolly-pull">Across time, space has been a <span class="accent">hazard</span></p>
+              <p class="scrolly-pull">Across time,<br class="mob-br"> space has been a <span class="accent">hazard</span></p>
             </div>
             <img class="scrolly-headlines-image" src="images/hazard_headlines.png" alt="" decoding="async">
           </div>
           <div class="scrolly-panel" data-panel="race">
             <div class="scrolly-progressive">
-              <p class="scrolly-pull">Across time, space has been a <span class="accent">race</span></p>
+              <p class="scrolly-pull">Across time,<br class="mob-br"> space has been a <span class="accent">race</span></p>
             </div>
             <img class="scrolly-headlines-image" src="images/race_headlines.png" alt="" decoding="async">
           </div>
           <div class="scrolly-panel" data-panel="market">
             <div class="scrolly-progressive">
-              <p class="scrolly-pull">Across time, space has been a <span class="accent">market</span></p>
+              <p class="scrolly-pull">Across time,<br class="mob-br"> space has been a <span class="accent">market</span></p>
             </div>
             <img class="scrolly-headlines-image" src="images/market_headlines.png" alt="" decoding="async">
           </div>
@@ -163,7 +158,7 @@
       <div class="bubble-header-grid">
         <div class="bubble-header-main">
           <h2 class="chart-title" id="bubble-section-title">The recurring themes</h2>
-          <p class="chart-subtitle" id="page-subtitle-planets">Click any circle to see how attention given to a theme changed across 1950–2024</p>
+          <p class="chart-subtitle" id="page-subtitle-planets">How attention given to different themes changed across 1950–2024</p>
           <div class="bubble-filters-cta-wrapper">
             <div class="bubble-filters-row">
               <div class="filters filters--inline" id="bubble-filters" aria-label="Source for bubble chart">
@@ -179,8 +174,8 @@
             </div>
             <div class="bubble-cta-row" id="bubble-cta-row">
               <button type="button" class="back-link bubble-back" id="back-link" style="display:none;" aria-hidden="true">← all themes</button>
-              <div id="cta-overview" class="bubble-cta bubble-cta--overview">CLICK A THEME TO SEE DETAILS</div>
-              <div id="cta-drilldown" class="bubble-cta bubble-cta--drilldown" style="display: none;">CLICK A DECADE TO SEE SAMPLES</div>
+              <div id="cta-overview" class="bubble-cta bubble-cta--overview">SELECT A THEME TO SEE DETAILS</div>
+              <div id="cta-drilldown" class="bubble-cta bubble-cta--drilldown" style="display: none;">SELECT A DECADE TO SEE SAMPLES</div>
             </div>
           </div><!-- /.bubble-filters-cta-wrapper -->
         </div><!-- /.bubble-header-main -->
@@ -203,49 +198,10 @@
 
 <div id="tooltip"></div>
 
-<script>
-// Set initial scrolly phase before first paint to prevent hero flash on mid-page reload.
-// Runs synchronously so the correct panel is visible from the very first frame.
-(function() {
-  function setInitialPhase() {
-    var scrolly = document.getElementById('scrolly');
-    var chartsScrolly = document.getElementById('tas-charts-scrolly');
-    if (window.innerWidth <= 900) return;
-    // Helper: given a scrolly section and its sticky inner selector,
-    // set the phase to whichever track the current scroll position falls into.
-    function applyPhase(section, innerSel) {
-      if (!section) return;
-      var inner = section.querySelector(innerSel);
-      if (!inner) return;
-      var tracks = section.querySelectorAll('.scrolly-track');
-      if (!tracks.length) return;
-      var scrolled = window.scrollY - section.getBoundingClientRect().top - window.scrollY;
-      // getBoundingClientRect gives position relative to viewport; add scrollY for page offset.
-      var sectionTop = section.getBoundingClientRect().top + window.scrollY;
-      var relScroll = window.scrollY - sectionTop;
-      var vh = window.innerHeight;
-      var current = tracks[0];
-      for (var i = 0; i < tracks.length; i++) {
-        var trackTop = tracks[i].offsetTop;
-        if (relScroll >= trackTop - vh * 0.5) current = tracks[i];
-      }
-      var phase = current.getAttribute('data-scrolly-phase');
-      if (phase) inner.setAttribute('data-phase', phase);
-    }
-    applyPhase(scrolly, '.scrolly-sticky-inner');
-    applyPhase(chartsScrolly, '.scrolly-sticky-inner');
-  }
-  // Run after DOM is ready but before any paint.
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setInitialPhase);
-  } else {
-    setInitialPhase();
-  }
-})();
-</script>
 <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
 <!-- Scrollama: IntersectionObserver-based scrollytelling step detection -->
 <script src="https://cdn.jsdelivr.net/npm/scrollama@3.2.0/build/scrollama.min.js"></script>
 <script src="talking_about_space.js"></script>
+
 </body>
 </html>

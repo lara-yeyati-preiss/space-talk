@@ -1,3 +1,33 @@
+// Set the correct scrolly phase before first paint to prevent a flash on mid-page reload.
+(function () {
+  if (window.innerWidth <= 900) return;
+  function applyPhase(section) {
+    if (!section) return;
+    var inner = section.querySelector(".scrolly-sticky-inner");
+    if (!inner) return;
+    var tracks = section.querySelectorAll(".scrolly-track");
+    if (!tracks.length) return;
+    var sectionTop = section.getBoundingClientRect().top + window.scrollY;
+    var relScroll = window.scrollY - sectionTop;
+    var vh = window.innerHeight;
+    var current = tracks[0];
+    for (var i = 0; i < tracks.length; i++) {
+      if (relScroll >= tracks[i].offsetTop - vh * 0.5) current = tracks[i];
+    }
+    var phase = current.getAttribute("data-scrolly-phase");
+    if (phase) inner.setAttribute("data-phase", phase);
+  }
+  function run() {
+    applyPhase(document.getElementById("scrolly"));
+    applyPhase(document.getElementById("tas-charts-scrolly"));
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", run);
+  } else {
+    run();
+  }
+}());
+
 (function () {
   'use strict';
   
@@ -79,7 +109,10 @@ function getActorsForSource(src) {
   const NS = 'http://www.w3.org/2000/svg';
   
   const LABEL_W     = 240;
-  const CHART_PAD        = 230;  // right gutter for rank chart end-labels (wider to fit actor names)
+  const CHART_PAD_DESKTOP = 230;
+  const CHART_PAD_MOBILE  = 0;  // labels inside chart on mobile
+  function getChartPad() { return window.innerWidth <= 900 ? CHART_PAD_MOBILE : CHART_PAD_DESKTOP; }
+  const CHART_PAD = CHART_PAD_DESKTOP; // backwards compat for non-rank code
   const DRILL_CHART_PAD  = 20; // right gutter for drilldown: reserves space for last circle radius
   const DRILL_MAX_R = 74;
   const DRILL_ROW_H = 140;
@@ -127,13 +160,11 @@ function getActorsForSource(src) {
     international_institutions: {
       nyt: [
         { decade: 1960, label: 'Outer Space Treaty signed (1967)' },
-        { decade: 1990, label: 'ISS assembly begins (1998)' },
-        { decade: 2020, label: 'Artemis Accords signed (2020)' },
+        { decade: 2020, label: 'Artemis Accords established (2020)' },
       ],
       politics: [
         { decade: 1960, label: 'Outer Space Treaty signed (1967)', placeAbove: false },
-        { decade: 1990, label: 'ISS assembly begins (1998)', placeAbove: false },
-        { decade: 2020, label: 'Artemis Accords signed (2020)', placeAbove: true },
+        { decade: 2020, label: 'Artemis Accords established (2020)', placeAbove: true },
       ],
     },
     private_sector: {
@@ -199,7 +230,7 @@ const ACTOR_COLORS = {
   rival_space_powers: '#9b4c47',
   international_institutions: '#476155',
   private_sector: '#6B5A80',
-  scientific_community: '#867d58',
+  scientific_community: '#a078d9',
 };
 
 const ACTOR_LABELS_MAP = {
@@ -433,7 +464,7 @@ function updateSourceCounts() {
   }
 
   function initTasScrolly() {
-    if (window.innerWidth <= 900) return; // mobile: panels flow statically
+    // Scrolly runs on all sizes; CSS handles sticky vs static per breakpoint.
     _makeScrollyScroller('scrolly', '#scrolly .scrolly-sticky-inner');
   }
 
@@ -442,8 +473,6 @@ function updateSourceCounts() {
   function initProtagonistsLines() {
     const root = document.getElementById('scrolly');
     if (!root) return;
-    if (window.innerWidth <= 900) return; // mobile: lines visible via CSS
-
     const allLines = Array.from(root.querySelectorAll('.scrolly-line--protagonists'));
     const triggers = Array.from(root.querySelectorAll('.protagonists-trigger[data-line]'));
     if (!allLines.length || !triggers.length) return;
@@ -770,7 +799,7 @@ function updateSourceCounts() {
   function chartW() {
     // Use DRILL_CHART_PAD when in drilldown mode so the last decade's circle
     // (which can be up to DRILL_MAX_R wide) doesn't clip against the right edge.
-    const rPad = _inDrilldown ? DRILL_CHART_PAD : CHART_PAD;
+    const rPad = _inDrilldown ? DRILL_CHART_PAD : getChartPad();
     if (trendsLayout) {
       return trendsLayout.W - trendsLayout.leftCol - trendsLayout.rightPad - rPad;
     }
@@ -911,18 +940,21 @@ function updateSourceCounts() {
     const hx2 = opts.hLineX2 != null ? opts.hLineX2 : yearToX(MAX_YEAR);
     el('line', { x1: hx1, y1: axisY, x2: hx2, y2: axisY, stroke: '#f0f0f0', 'stroke-width': '1', opacity: '0.85' }, svg);
   
-    DECADES.forEach(dec => {
+    const _mobAxis = window.innerWidth <= 900;
+    DECADES.forEach((dec, _di) => {
       const x = decadeX(dec);
-      // Draw tick mark above decade label
       el('line', { x1: x, y1: axisY - 3, x2: x, y2: axisY + 3, stroke: '#f0f0f0', 'stroke-width': '0.75', opacity: '0.65' }, svg);
-      // Decade label in mono font
-      tx(dec + 's', { x: x, y: decY, 'text-anchor': 'middle', style: `font-family:var(--font-mono);font-size:16px;font-weight:500;letter-spacing:0.05em;fill:${decLabelFill};` }, svg);
+      // On mobile show only every other decade to prevent crowding; skip 2020 label
+      if (dec !== 2020 && (!_mobAxis || _di % 2 === 0)) {
+        const _decFs = _mobAxis ? '12' : '16';
+        tx(dec + 's', { x: x, y: decY, 'text-anchor': 'middle', style: `font-family:var(--font-mono);font-size:${_decFs}px;font-weight:500;letter-spacing:0.05em;fill:${decLabelFill};` }, svg);
+      }
     });
   
     const lmLbl = decY + 2 + LM_TICK + LM_LBL_H - 2;
     landmarks.forEach(lm => {
       const x = yearToX(lm.year);
-      const rPad = _inDrilldown ? DRILL_CHART_PAD : CHART_PAD;
+      const rPad = _inDrilldown ? DRILL_CHART_PAD : getChartPad();
       if (x < axisPlotLeft() || x > landmarkClipW(_activeDrillW) - rPad + 8) return;
       const yOff = 0;
       el('line', { x1: x, y1: axisY, x2: x, y2: decY + 2 + LM_TICK + yOff, stroke: '#f0f0f0', 'stroke-width': '0.5', opacity: '0.45' }, svg);
@@ -957,12 +989,12 @@ function updateSourceCounts() {
   // Smaller top inset so the plot gets taller upward without moving the axis.
   const TRENDS_PAD_TOP = 8;
   const TRENDS_ACTOR_COLORS = {
-    national_state_us:        '#7aabcf',
-    rival_space_powers:       '#c97c5d',
-    private_sector:           '#8cbf7a',
-    international_institutions: '#c9956a',  // warm terracotta — distinct from green private sector
-    astronauts_cosmonauts:    '#d4a45a',
-    scientific_community:     '#b09e72',
+    national_state_us:           '#6fa3c0',  // steel blue — clear, institutional
+    rival_space_powers:          '#b85c3a',  // burnt sienna / brick — earthy warm red
+    private_sector:              '#7aab72',  // sage green — calm, commercial
+    international_institutions:  '#b89a5e',  // warm sand / old gold — diplomatic
+    astronauts_cosmonauts:       '#c8a84b',  // deep gold — distinct from brick red
+    scientific_community:        '#8b7db5',  // muted violet — knowledge, cosmos
   };
 
   const TRENDS_HIGHLIGHT_ACTORS_BY_SOURCE = {
@@ -1136,12 +1168,15 @@ function updateSourceCounts() {
     }
     const blockH = drawTrendsChart._cachedH;
   
-    trendsLayout = { W: TW, leftCol: TRENDS_LEFT_COL, rightPad: TRENDS_RIGHT_PAD };
+    trendsLayout = { W: TW, leftCol: window.innerWidth <= 900 ? 68 : TRENDS_LEFT_COL, rightPad: window.innerWidth <= 900 ? 4 : TRENDS_RIGHT_PAD };
     _activeDrillW = TW;
   
     const keys = getActorsForSource(trendSrc);
     const labelFor = key => ACTOR_LABELS_MAP[key] || key;
     const nRanks = keys.length;
+
+    // Legend injected after _mr is declared below
+
   
     // Rank chart: actors only; curated actor timeline milestones.
     const maxLmOff = calculateMaxLandmarkOffset(getLandmarks(null, { timelineView: 'actor' }), TW);
@@ -1166,9 +1201,57 @@ function updateSourceCounts() {
   
     drawTrendsVertGrid(svg, plotTop, plotBot);
   
-    const rankCaptionStyle = 'font-family:var(--font-mono,monospace);font-size:12px;font-weight:500;letter-spacing:0.05em;fill:rgba(240,240,240,0.58);';
-    const rankOrdinalStyle = 'font-family:var(--font-mono,monospace);font-size:16px;font-weight:400;fill:rgba(240,240,240,0.84);';
-    const rankMidStyle = 'font-family:var(--font-mono,monospace);font-size:16px;font-weight:400;fill:rgba(240,240,240,0.74);';
+    const _mobRank = window.innerWidth <= 900;
+    const _mr = _mobRank; // alias used for most/least covered labels
+
+    // ── MOBILE RANK LEGEND ────────────────────────────────────────────────
+    if (_mr) {
+      const existingLeg = document.getElementById('mob-rank-legend');
+      if (existingLeg) existingLeg.remove();
+      const rankStage = document.getElementById('rank-stage');
+      if (rankStage) {
+        const leg = document.createElement('div');
+        leg.id = 'mob-rank-legend';
+        const actorLabels = {
+          national_state_us: 'National state',
+          rival_space_powers: 'Rival powers',
+          private_sector: 'Private sector',
+          international_institutions: "Int'l partnerships",
+          astronauts_cosmonauts: 'Astronauts',
+          scientific_community: 'Scientific community',
+        };
+        keys.forEach(k => {
+          const color = TRENDS_ACTOR_COLORS[k] || 'rgba(240,240,240,0.6)';
+          const label = actorLabels[k] || k;
+          const item = document.createElement('div');
+          item.className = 'mob-rank-legend-item';
+          item.style.cursor = 'pointer';
+          const swatch = document.createElement('span');
+          swatch.className = 'mob-rank-legend-swatch';
+          swatch.style.background = color;
+          const txt = document.createTextNode(label);
+          item.appendChild(swatch);
+          item.appendChild(txt);
+          // Click to toggle pin/isolation of this actor's line
+          item.addEventListener('click', e => {
+            e.stopPropagation();
+            if (_pinnedActor === k) {
+              _pinnedActor = null;
+              setTrendsHoverState(null);
+            } else {
+              _pinnedActor = k;
+              setTrendsHoverState(k);
+            }
+          });
+          leg.appendChild(item);
+        });
+        rankStage.parentNode.insertBefore(leg, rankStage);
+      }
+    }
+
+    const rankCaptionStyle = `font-family:var(--font-mono,monospace);font-size:${_mobRank?10:12}px;font-weight:500;letter-spacing:0.05em;fill:rgba(240,240,240,0.58);`;
+    const rankOrdinalStyle = `font-family:var(--font-mono,monospace);font-size:${_mobRank?11:16}px;font-weight:400;fill:rgba(240,240,240,0.84);`;
+    const rankMidStyle = `font-family:var(--font-mono,monospace);font-size:${_mobRank?11:16}px;font-weight:400;fill:rgba(240,240,240,0.74);`;
     // Neutral (non-highlight) series: a touch dimmer, but still above decade labels.
     const TRENDS_NEUTRAL_STROKE = 'rgba(240,240,240,0.78)';
     for (let r = 1; r <= nRanks; r++) {
@@ -1200,16 +1283,22 @@ function updateSourceCounts() {
         tx(trendsOrdinalRank(1), {
           x: rankLabelX, y: y - 5, 'text-anchor': 'end', style: rankOrdinalStyle,
         }, rankAxisG);
-        tx('most covered', {
-          x: rankLabelX, y: y + 9, 'text-anchor': 'end', style: rankCaptionStyle,
-        }, rankAxisG);
+        if (_mr) {
+          tx('most', { x: rankLabelX, y: y + 14, 'text-anchor': 'end', style: rankCaptionStyle }, rankAxisG);
+          tx('covered', { x: rankLabelX, y: y + 24, 'text-anchor': 'end', style: rankCaptionStyle }, rankAxisG);
+        } else {
+          tx('most covered', { x: rankLabelX, y: y + 9, 'text-anchor': 'end', style: rankCaptionStyle }, rankAxisG);
+        }
       } else if (r === nRanks && nRanks > 1) {
         tx(trendsOrdinalRank(r), {
           x: rankLabelX, y: y - 5, 'text-anchor': 'end', style: rankOrdinalStyle,
         }, rankAxisG);
-        tx('least covered', {
-          x: rankLabelX, y: y + 9, 'text-anchor': 'end', style: rankCaptionStyle,
-        }, rankAxisG);
+        if (_mr) {
+          tx('least', { x: rankLabelX, y: y + 14, 'text-anchor': 'end', style: rankCaptionStyle }, rankAxisG);
+          tx('covered', { x: rankLabelX, y: y + 24, 'text-anchor': 'end', style: rankCaptionStyle }, rankAxisG);
+        } else {
+          tx('least covered', { x: rankLabelX, y: y + 9, 'text-anchor': 'end', style: rankCaptionStyle }, rankAxisG);
+        }
       } else {
         tx(trendsOrdinalRank(r), {
           x: rankLabelX, y: y + 4, 'text-anchor': 'end', style: rankMidStyle,
@@ -1237,6 +1326,8 @@ function updateSourceCounts() {
 
     function renderTrendsActorAnnotations(actorKeyOrNull) {
       clearTrendsAnnotations();
+      // On mobile, never show callout annotations — they don't fit the screen
+      if (_mobRank) return;
       if (!actorKeyOrNull) return;
       const entry = TRENDS_ACTOR_CALLOUTS[actorKeyOrNull];
       const items = (entry ? (entry[trendSrc] || entry.nyt || []) : []).filter(d => DECADES.includes(d.decade));
@@ -1381,12 +1472,14 @@ const bh = isTrendsHighlightedActor(b) ? 1 : 0;
       }
   
       const isHighlighted = isTrendsHighlightedActor(k);
-      const lineStroke    = isHighlighted
+      // On mobile: all series get their distinct color for readability (labels on top)
+      const _mobColor = window.innerWidth <= 900;
+      const lineStroke    = (_mobColor || isHighlighted)
         ? (TRENDS_ACTOR_COLORS[k] || 'rgba(240,240,240,0.75)')
         : 'rgba(240,240,240,0.72)';
       const seriesStrokeW = 2.5;
       const tickStrokeW   = 1.8;
-      const seriesOpacity = isHighlighted ? '0.92' : '0.78';
+      const seriesOpacity = (_mobColor || isHighlighted) ? '0.92' : '0.78';
       const strokeDash    = 'none';
 
       el('path', {
@@ -1411,6 +1504,11 @@ const bh = isTrendsHighlightedActor(b) ? 1 : 0;
         opacity: seriesOpacity,
         class: 'rank-series-line',
       }, seriesG);
+      
+      // Ensure stroke color persists on mobile
+      if (_mobColor) {
+        linePathEl.style.stroke = lineStroke;
+      }
       
       // Calculate path length for stroke-dasharray animation.
       // Use requestAnimationFrame to ensure the SVG has laid out the path.
@@ -1460,9 +1558,11 @@ const bh = isTrendsHighlightedActor(b) ? 1 : 0;
           class: 'rank-tick-hit',
           'data-decade': p.dec,
         }, seriesG);
-        // Rank chart: no tooltips; hover is reserved for annotations + highlighting.
-        hit.addEventListener('mouseenter', () => { setTrendsHoverState(k); });
-        hit.addEventListener('mouseleave', () => { setTrendsHoverState(null); });
+        // Rank chart: no tooltips on mobile; desktop has hover annotations
+        if (!_mobRank) {
+          hit.addEventListener('mouseenter', () => { setTrendsHoverState(k); });
+          hit.addEventListener('mouseleave', () => { setTrendsHoverState(null); });
+        }
       });
       seriesPtsByKey[k] = pts;
   
@@ -1475,18 +1575,24 @@ const bh = isTrendsHighlightedActor(b) ? 1 : 0;
       });
   
       seriesG.style.cursor = 'pointer';
-      seriesG.addEventListener('mouseover', e => {
-        if (seriesG.contains(e.relatedTarget)) return;
-        if (!_pinnedActor) setTrendsHoverState(k);
-      });
-      seriesG.addEventListener('mouseout', e => {
-        if (seriesG.contains(e.relatedTarget)) return;
-        if (!_pinnedActor) setTrendsHoverState(null);
-      });
-      seriesG.addEventListener('click', e => {
-        e.stopPropagation();
-        togglePin(k);
-      });
+      // Disable hover annotations on mobile; desktop has landmarks
+      if (!_mobRank) {
+        seriesG.addEventListener('mouseover', e => {
+          if (seriesG.contains(e.relatedTarget)) return;
+          if (!_pinnedActor) setTrendsHoverState(k);
+        });
+        seriesG.addEventListener('mouseout', e => {
+          if (seriesG.contains(e.relatedTarget)) return;
+          if (!_pinnedActor) setTrendsHoverState(null);
+        });
+      }
+      // Disable click-to-pin on mobile; mobile has legend-based interaction only
+      if (!_mobRank) {
+        seriesG.addEventListener('click', e => {
+          e.stopPropagation();
+          togglePin(k);
+        });
+      }
     });
   
     // End labels fade in after all lines have finished drawing.
@@ -1497,25 +1603,30 @@ const bh = isTrendsHighlightedActor(b) ? 1 : 0;
     labelRows.sort((a, b) => a.y - b.y);
     let lastLy = -1e9;
     labelRows.forEach(row => {
+      // Skip rendering labels on mobile (legend is used instead)
+      if (_mobRank) return;
+      
       let ly = row.y + 4;
       if (ly - lastLy < 18) ly = lastLy + 18;
       lastLy = ly;
-      const lx = row.xEnd + TRENDS_LABEL_LINE_GAP + 8;
-      const maxW = Math.max(80, TW - lx - 8);
+      const _ml = window.innerWidth <= 900;
+      const lx = _ml ? row.xEnd : (row.xEnd + TRENDS_LABEL_LINE_GAP + 8);
+      const maxW = _ml ? 100 : Math.max(80, TW - lx - 8);
       const hit = el('g', { class: 'rank-end-label', 'data-series': row.k }, labelsG);
       hit.style.setProperty('--label-delay', `${labelBaseDelay}s`);
       hit.style.cursor = 'default';
-      const tw = Math.min(maxW, Math.max(60, row.lab.length * 6.2));
-      const th = 18;
+      const tw = Math.min(maxW, Math.max(40, row.lab.length * (_ml ? 5.5 : 6.2)));
+      const th = _ml ? 13 : 18;
       el('rect', {
-        x: lx - 2, y: ly - th + 4,
+        x: _ml ? lx - tw - 2 : lx - 2, y: ly - th + 4,
         width: tw + 4, height: th,
         fill: 'transparent', 'pointer-events': 'all',
       }, hit);
+      const _lc = _ml ? (TRENDS_ACTOR_COLORS[row.k] || 'rgba(240,240,240,0.72)') : 'rgba(240,240,240,0.72)';
       tx(row.lab, {
         x: lx, y: ly,
-        'text-anchor': 'start',
-        style: 'font-family:"Archivo Narrow",sans-serif;font-size:16px;font-weight:400;fill:rgba(240,240,240,0.72);pointer-events:none;',
+        'text-anchor': _ml ? 'end' : 'start',
+        style: `font-family:"Archivo Narrow",sans-serif;font-size:${_mobRank?11:14}px;font-weight:400;fill:rgba(240,240,240,0.72);pointer-events:none;`,
       }, hit);
       hit.style.cursor = 'pointer';
       hit.addEventListener('mouseover', e => {
@@ -1560,12 +1671,12 @@ const bh = isTrendsHighlightedActor(b) ? 1 : 0;
     });
   
     // For the POLITICS source, we have no data for the 1950s.
-    // Render a subtle "insufficient data" label just above the axis, between 1950s and 1960s ticks.
-    if (trendSrc === 'politics') {
+    // Only show "insufficient data" label on desktop (it doesn't fit on mobile).
+    if (trendSrc === 'politics' && window.innerWidth > 900) {
       const x1950 = decadeX(1950);
       const x1960 = decadeX(1960);
       const labelX = (x1950 + x1960) / 2;
-      const labelY = plotBot - 8; // just above the axis baseline
+      const labelY = plotBot - 8;
       tx('insufficient data', {
         x: labelX, y: labelY,
         'text-anchor': 'middle',
@@ -2173,24 +2284,7 @@ function getThemeProminenceShare(src, umb, dec) {
     container.innerHTML = '';
     container.style.display = 'block';
   
-    // ── SOURCE TABS ─────────────────────────────────────────────────────────
-    // On mobile we duplicate the source selector as tabs inside the drilldown
-    // because the desktop source filter can scroll off-screen.
-    const tabs = document.createElement('div');
-    tabs.className = 'mob-src-tabs';
-    ['nyt','politics'].forEach(src => {
-      const tab = document.createElement('button');
-      tab.className = 'mob-src-tab' + (src === planetSrc ? ' active' : '');
-      tab.textContent = SRC_ABBR[src];
-      tab.addEventListener('click', () => {
-        planetSrc = src;
-        syncPlanetFilters();
-        updateCaption();
-        drawMobileDrilldown(key, kind);
-      });
-      tabs.appendChild(tab);
-    });
-    container.appendChild(tabs);
+    // Source tabs removed — top filter handles source switching
   
     // ── SCALE ───────────────────────────────────────────────────────────────
     // Bars are normalized within the selected key across all sources/decades so
@@ -2614,12 +2708,6 @@ const decStr   = String(dec);
   
   function buildSamplesList(samples, src) {
     const sorted = [...samples].sort((a, b) => (b.score || 0) - (a.score || 0));
-    console.log(`buildSamplesList called with src='${src}', total samples: ${sorted.length}`);
-    if (sorted[0]) {
-      const keys = Object.keys(sorted[0]);
-      console.log('First sample object keys:', keys);
-      console.log('First sample object:', sorted[0]);
-    }
     return sorted.map(s => {
       let yearCell = `<span class="dp-hl-year">${s.year || ''}</span>`;
       let content  = '';
@@ -2657,11 +2745,7 @@ const decStr   = String(dec);
       ? (DATA.samples?.[planetSrc]?.[key]?.[String(dec)] || [])
       : (DATA.actor_samples?.[planetSrc]?.[key]?.[String(dec)] || []);
     
-    console.log(`openSamplesModal: kind='${kind}', planetSrc='${planetSrc}', key='${key}', dec=${dec}`);
-    console.log(`Loading from: DATA.actor_samples['${planetSrc}']['${key}']['${dec}']`);
-    console.log(`Raw samples from JSON (first 2):`, samples.slice(0, 2));
-    
-    samples = [...samples].sort((a, b) => (b.score || 0) - (a.score || 0));
+        samples = [...samples].sort((a, b) => (b.score || 0) - (a.score || 0));
   
     const label = kind === 'theme'
       ? (DATA.themes[key]?.label || key)

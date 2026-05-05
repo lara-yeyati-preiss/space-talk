@@ -35,11 +35,6 @@
       <div class="hero-inner">
         <h1 id="page-title">Talking <span class="accent">to</span> space</h1>
         <p id="page-intro" class="page-intro">Since the beginning of the space age, people have sent beyond Earth not only instruments and machines, but also something more personal: an archive of ourselves—of who we are and who we were.</p>
-        <a class="scroll-indicator" href="#scrolly" aria-label="Scroll to begin" title="Scroll to begin">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9" stroke="currentColor"/>
-          </svg>
-        </a>
         <span class="back-link" id="decade-back-link" style="display:none;">← all decades</span>
       </div>
       <div class="hero-image-wrap">
@@ -173,35 +168,6 @@
 
 <div id="tooltip"></div>
 
-<script>
-// Set initial scrolly phase before first paint to prevent hero flash on mid-page reload.
-(function() {
-  function setInitialPhase() {
-    if (window.innerWidth <= 900) return;
-    var scrolly = document.getElementById('scrolly');
-    if (!scrolly) return;
-    var inner = scrolly.querySelector('.scrolly-sticky-inner');
-    if (!inner) return;
-    var tracks = scrolly.querySelectorAll('.scrolly-track');
-    if (!tracks.length) return;
-    var sectionTop = scrolly.getBoundingClientRect().top + window.scrollY;
-    var relScroll = window.scrollY - sectionTop;
-    var vh = window.innerHeight;
-    var current = tracks[0];
-    for (var i = 0; i < tracks.length; i++) {
-      if (relScroll >= tracks[i].offsetTop - vh * 0.5) current = tracks[i];
-    }
-    var phase = current.getAttribute('data-scrolly-phase');
-    if (phase) inner.setAttribute('data-phase', phase);
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setInitialPhase);
-  } else {
-    setInitialPhase();
-  }
-})();
-</script>
-<!-- Scrollama: IntersectionObserver-based scrollytelling step detection -->
 <script src="https://cdn.jsdelivr.net/npm/scrollama@3.2.0/build/scrollama.min.js"></script>
 <script src="talking_to_space.js"></script>
 </body>

@@ -1626,7 +1626,7 @@ const bh = isTrendsHighlightedActor(b) ? 1 : 0;
       tx(row.lab, {
         x: lx, y: ly,
         'text-anchor': _ml ? 'end' : 'start',
-        style: `font-family:"Archivo Narrow",sans-serif;font-size:${_mobRank?11:14}px;font-weight:400;fill:rgba(240,240,240,0.72);pointer-events:none;`,
+        style: `font-family:"Archivo Narrow",sans-serif;font-size:${_mobRank?13:16}px;font-weight:400;fill:rgba(240,240,240,0.72);pointer-events:none;`,
       }, hit);
       hit.style.cursor = 'pointer';
       hit.addEventListener('mouseover', e => {

@@ -258,7 +258,7 @@ const ACTOR_LABELS_MAP = {
   
   const THEME_LABELS = {
     discovery_science:      'Studying the cosmos',
-    applied_space_science:  'Space operations & missions',
+    applied_space_science:  'Spaceflight & missions',
     power_rivalry:          'Space race & rivalry',
     risk_hazard:            'Risk & hazards',
     economic_financial:     'Markets & commerce',

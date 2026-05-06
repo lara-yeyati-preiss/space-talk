@@ -939,7 +939,7 @@ body.tas-body #scrolly {
   max-width: clamp(280px, 50vw, 650px);
   max-height: 65vh;
   object-fit: contain;
-  opacity: 0.24;
+  opacity: 0.44;
   pointer-events: none;
   z-index: 100;
 }
@@ -3086,7 +3086,7 @@ body.tas-body .page-footer-nav {
   }
   .mob-rank-legend-item {
     display: flex; align-items: center; gap: 5px;
-    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.03em;
+    font-family: var(--font-mono); font-size: 16px; letter-spacing: 0.03em;
     color: rgba(240,240,240,0.78); white-space: nowrap;
   }
   .mob-rank-legend-swatch {

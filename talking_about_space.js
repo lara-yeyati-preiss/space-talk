@@ -687,7 +687,7 @@ function updateSourceCounts() {
   const TAS_RANK_SUBTITLE =
     'How attention given to different actors changed across 1950–2024';
   const TAS_TRENDS_ANNOTATIONS = {
-    nyt: 'Coverage opens with Soviet rivalry as the dominant frame, before <span style="color:#7aabcf;">national institutional</span> space activities take center stage. The landscape changes in the past decade, as the <span style="color:#8cbf7a;">private sector</span> overtakes all other actors, reframing space through the language of markets, resource extraction, and individual ambition.',
+    nyt: 'Coverage opens with <span style="color:#dd7d7d;">Soviet rivalry</span> as the dominant frame, before <span style="color:#7aabcf;">national institutional</span> space activities take center stage. The landscape changes in the past decade, as the <span style="color:#8cbf7a;">private sector</span> overtakes all other actors, reframing space through the language of markets, resource extraction, and individual ambition.',
     politics: 'Following the focus on geopolitical rivalry during the peak of the space race in the 1960s, political rhetoric remains anchored in <span style="color:#7aabcf;">U.S. leadership</span> across subsequent decades. In the 2020s, <span style="color:#c9956a;">international partnerships</span> emerge as an increasingly prominent mode of action, reflected in broader emphasis on cooperation in space governance.',
   };
   const TAS_SECTION_TITLE_PLANETS = 'The recurring themes';
@@ -758,11 +758,6 @@ function updateSourceCounts() {
     updatePlanetsSubtitle();
     updateSectionTitles();
   }
-  
-  // ── DESCRIPTION BLOCK ─────────────────────────────────────────────────────
-  
-  
-  
   
   
   // ── SVG HELPERS ───────────────────────────────────────────────────────────
@@ -944,8 +939,8 @@ function updateSourceCounts() {
     DECADES.forEach((dec, _di) => {
       const x = decadeX(dec);
       el('line', { x1: x, y1: axisY - 3, x2: x, y2: axisY + 3, stroke: '#f0f0f0', 'stroke-width': '0.75', opacity: '0.65' }, svg);
-      // On mobile show only every other decade to prevent crowding; skip 2020 label
-      if (dec !== 2020 && (!_mobAxis || _di % 2 === 0)) {
+      // On mobile show only every other decade to prevent crowding; on desktop show all
+      if (!_mobAxis || _di % 2 === 0) {
         const _decFs = _mobAxis ? '12' : '16';
         tx(dec + 's', { x: x, y: decY, 'text-anchor': 'middle', style: `font-family:var(--font-mono);font-size:${_decFs}px;font-weight:500;letter-spacing:0.05em;fill:${decLabelFill};` }, svg);
       }
@@ -1001,6 +996,16 @@ function updateSourceCounts() {
     nyt:      new Set(['national_state_us', 'private_sector']),
     politics: new Set(['national_state_us', 'international_institutions']),
   };
+
+  /** Get actor color, conditionally based on source */
+  function getTrendsActorColor(actorKey, source) {
+    // In NEWS view, use dd7d7d for rival_space_powers instead of the default burnt sienna
+    if (source === 'nyt' && actorKey === 'rival_space_powers') {
+      return '#dd7d7d';
+    }
+    return TRENDS_ACTOR_COLORS[actorKey] || 'rgba(240,240,240,0.75)';
+  }
+
   /** Rank label for axis and tooltips (e.g. #1, #2). */
   function trendsOrdinalRank(r) {
     return `#${r}`;
@@ -1038,7 +1043,7 @@ function updateSourceCounts() {
             path.setAttribute('stroke-width', '2.5');
             path.setAttribute('opacity', wasH ? '0.92' : '0.78');
             path.setAttribute('stroke', wasH
-              ? (TRENDS_ACTOR_COLORS[sid2] || 'rgba(240,240,240,0.75)')
+              ? getTrendsActorColor(sid2, trendSrc)
               : 'rgba(240,240,240,0.72)');
           });
           node.querySelectorAll('.rank-tick').forEach(tick => { tick.style.opacity = ''; });
@@ -1221,11 +1226,12 @@ function updateSourceCounts() {
           scientific_community: 'Scientific community',
         };
         keys.forEach(k => {
-          const color = TRENDS_ACTOR_COLORS[k] || 'rgba(240,240,240,0.6)';
+          const color = getTrendsActorColor(k, trendSrc);
           const label = actorLabels[k] || k;
           const item = document.createElement('div');
           item.className = 'mob-rank-legend-item';
           item.style.cursor = 'pointer';
+          item.style.fontSize = '12px';
           const swatch = document.createElement('span');
           swatch.className = 'mob-rank-legend-swatch';
           swatch.style.background = color;
@@ -1474,12 +1480,14 @@ const bh = isTrendsHighlightedActor(b) ? 1 : 0;
       const isHighlighted = isTrendsHighlightedActor(k);
       // On mobile: all series get their distinct color for readability (labels on top)
       const _mobColor = window.innerWidth <= 900;
-      const lineStroke    = (_mobColor || isHighlighted)
-        ? (TRENDS_ACTOR_COLORS[k] || 'rgba(240,240,240,0.75)')
+      // Show color for highlighted actors, mobile, or rival_space_powers in NEWS view
+      const shouldShowColor = _mobColor || isHighlighted || (trendSrc === 'nyt' && k === 'rival_space_powers');
+      const lineStroke    = shouldShowColor
+        ? getTrendsActorColor(k, trendSrc)
         : 'rgba(240,240,240,0.72)';
       const seriesStrokeW = 2.5;
       const tickStrokeW   = 1.8;
-      const seriesOpacity = (_mobColor || isHighlighted) ? '0.92' : '0.78';
+      const seriesOpacity = (_mobColor || isHighlighted || (trendSrc === 'nyt' && k === 'rival_space_powers')) ? '0.92' : '0.78';
       const strokeDash    = 'none';
 
       el('path', {
@@ -1505,10 +1513,8 @@ const bh = isTrendsHighlightedActor(b) ? 1 : 0;
         class: 'rank-series-line',
       }, seriesG);
       
-      // Ensure stroke color persists on mobile
-      if (_mobColor) {
-        linePathEl.style.stroke = lineStroke;
-      }
+      // Always set stroke color via style to ensure it persists
+      linePathEl.style.stroke = lineStroke;
       
       // Calculate path length for stroke-dasharray animation.
       // Use requestAnimationFrame to ensure the SVG has laid out the path.
@@ -1622,11 +1628,11 @@ const bh = isTrendsHighlightedActor(b) ? 1 : 0;
         width: tw + 4, height: th,
         fill: 'transparent', 'pointer-events': 'all',
       }, hit);
-      const _lc = _ml ? (TRENDS_ACTOR_COLORS[row.k] || 'rgba(240,240,240,0.72)') : 'rgba(240,240,240,0.72)';
+      const _lc = _ml ? getTrendsActorColor(row.k, trendSrc) : 'rgba(240,240,240,0.72)';
       tx(row.lab, {
         x: lx, y: ly,
         'text-anchor': _ml ? 'end' : 'start',
-        style: `font-family:"Archivo Narrow",sans-serif;font-size:${_mobRank?13:16}px;font-weight:400;fill:rgba(240,240,240,0.72);pointer-events:none;`,
+        style: `font-family:"Archivo Narrow",sans-serif;font-size:${_mobRank?13:16}px;font-weight:400;fill:rgba(240,240,240,0.84);pointer-events:none;`,
       }, hit);
       hit.style.cursor = 'pointer';
       hit.addEventListener('mouseover', e => {

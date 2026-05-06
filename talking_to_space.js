@@ -58,7 +58,7 @@ const DECADE_COUNT = 7;
 const NOTABLES = {
   '1':   'Arecibo Message',
   '15':  'Morse Message',
-  '35':  'Dorito Advertisement',
+  '35':  'Doritos Advertisement',
   '117': 'Pioneer Plaques',
   '118': 'Voyager Golden Record',
   '164': 'IKAROS',

@@ -241,13 +241,7 @@ function buildLegend() {
 
     panel.appendChild(row);
   });
-
-  // Add METI clarification note below legends
-  const note = document.createElement('div');
-  note.className = 'leg-note';
-  note.innerHTML = 'METI:<br>Messaging to extra-terrestrial intelligence';
-  panel.appendChild(note);
-
+  
   // Click anywhere outside to deactivate ring filter
   document.addEventListener('click', (e) => {
     if (selectedRing === null) return;

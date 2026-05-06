@@ -1762,7 +1762,7 @@ function showInlineCardExpanded(obj) {
   if (obj._spaceShowEpisodes) {
     const eList = obj._spaceShowEpisodes.map(e => `${e.name} (${e.year || '?'})`).join('\n');
     html += `<div class="oc-section">
-      <div class="oc-section-label">EPISODES (${obj._spaceShowEpisodes.length})</div>
+      <div class="oc-section-label">EPISODES</div>
       <div class="oc-organizer" style="white-space:pre-line;font-size:12px;">${esc(eList)}</div>
     </div>`;
   }

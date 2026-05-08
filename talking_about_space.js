@@ -987,7 +987,7 @@ function updateSourceCounts() {
     national_state_us:           '#6fa3c0',  // steel blue — clear, institutional
     rival_space_powers:          '#b85c3a',  // burnt sienna / brick — earthy warm red
     private_sector:              '#7aab72',  // sage green — calm, commercial
-    international_institutions:  '#b89a5e',  // warm sand / old gold — diplomatic
+    international_institutions:  '#c9956a',  // warm ochre — diplomatic
     astronauts_cosmonauts:       '#c8a84b',  // deep gold — distinct from brick red
     scientific_community:        '#8b7db5',  // muted violet — knowledge, cosmos
   };

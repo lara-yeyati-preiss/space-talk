@@ -2731,7 +2731,10 @@ body.tas-body .page-footer-nav {
   .viz-screen { min-height: 0; flex: 1; flex-direction: column; gap: clamp(20px, 4vh, 36px); }
   .viz-hint { font-size: clamp(15px, 3.6vw, 20px); min-width: 0; white-space: normal; overflow-x: visible; }
   .viz-main { flex: 1; flex-direction: column; min-height: 0; gap: 12px; }
-  .viz-sidebar { width: 100%; padding-top: 10px; gap: 14px; }
+  .viz-chart-col { order: 1; }
+  .viz-sidebar { width: 100%; padding-top: 10px; gap: 14px; order: 2; }
+  .sidebar-back-slot { display: none; }
+  .leg-note { width: 100%; margin-top: 20px; padding-top: 20px; border-top: 0.5px solid rgba(240,240,240,0.08); order: 3; }
   #chart-inner { width: 100%; min-width: 0; margin-left: 0; max-width: 100%; align-self: stretch; }
   #star-svg { max-width: 100%; }
   #chart-wrap { flex: 1; width: 100%; }

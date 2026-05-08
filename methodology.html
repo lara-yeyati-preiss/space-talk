@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Space Talk — Methodology</title>
+  <link rel="icon" href="images/favicon.png" type="image/png">
+  <meta property="og:title" content="Space Talk">
+  <meta property="og:description" content="Visualizing how outer space has been framed, addressed, and imagined over seven decades.">
+  <meta property="og:image" content="images/og-image.png">
+  <meta property="og:type" content="website">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="tts-body">
@@ -34,7 +39,16 @@
     <div class="method-subsection">
       <h3 class="method-subsection-title">Thematic & actor classification</h3>
       <p>Each text was classified across a set of thematic frames and actor types using the semantic embedding model <a href="https://huggingface.co/nomic-ai/nomic-embed-text-v1.5" target="_blank">nomic-embed-text-v1.5</a>. The model converts both texts and thematic and anchor anchors into numerical vectors in a high-dimensional space, where meaning is encoded as geometric position and similarity is measured as the angle between vectors.</p>
-      <p>Each thematic frame and actor type is represented by a single dense anchor string made up of descriptive terms, capturing what that type looks like across different historical periods and vocabulary registers. The six thematic frames are: Space race &amp; rivalry, Space operations &amp; missions, Studying the cosmos, Risk &amp; hazards, Markets &amp; commerce, and Meaning &amp; identity.</p>
+    <p>Each thematic frame and actor type is represented by a single dense anchor string made up of descriptive terms, capturing what that type looks like across different historical periods and vocabulary registers. The six thematic frames are:</p>
+    <ul class="method-themes">
+    <ul class="method-themes">
+      <li>Space race &amp; rivalry: competition between nations and powers for space dominance and strategic advantage</li>
+      <li>Spaceflight &amp; missions: operational activities, programs, missions, and execution of space exploration</li>
+      <li>Studying the cosmos: scientific research and discovery about space and celestial phenomena</li>
+      <li>Risk &amp; hazards: dangers, failures, disasters, and hazards related to space activities and infrastructure</li>
+      <li>Markets &amp; commerce: commercial opportunities, private companies, and economic dimensions of space</li>
+      <li>Meaning &amp; identity: cultural, philosophical, and existential significance of space exploration</li>
+    </ul>
       <p>The main actor sets differ between the two corpora, reflecting the different rhetorical logics of journalism and political speech. In news, five actor types are tracked: astronauts, the national state, geopolitical rivals, the private sector, and the scientific community. In political speech, four actor types are tracked: the national state, geopolitical rivals, international partnerships, and the private sector.</p>
     </div>
       <p>Because all texts in the corpus are already <em>about</em> space, raw similarity scores for both actors and themes tend to be close together by definition. Each document's scores are therefore z-score normalized relative to its own mean and standard deviation across all six themes — asking not which theme/actor this document is close to, but which theme it stands out in relative to all others. A softmax transformation then converts these relative scores into a probability distribution summing to 1.0.</p>
